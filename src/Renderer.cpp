@@ -1,7 +1,14 @@
 #include "Renderer.h"
 
 Renderer::Renderer(int width, int height, const char* title)
-    : window(nullptr), buffer(0), windowWidth(width), windowHeight(height), windowTitle(title) {
+    : window(nullptr), buffer(0), windowWidth(width), windowHeight(height), windowTitle(title)
+{
+
+}
+
+static int CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
+{
+
 }
 
 bool Renderer::initialize() {
@@ -38,6 +45,8 @@ void Renderer::setup() {
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
     glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+    glEnableVertexAttribArray(0);
 }
 
 void Renderer::renderLoop() {
