@@ -21,8 +21,8 @@ public:
     void renderLoop();
     void cleanup();
     ~Renderer();
-    static unsigned int CompileShader(const std::string& source, unsigned int type);
-    static int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
+    unsigned int CompileShader(unsigned int type, const std::string& source);
+    unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
 };
 
 #endif // RENDERER_H

@@ -3,10 +3,6 @@
 int main() {
     Renderer renderer;
 
-    if (!renderer.initialize()) {
-        return -1;
-    }
-
     renderer.setup();
     renderer.renderLoop();
 
