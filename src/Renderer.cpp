@@ -8,6 +8,16 @@ Renderer::Renderer(int width, int height, const char* title)
 	}
 }
 
+void Renderer::GLCheckError() {
+	while (GLenum error = glGetError()) {
+		std::cout << "[OpenGL Error] (" << error << ")" << std::endl;
+	}
+}
+
+void Renderer::GLClearError() {
+	while (glGetError() != GL_NO_ERROR);
+}
+
 struct ShaderProgramSource {
 	std::string VertexSource;
 	std::string FragmentSource;
@@ -150,7 +160,9 @@ void Renderer::renderLoop() {
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
 
+        GLClearError();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+		GLCheckError();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -165,3 +177,5 @@ void Renderer::cleanup() {
 Renderer::~Renderer() {
     cleanup();
 }
+
+
