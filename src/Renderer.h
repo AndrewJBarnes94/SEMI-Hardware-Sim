@@ -24,8 +24,8 @@ public:
     void renderLoop();
     void cleanup();
     ~Renderer();
+    bool GLLogCall(const char* function, const char* file, int line);
 	void GLClearError();
-    void GLCheckError();
     struct ShaderProgramSource {
         std::string VertexSource;
         std::string FragmentSource;

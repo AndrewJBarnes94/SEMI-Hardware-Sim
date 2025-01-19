@@ -1,4 +1,8 @@
 #include "Renderer.h"
+#define ASSERT(x) if (!(x)) __debugbreak();
+#define GLCall(x) GLClearError();\
+    x;\
+    ASSERT(GLLogCall(#x, __FILE__, __LINE__));
 
 Renderer::Renderer(int width, int height, const char* title)
     : window(nullptr), buffer(0), windowWidth(width), windowHeight(height), windowTitle(title)
@@ -8,10 +12,13 @@ Renderer::Renderer(int width, int height, const char* title)
 	}
 }
 
-void Renderer::GLCheckError() {
-	while (GLenum error = glGetError()) {
-		std::cout << "[OpenGL Error] (" << error << ")" << std::endl;
-	}
+bool Renderer::GLLogCall(const char* function, const char* file, int line) {
+    while (GLenum error = glGetError()) {
+        std::cout << "[OpenGL Error] (" << error << ")" << function <<
+            " " << file << ": " << line << std::endl;
+        return false;
+    }
+    return true;
 }
 
 void Renderer::GLClearError() {
@@ -64,7 +71,7 @@ unsigned int Renderer::CompileShader(unsigned int type, const std::string& sourc
     if (result == GL_FALSE) {
         int length;
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-        char* message = (char*)alloca(length * sizeof(char));
+        char* message = (char*)_malloca(length * sizeof(char));
         glGetShaderInfoLog(id, length, &length, message);
         std::cerr << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!" << std::endl;
         std::cerr << message << std::endl;
@@ -160,9 +167,10 @@ void Renderer::renderLoop() {
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        GLClearError();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-		GLCheckError();
+        
+        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+		
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
