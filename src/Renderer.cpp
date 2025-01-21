@@ -5,11 +5,11 @@
     ASSERT(GLLogCall(#x, __FILE__, __LINE__));
 
 Renderer::Renderer(int width, int height, const char* title)
-    : window(nullptr), buffer(0), windowWidth(width), windowHeight(height), windowTitle(title)
+    : window(nullptr), buffer(0), windowWidth(width), windowHeight(height), windowTitle(title), r(0.0f), increment(0.05f)
 {
-	if (!initialize()) {
-		std::cerr << "Renderer initialization failed!" << std::endl;
-	}
+    if (!initialize()) {
+        std::cerr << "Renderer initialization failed!" << std::endl;
+    }
 }
 
 bool Renderer::GLLogCall(const char* function, const char* file, int line) {
@@ -120,6 +120,8 @@ bool Renderer::initialize() {
 
     glfwMakeContextCurrent(window);
 
+	glfwSwapInterval(1); // Enable VSync
+
     if (glewInit() != GLEW_OK) {
         std::cerr << "Failed to initialize GLEW." << std::endl;
         return false;
@@ -160,22 +162,32 @@ void Renderer::setup() {
     ShaderProgramSource source = Renderer::ParseShader("res/shaders/basic.shader");
     unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
     glUseProgram(shader);
+
+    location = glGetUniformLocation(shader, "u_Color");
+    ASSERT(location != -1);
+    glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f);
 }
 
 
 void Renderer::renderLoop() {
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
-
-        
+		glUniform4f(this->location, r, 0.3f, 0.8f, 1.0f);
         GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-		
 
+        if (this->r > 1.0f) {
+            this->increment = -0.05f;
+        }
+        else if (this->r < 0.0f) {
+            this->increment = 0.05f;
+        }
+        this->r += this->increment; // Updates the member variable
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 }
+
 
 void Renderer::cleanup() {
     glDeleteBuffers(1, &buffer);

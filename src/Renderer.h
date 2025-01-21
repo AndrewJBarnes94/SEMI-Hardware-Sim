@@ -17,6 +17,10 @@ private:
     const int windowHeight;
     const char* windowTitle;
 
+    float r;            // The color value
+    float increment;    // The increment value
+	int location;       // The location of the uniform variable
+
 public:
     Renderer(int width = 640, int height = 480, const char* title = "Hello World");
     bool initialize();
