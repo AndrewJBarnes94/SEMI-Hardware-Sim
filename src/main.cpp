@@ -2,18 +2,42 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cmath>
+#include <thread>
+#include <atomic>
 #include "Shader.h"
 
-const int RECT_COUNT = 3; // Number of rectangles
+std::atomic<float> rotationSpeed(0.0f); // Initial speed set to 0
+std::atomic<bool> newInputReceived(false); // Flag to indicate new input
+const float M_PI = 3.14159265358979323846f;
 
-void UpdateRectangleRotation(float* positions, float angle, float centerX, float centerY) {
-    for (int i = 0; i < 8; i += 2) {
+void UpdateRotation(float* positions, int numVertices, float angle, float centerX, float centerY) {
+    for (int i = 0; i < numVertices * 2; i += 2) {
         float x = positions[i] - centerX;
         float y = positions[i + 1] - centerY;
 
-        // Apply rotation
-        positions[i] = cos(angle) * x - sin(angle) * y + centerX; // New x
-        positions[i + 1] = sin(angle) * x + cos(angle) * y + centerY; // New y
+        // Apply rotation (negate angle for clockwise rotation)
+        positions[i] = cos(-angle) * x - sin(-angle) * y + centerX; // New x
+        positions[i + 1] = sin(-angle) * x + cos(-angle) * y + centerY; // New y
+    }
+}
+
+void TranslateToCenter(float* positions, int numVertices, float offsetX, float offsetY) {
+    for (int i = 0; i < numVertices * 2; i += 2) {
+        positions[i] += offsetX;
+        positions[i + 1] += offsetY;
+    }
+}
+
+void HandleUserInput() {
+    while (true) {
+        float degree;
+        std::cout << "Enter rotation degree (positive for clockwise, negative for counterclockwise): ";
+        std::cin >> degree;
+
+        float speed = degree * (M_PI / 180.0f); // Convert degree to radians
+
+        rotationSpeed = speed;
+        newInputReceived = true; // Set the flag to indicate new input
     }
 }
 
@@ -25,7 +49,7 @@ int main() {
     }
 
     // Create window
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Rotating Rectangles", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Rotating Shapes", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window." << std::endl;
         glfwTerminate();
@@ -43,52 +67,107 @@ int main() {
 
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
-    // Base rectangle data (used as a template for all rectangles)
-    float basePositions[] = {
-        -0.2f, -0.2f,
-         0.2f, -0.2f,
-         0.2f,  0.2f,
-        -0.2f,  0.2f
-    };
+    // Base shape data (half-circles on the sides)
+    const int numCircleSegments = 20;
+    const int numCircleVertices = 2 * (numCircleSegments + 1);
+    const int numRectangleVertices = 4;
+    float circlePositions[numCircleVertices * 2];
+    float rectanglePositions[numRectangleVertices * 2];
+    int index = 0;
 
-    unsigned int indices[] = { 0, 1, 2, 2, 3, 0 };
-
-    // Vertex Array Objects and Buffers for each rectangle
-    unsigned int vaos[RECT_COUNT], vbos[RECT_COUNT];
-    glGenVertexArrays(RECT_COUNT, vaos);
-    glGenBuffers(RECT_COUNT, vbos);
-
-    // Separate position arrays and rotation angles for each rectangle
-    float positions[RECT_COUNT][8];
-    float angles[RECT_COUNT] = { 0.0f, 0.0f, 0.0f }; // Initial rotation angles
-    float rotationSpeeds[RECT_COUNT] = { 0.01f, 0.015f, 0.02f }; // Different speeds
-
-    // Rectangle centers
-    float centers[RECT_COUNT][2] = {
-        {-0.5f, 0.0f}, // Left
-        { 0.0f, 0.0f}, // Center
-        { 0.5f, 0.0f}  // Right
-    };
-
-    // Initialize VAOs and VBOs
-    for (int i = 0; i < RECT_COUNT; i++) {
-        // Copy base rectangle positions for this rectangle
-        std::copy(std::begin(basePositions), std::end(basePositions), positions[i]);
-
-        // Bind VAO and VBO
-        glBindVertexArray(vaos[i]);
-        glBindBuffer(GL_ARRAY_BUFFER, vbos[i]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(positions[i]), positions[i], GL_DYNAMIC_DRAW);
-
-        // Element Buffer (shared for all)
-        unsigned int ebo;
-        glGenBuffers(1, &ebo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
-        glEnableVertexAttribArray(0);
+    // Left half-circle vertices (from -?/2 to ?/2)
+    for (int i = 0; i <= numCircleSegments; ++i) {
+        float theta = -M_PI / 2 + M_PI * i / numCircleSegments;
+        circlePositions[index++] = 0.4f + 0.2f * cos(theta);
+        circlePositions[index++] = 0.2f * sin(theta);
     }
+
+    // Right half-circle vertices (from ?/2 to 3?/2)
+    for (int i = 0; i <= numCircleSegments; ++i) {
+        float theta = M_PI / 2 + M_PI * i / numCircleSegments;
+        circlePositions[index++] = -0.4f + 0.2f * cos(theta);
+        circlePositions[index++] = 0.2f * sin(theta);
+    }
+
+    // Rectangle vertices
+    rectanglePositions[0] = 0.4f;  // Top right
+    rectanglePositions[1] = 0.2f;
+    rectanglePositions[2] = 0.4f;  // Bottom right
+    rectanglePositions[3] = -0.2f;
+    rectanglePositions[4] = -0.4f; // Bottom left
+    rectanglePositions[5] = -0.2f;
+    rectanglePositions[6] = -0.4f; // Top left
+    rectanglePositions[7] = 0.2f;
+
+    // Calculate the center of the diameter of the right half-circle
+    float centerX = -0.4f;
+    float centerY = 0.0f;
+
+    // Translate the entire geometry so that the center of the right half-circle is at the origin
+    TranslateToCenter(circlePositions, numCircleVertices, -centerX, -centerY);
+    TranslateToCenter(rectanglePositions, numRectangleVertices, -centerX, -centerY);
+
+    const int numCircleIndices = 2 * 3 * numCircleSegments;
+    const int numRectangleIndices = 6;
+    unsigned int circleIndices[numCircleIndices];
+    unsigned int rectangleIndices[numRectangleIndices];
+    index = 0;
+
+    // Left half-circle indices
+    for (int i = 0; i < numCircleSegments; ++i) {
+        circleIndices[index++] = 0;
+        circleIndices[index++] = i;
+        circleIndices[index++] = i + 1;
+    }
+
+    // Right half-circle indices
+    for (int i = numCircleSegments + 1; i < 2 * numCircleSegments + 1; ++i) {
+        circleIndices[index++] = numCircleSegments + 1;
+        circleIndices[index++] = i;
+        circleIndices[index++] = i + 1;
+    }
+
+    // Rectangle indices
+    rectangleIndices[0] = 0; // Top right
+    rectangleIndices[1] = 1; // Bottom right
+    rectangleIndices[2] = 2; // Bottom left
+    rectangleIndices[3] = 0; // Top right
+    rectangleIndices[4] = 2; // Bottom left
+    rectangleIndices[5] = 3; // Top left
+
+    // Vertex Array Object and Buffer for circles
+    unsigned int circleVao, circleVbo, circleEbo;
+    glGenVertexArrays(1, &circleVao);
+    glGenBuffers(1, &circleVbo);
+    glGenBuffers(1, &circleEbo);
+
+    // Initialize VAO and VBO for circles
+    glBindVertexArray(circleVao);
+    glBindBuffer(GL_ARRAY_BUFFER, circleVbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(circlePositions), circlePositions, GL_DYNAMIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, circleEbo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(circleIndices), circleIndices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
+
+    // Vertex Array Object and Buffer for rectangle
+    unsigned int rectangleVao, rectangleVbo, rectangleEbo;
+    glGenVertexArrays(1, &rectangleVao);
+    glGenBuffers(1, &rectangleVbo);
+    glGenBuffers(1, &rectangleEbo);
+
+    // Initialize VAO and VBO for rectangle
+    glBindVertexArray(rectangleVao);
+    glBindBuffer(GL_ARRAY_BUFFER, rectangleVbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(rectanglePositions), rectanglePositions, GL_DYNAMIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectangleEbo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangleIndices), rectangleIndices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
 
     // Shader
     Shader shader("res/shaders/basic.shader");
@@ -96,38 +175,45 @@ int main() {
 
     int location = shader.GetUniformLocation("u_Color");
 
+    // Start user input thread
+    std::thread inputThread(HandleUserInput);
+
     // Main render loop
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        for (int i = 0; i < RECT_COUNT; i++) {
-            // Update positions with rotation
-            UpdateRectangleRotation(positions[i], angles[i], centers[i][0], centers[i][1]);
-            angles[i] += rotationSpeeds[i];
+        if (newInputReceived) {
+            // Update positions with rotation based on new input
+            UpdateRotation(circlePositions, numCircleVertices, rotationSpeed, 0.0f, 0.0f);
+            UpdateRotation(rectanglePositions, numRectangleVertices, rotationSpeed, 0.0f, 0.0f);
 
-            // Reset angle to stay within 0 to 2?
-            int M_PI = 3.14159265358979323846;
-            if (angles[i] > 2.0f * M_PI) angles[i] -= 2.0f * M_PI;
+            // Update VBOs
+            glBindBuffer(GL_ARRAY_BUFFER, circleVbo);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(circlePositions), circlePositions);
 
-            // Update VBO
-            glBindBuffer(GL_ARRAY_BUFFER, vbos[i]);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(positions[i]), positions[i]);
+            glBindBuffer(GL_ARRAY_BUFFER, rectangleVbo);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(rectanglePositions), rectanglePositions);
 
-            // Set color based on rectangle index
-            float r = (i == 0) ? 1.0f : 0.5f;
-            float g = (i == 1) ? 1.0f : 0.5f;
-            float b = (i == 2) ? 1.0f : 0.5f;
-            glUniform4f(location, r, g, b, 1.0f);
-
-            // Draw the rectangle
-            glBindVertexArray(vaos[i]);
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+            newInputReceived = false; // Reset the flag
         }
+
+        // Set color to metallic gray/silver
+        glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f);
+
+        // Draw the circles
+        glBindVertexArray(circleVao);
+        glDrawElements(GL_TRIANGLES, numCircleIndices, GL_UNSIGNED_INT, nullptr);
+
+        // Draw the rectangle
+        glBindVertexArray(rectangleVao);
+        glDrawElements(GL_TRIANGLES, numRectangleIndices, GL_UNSIGNED_INT, nullptr);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
+    inputThread.join();
     glfwTerminate();
     return 0;
 }
+
