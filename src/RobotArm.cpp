@@ -49,12 +49,11 @@ void RobotArm::Initialize(float posX, float posY, float initialRotationDegrees) 
     std::copy(std::begin(appendage_2.circlePositions), std::end(appendage_2.circlePositions), std::begin(appendage_2.initialCirclePositions));
     std::copy(std::begin(appendage_2.rectanglePositions), std::end(appendage_2.rectanglePositions), std::begin(appendage_2.initialRectanglePositions));
 
-    // Update positions with initial rotation
-    UpdateRotation(appendage_1, initialRotationRadians, 0.0f, 0.0f);
-    UpdateRotation(appendage_2, initialRotationRadians, 0.5f, 0.5f);
-
     shader.Bind();
 }
+
+
+
 
 void RobotArm::InitializeAppendage(Appendage& appendage) {
     int index = 0;
@@ -146,53 +145,30 @@ void RobotArm::InitializeAppendage(Appendage& appendage) {
 
 void RobotArm::Update() {
     if (newInputReceived) {
-        // Update positions with rotation based on new input
+        // Update positions with rotation based on new input for both appendages
         UpdateRotation(appendage_1, rotationSpeed, 0.0f, 0.0f);
-        UpdateRotation(appendage_2, rotationSpeed, 0.5f, 0.5f);
+        UpdateRotation(appendage_2, rotationSpeed, 0.0f, 0.0f);
 
-        // Update VBOs
+        // Update VBOs for the first appendage
         GLCall(glBindBuffer(GL_ARRAY_BUFFER, appendage_1.circleVbo));
         GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * appendage_1.numCircleVertices * 2, appendage_1.circlePositions));
 
         GLCall(glBindBuffer(GL_ARRAY_BUFFER, appendage_1.rectangleVbo));
         GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * appendage_1.numRectangleVertices * 2, appendage_1.rectanglePositions));
 
+        // Update VBOs for the second appendage
         GLCall(glBindBuffer(GL_ARRAY_BUFFER, appendage_2.circleVbo));
         GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * appendage_2.numCircleVertices * 2, appendage_2.circlePositions));
 
         GLCall(glBindBuffer(GL_ARRAY_BUFFER, appendage_2.rectangleVbo));
         GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * appendage_2.numRectangleVertices * 2, appendage_2.rectanglePositions));
 
-        PrintCenterPoints();
-
         newInputReceived = false; // Reset the flag
     }
 }
 
-void RobotArm::PrintCenterPoints() const {
-    // Calculate the center point of the circle for appendage_1
-    float centerX1 = 0.0f;
-    float centerY1 = 0.0f;
-    for (int i = 0; i <= 20; ++i) {
-        centerX1 += appendage_1.circlePositions[i * 2];
-        centerY1 += appendage_1.circlePositions[i * 2 + 1];
-    }
-    centerX1 /= 21;
-    centerY1 /= 21;
 
-    // Calculate the center point of the circle for appendage_2
-    float centerX2 = 0.0f;
-    float centerY2 = 0.0f;
-    for (int i = 0; i <= 20; ++i) {
-        centerX2 += appendage_2.circlePositions[i * 2];
-        centerY2 += appendage_2.circlePositions[i * 2 + 1];
-    }
-    centerX2 /= 21;
-    centerY2 /= 21;
 
-    std::cout << "Appendage 1 Circle Center Point: (" << centerX1 << ", " << centerY1 << ")" << std::endl;
-    std::cout << "Appendage 2 Circle Center Point: (" << centerX2 << ", " << centerY2 << ")" << std::endl;
-}
 
 void RobotArm::Render() {
     int location = shader.GetUniformLocation("u_Color");
@@ -202,7 +178,16 @@ void RobotArm::Render() {
 
     // Draw appendage 2
     RenderAppendage(appendage_2);
+
+    // Calculate midpoints
+    auto rectangleHeightMidpoint = CalculateRectangleHeightMidpoint(appendage_1);
+
+    // Render red dots at the midpoints
+    RenderDot(rectangleHeightMidpoint.first, rectangleHeightMidpoint.second, 0.01f, 1.0f, 0.0f, 0.0f);
 }
+
+
+
 
 void RobotArm::UpdateRotation(Appendage& appendage, float angle, float centerX, float centerY) {
     for (int i = 0; i < appendage.numCircleVertices * 2; i += 2) {
@@ -231,6 +216,59 @@ void RobotArm::TranslateToCenter(float* positions, int numVertices, float offset
     }
 }
 
+void RobotArm::TranslateToPivot(float* positions, int numVertices, float pivotX, float pivotY) {
+    for (int i = 0; i < numVertices * 2; i += 2) {
+        positions[i] += pivotX;
+        positions[i + 1] += pivotY;
+    }
+}
+
+std::pair<float, float> RobotArm::CalculateRectangleHeightMidpoint(const Appendage& appendage) const {
+    // Midpoint of the rectangle's height on the left side
+    float midpointX = (appendage.rectanglePositions[4] + appendage.rectanglePositions[6]) / 2;
+    float midpointY = (appendage.rectanglePositions[5] + appendage.rectanglePositions[7]) / 2;
+    return { midpointX, midpointY };
+}
+
+void RobotArm::RenderDot(float x, float y, float size, float r, float g, float b) {
+    int location = shader.GetUniformLocation("u_Color");
+    GLCall(glUniform4f(location, r, g, b, 1.0f)); // Set color
+
+    float dotVertices[] = {
+        x - size, y - size,
+        x + size, y - size,
+        x + size, y + size,
+        x - size, y + size
+    };
+
+    unsigned int dotIndices[] = {
+        0, 1, 2,
+        2, 3, 0
+    };
+
+    unsigned int vao, vbo, ebo;
+    GLCall(glGenVertexArrays(1, &vao));
+    GLCall(glGenBuffers(1, &vbo));
+    GLCall(glGenBuffers(1, &ebo));
+
+    GLCall(glBindVertexArray(vao));
+
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(dotVertices), dotVertices, GL_STATIC_DRAW));
+
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(dotIndices), dotIndices, GL_STATIC_DRAW));
+
+    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr));
+    GLCall(glEnableVertexAttribArray(0));
+
+    GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
+    GLCall(glDeleteVertexArrays(1, &vao));
+    GLCall(glDeleteBuffers(1, &vbo));
+    GLCall(glDeleteBuffers(1, &ebo));
+}
+
 void RobotArm::RenderAppendage(const Appendage& appendage) {
     int location = shader.GetUniformLocation("u_Color");
 
@@ -257,3 +295,4 @@ void RobotArm::RenderAppendage(const Appendage& appendage) {
     GLCall(glBindVertexArray(appendage.rectangleVao));
     GLCall(glDrawElements(GL_TRIANGLES, appendage.numRectangleIndices, GL_UNSIGNED_INT, nullptr));
 }
+

@@ -13,7 +13,7 @@ std::atomic<bool> newInputReceived(false); // Flag to indicate new input
 void HandleUserInput() {
     while (true) {
         float degree;
-        std::cout << "Enter rotation degree for the arm (positive for clockwise, negative for counterclockwise): ";
+        std::cout << "Enter rotation degree for the arm: ";
         std::cin >> degree;
 
         const float M_PI = 3.14159265358979323846f;
@@ -76,5 +76,3 @@ int main() {
     GLCall(glfwTerminate());
     return 0;
 }
-
-

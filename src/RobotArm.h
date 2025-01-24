@@ -14,7 +14,6 @@ public:
     void Initialize(float posX, float posY, float initialRotationDegrees);
     void Update();
     void Render();
-    void PrintCenterPoints() const;
 
 private:
     struct Appendage {
@@ -35,7 +34,12 @@ private:
     void InitializeAppendage(Appendage& appendage);
     void UpdateRotation(Appendage& appendage, float angle, float centerX, float centerY);
     void TranslateToCenter(float* positions, int numVertices, float offsetX, float offsetY);
+    void TranslateToPivot(float* positions, int numVertices, float pivotX, float pivotY);
     void RenderAppendage(const Appendage& appendage);
+    void RenderDot(float x, float y, float size, float r, float g, float b);
+
+    std::pair<float, float> CalculateHalfCircleMidwayPoint(const Appendage& appendage) const;
+    std::pair<float, float> CalculateRectangleHeightMidpoint(const Appendage& appendage) const;
 
     Shader shader;
     Appendage appendage_1;
@@ -48,9 +52,3 @@ private:
 };
 
 #endif // ROBOT_ARM_H
-
-
-
-
-
-
