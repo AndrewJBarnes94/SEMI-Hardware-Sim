@@ -29,9 +29,11 @@ void RobotArm::Update() {
     appendage_1.UpdateRotation(angle, 0.0f, 0.0f);
 
     if (newInputReceived) {
-        // Translate the second appendage with a small offset
-        appendage_2.TranslateArbitrary(appendage_2.circlePositions, appendage_2.numCircleVertices, 0.05f, 0.05f);
-        appendage_2.TranslateArbitrary(appendage_2.rectanglePositions, appendage_2.numRectangleVertices, 0.05f, 0.05f);
+        // Calculate the red dot position of the first appendage
+        auto redDotPosition_1 = appendage_1.CalculateRedDotPosition();
+
+        // Translate the second appendage to align its red dot with the red dot of the first appendage
+        appendage_2.TranslateToPosition(redDotPosition_1.first, redDotPosition_1.second);
 
         std::cout << "New input received. Angle: " << angle << std::endl;
         newInputReceived = false; // Reset the flag
@@ -49,13 +51,13 @@ void RobotArm::Render() {
     // Draw appendage 2
     appendage_2.Render(shader);
 
-    // Calculate midpoints
-    auto rectangleHeightMidpoint_1 = appendage_1.CalculateRectangleHeightMidpoint();
-    auto rectangleHeightMidpoint_2 = appendage_2.CalculateRectangleHeightMidpoint();
+    // Calculate red dot positions
+    auto redDotPosition_1 = appendage_1.CalculateRedDotPosition();
+    auto redDotPosition_2 = appendage_2.CalculateRedDotPosition();
 
-    // Render red dots at the midpoints
-    RenderDot(rectangleHeightMidpoint_1.first, rectangleHeightMidpoint_1.second, 0.01f, 1.0f, 0.0f, 0.0f);
-	RenderDot(rectangleHeightMidpoint_2.first, rectangleHeightMidpoint_2.second, 0.01f, 1.0f, 0.0f, 0.0f);
+    // Render red dots at the positions
+    RenderDot(redDotPosition_1.first, redDotPosition_1.second, 0.01f, 1.0f, 0.0f, 0.0f);
+    RenderDot(redDotPosition_2.first, redDotPosition_2.second, 0.01f, 1.0f, 0.0f, 0.0f);
 }
 
 void RobotArm::RenderDot(float x, float y, float size, float r, float g, float b) {

@@ -12,7 +12,6 @@ RobotArmAppendage::RobotArmAppendage(float scale) : scale(scale) {
     numRectangleIndices = 6; // Initialize here
 }
 
-
 RobotArmAppendage::~RobotArmAppendage() {
     GLCall(glDeleteVertexArrays(1, &circleVao));
     GLCall(glDeleteBuffers(1, &circleVbo));
@@ -129,8 +128,6 @@ void RobotArmAppendage::Initialize() {
     GLCall(glEnableVertexAttribArray(0));
 }
 
-
-
 void RobotArmAppendage::UpdateRotation(float angle, float centerX, float centerY) {
     for (int i = 0; i < numCircleVertices * 2; i += 2) {
         float x = initialCirclePositions[i] - centerX;
@@ -175,10 +172,6 @@ void RobotArmAppendage::TranslateArbitrary(float* positions, int numVertices, fl
     }
 }
 
-
-
-
-
 void RobotArmAppendage::Render(const Shader& shader) {
     int location = shader.GetUniformLocation("u_Color");
 
@@ -206,7 +199,6 @@ void RobotArmAppendage::Render(const Shader& shader) {
     GLCall(glDrawElements(GL_TRIANGLES, numRectangleIndices, GL_UNSIGNED_INT, nullptr));
 }
 
-
 std::pair<float, float> RobotArmAppendage::CalculateRectangleHeightMidpoint() const {
     // Midpoint of the rectangle's height on the left side
     float midpointX = (rectanglePositions[4] + rectanglePositions[6]) / 2;
@@ -219,4 +211,20 @@ void RobotArmAppendage::TranslateToCenter(float* positions, int numVertices, flo
         positions[i] += offsetX;
         positions[i + 1] += offsetY;
     }
+}
+
+std::pair<float, float> RobotArmAppendage::CalculateRedDotPosition() const {
+    // Calculate the red dot position based on the rectangle's height midpoint
+    return CalculateRectangleHeightMidpoint();
+}
+
+void RobotArmAppendage::TranslateToPosition(float x, float y) {
+    // Calculate the offset needed to translate the appendage to the specified position
+    auto redDotPosition = CalculateRedDotPosition();
+    float offsetX = x - redDotPosition.first;
+    float offsetY = y - redDotPosition.second;
+
+    // Translate the entire geometry
+    TranslateArbitrary(circlePositions, numCircleVertices, offsetX, offsetY);
+    TranslateArbitrary(rectanglePositions, numRectangleVertices, offsetX, offsetY);
 }
