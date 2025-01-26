@@ -8,9 +8,10 @@ const float M_PI = 3.14159265358979323846f;
 RobotArmAppendage::RobotArmAppendage(float scale) : scale(scale) {
     numCircleVertices = 2 * (20 + 1);
     numRectangleVertices = 4;
-    numCircleIndices = 2 * 3 * 20;
-    numRectangleIndices = 6;
+    numCircleIndices = 2 * 3 * 20; // Initialize here
+    numRectangleIndices = 6; // Initialize here
 }
+
 
 RobotArmAppendage::~RobotArmAppendage() {
     GLCall(glDeleteVertexArrays(1, &circleVao));
@@ -129,6 +130,7 @@ void RobotArmAppendage::Initialize() {
 }
 
 
+
 void RobotArmAppendage::UpdateRotation(float angle, float centerX, float centerY) {
     for (int i = 0; i < numCircleVertices * 2; i += 2) {
         float x = initialCirclePositions[i] - centerX;
@@ -155,6 +157,26 @@ void RobotArmAppendage::UpdateRotation(float angle, float centerX, float centerY
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, rectangleVbo));
     GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * numRectangleVertices * 2, rectanglePositions));
 }
+
+void RobotArmAppendage::TranslateArbitrary(float* positions, int numVertices, float offsetX, float offsetY) {
+    for (int i = 0; i < numVertices * 2; i += 2) {
+        positions[i] += offsetX;
+        positions[i + 1] += offsetY;
+    }
+
+    // Update the vertex buffer with the new positions
+    if (positions == circlePositions) {
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, circleVbo));
+        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * numCircleVertices * 2, circlePositions));
+    }
+    else if (positions == rectanglePositions) {
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, rectangleVbo));
+        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * numRectangleVertices * 2, rectanglePositions));
+    }
+}
+
+
+
 
 
 void RobotArmAppendage::Render(const Shader& shader) {
@@ -183,6 +205,7 @@ void RobotArmAppendage::Render(const Shader& shader) {
     GLCall(glBindVertexArray(rectangleVao));
     GLCall(glDrawElements(GL_TRIANGLES, numRectangleIndices, GL_UNSIGNED_INT, nullptr));
 }
+
 
 std::pair<float, float> RobotArmAppendage::CalculateRectangleHeightMidpoint() const {
     // Midpoint of the rectangle's height on the left side

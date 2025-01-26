@@ -25,17 +25,22 @@ void RobotArm::Initialize(float posX, float posY, float initialRotationDegrees) 
 }
 
 void RobotArm::Update() {
-    // Update positions with rotation based on the current angle for both appendages
+    // Update positions with rotation based on the current angle for the first appendage
     appendage_1.UpdateRotation(angle, 0.0f, 0.0f);
-    appendage_2.UpdateRotation(angle, 0.0f, 0.0f);
 
     if (newInputReceived) {
+        // Translate the second appendage with a small offset
+        appendage_2.TranslateArbitrary(appendage_2.circlePositions, appendage_2.numCircleVertices, 0.05f, 0.05f);
+        appendage_2.TranslateArbitrary(appendage_2.rectanglePositions, appendage_2.numRectangleVertices, 0.05f, 0.05f);
+
         std::cout << "New input received. Angle: " << angle << std::endl;
         newInputReceived = false; // Reset the flag
     }
 }
 
 void RobotArm::Render() {
+    shader.Bind(); // Ensure shader is bound before rendering
+
     int location = shader.GetUniformLocation("u_Color");
 
     // Draw appendage 1

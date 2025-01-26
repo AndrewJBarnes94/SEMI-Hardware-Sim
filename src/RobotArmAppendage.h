@@ -11,15 +11,12 @@ class RobotArmAppendage {
 public:
     RobotArmAppendage(float scale);
     ~RobotArmAppendage();
-
     void Initialize();
     void UpdateRotation(float angle, float centerX, float centerY);
-    void Render(const Shader& shader); // Pass shader as parameter
-
+    void Render(const Shader& shader);
     std::pair<float, float> CalculateRectangleHeightMidpoint() const;
-
-private:
     void TranslateToCenter(float* positions, int numVertices, float offsetX, float offsetY);
+    void TranslateArbitrary(float* positions, int numVertices, float offsetX, float offsetY);
 
     unsigned int circleVao, circleVbo, circleEbo;
     unsigned int rectangleVao, rectangleVbo, rectangleEbo;
@@ -28,12 +25,15 @@ private:
     float initialCirclePositions[84]; // Store initial positions
     float initialRectanglePositions[8]; // Store initial positions
     unsigned int circleIndices[120]; // 2 * 3 * 20
-    unsigned int rectangleIndices[6]; // 6
+    unsigned int rectangleIndices[6];
     int numCircleVertices;
     int numRectangleVertices;
-    int numCircleIndices;
-    int numRectangleIndices;
+    int numCircleIndices; // Add this line
+    int numRectangleIndices; // Add this line
+
+private:
     float scale;
 };
+
 
 #endif // ROBOT_ARM_APPENDAGE_H
