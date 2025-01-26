@@ -7,7 +7,7 @@
 #include "RobotArm.h"
 #include "ErrorHandling.h"
 
-std::atomic<float> rotationSpeed(0.0f); // Initial speed set to 0
+std::atomic<float> angle(0.0f); // Initial angle set to 0
 std::atomic<bool> newInputReceived(false); // Flag to indicate new input
 
 void HandleUserInput() {
@@ -18,9 +18,9 @@ void HandleUserInput() {
 
         const float M_PI = 3.14159265358979323846f;
 
-        float speed = degree * (M_PI / 180.0f); // Convert degree to radians
+        float newAngle = degree * (M_PI / 180.0f); // Convert degree to radians
 
-        rotationSpeed = speed;
+        angle = newAngle;
         newInputReceived = true; // Set the flag to indicate new input
     }
 }
@@ -55,7 +55,7 @@ int main() {
     GLCall(glClearColor(0.2f, 0.3f, 0.4f, 1.0f));
 
     // Create and initialize RobotArm with a scaling factor of 0.5
-    RobotArm robotArm(rotationSpeed, newInputReceived, 0.5f);
+    RobotArm robotArm(angle, newInputReceived, 0.5f);
     robotArm.Initialize(0.0f, 0.0f, 45.0f); // Initialize with position (0, 0) and 45 degrees rotation
 
     // Start user input thread
