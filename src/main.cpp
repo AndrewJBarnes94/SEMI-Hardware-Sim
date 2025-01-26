@@ -14,9 +14,7 @@ std::atomic<bool> newInputReceived(false); // Flag to indicate new input
 void HandleUserInput() {
     while (true) {
         float degree1, degree2;
-        std::cout << "Enter rotation degree for the first appendage: ";
         std::cin >> degree1;
-        std::cout << "Enter rotation degree for the second appendage: ";
         std::cin >> degree2;
 
         const float M_PI = 3.14159265358979323846f;

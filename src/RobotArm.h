@@ -24,6 +24,16 @@ private:
     float scale;
     float posX, posY;
     float initialRotationRadians;
+
+    // Auto-update variables
+    bool autoUpdateEnabled;
+    float autoAngle1;
+    float autoAngle2;
+    int autoDirection;
+    int currentPhase;
 };
 
 #endif // ROBOT_ARM_H
+
+
+
