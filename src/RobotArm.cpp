@@ -50,10 +50,12 @@ void RobotArm::Render() {
     appendage_2.Render(shader);
 
     // Calculate midpoints
-    auto rectangleHeightMidpoint = appendage_1.CalculateRectangleHeightMidpoint();
+    auto rectangleHeightMidpoint_1 = appendage_1.CalculateRectangleHeightMidpoint();
+    auto rectangleHeightMidpoint_2 = appendage_2.CalculateRectangleHeightMidpoint();
 
     // Render red dots at the midpoints
-    RenderDot(rectangleHeightMidpoint.first, rectangleHeightMidpoint.second, 0.01f, 1.0f, 0.0f, 0.0f);
+    RenderDot(rectangleHeightMidpoint_1.first, rectangleHeightMidpoint_1.second, 0.01f, 1.0f, 0.0f, 0.0f);
+	RenderDot(rectangleHeightMidpoint_2.first, rectangleHeightMidpoint_2.second, 0.01f, 1.0f, 0.0f, 0.0f);
 }
 
 void RobotArm::RenderDot(float x, float y, float size, float r, float g, float b) {
