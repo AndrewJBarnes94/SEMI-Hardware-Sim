@@ -17,7 +17,6 @@ public:
     std::pair<float, float> CalculateRectangleHeightMidpoint() const;
     void TranslateToCenter(float* positions, int numVertices, float offsetX, float offsetY);
     void TranslateArbitrary(float* positions, int numVertices, float offsetX, float offsetY);
-    std::pair<float, float> CalculateEndPosition() const;
     void TranslateToPosition(float x, float y);
     std::pair<float, float> CalculateRedDotPosition() const; // Add this line
 

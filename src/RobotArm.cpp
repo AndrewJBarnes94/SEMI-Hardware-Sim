@@ -6,8 +6,8 @@
 
 const float M_PI = 3.14159265358979323846f;
 
-RobotArm::RobotArm(std::atomic<float>& angle, std::atomic<bool>& newInputReceived, float scale)
-    : shader("res/shaders/basic.shader"), angle(angle), newInputReceived(newInputReceived), scale(scale),
+RobotArm::RobotArm(std::atomic<float>& angle1, std::atomic<float>& angle2, std::atomic<bool>& newInputReceived, float scale)
+    : shader("res/shaders/basic.shader"), angle1(angle1), angle2(angle2), newInputReceived(newInputReceived), scale(scale),
     appendage_1(scale), appendage_2(scale) {
 }
 
@@ -25,17 +25,17 @@ void RobotArm::Initialize(float posX, float posY, float initialRotationDegrees) 
 }
 
 void RobotArm::Update() {
-    // Update positions with rotation based on the current angle for the first appendage
-    appendage_1.UpdateRotation(angle, 0.0f, 0.0f);
-
     if (newInputReceived) {
+        // Update positions with rotation based on the current angle for the first appendage
+        appendage_1.UpdateRotation(angle1, 0.0f, 0.0f);
         // Calculate the red dot position of the first appendage
         auto redDotPosition_1 = appendage_1.CalculateRedDotPosition();
+        appendage_2.UpdateRotation(angle2, redDotPosition_1.first, redDotPosition_1.second);
 
         // Translate the second appendage to align its red dot with the red dot of the first appendage
         appendage_2.TranslateToPosition(redDotPosition_1.first, redDotPosition_1.second);
 
-        std::cout << "New input received. Angle: " << angle << std::endl;
+        std::cout << "New input received. Angle1: " << angle1 << ", Angle2: " << angle2 << std::endl;
         newInputReceived = false; // Reset the flag
     }
 }
