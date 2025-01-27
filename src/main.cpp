@@ -10,21 +10,31 @@
 std::atomic<float> angle1(0.0f); // Initial angle for the first appendage
 std::atomic<float> angle2(0.0f); // Initial angle for the second appendage
 std::atomic<bool> newInputReceived(false); // Flag to indicate new input
+std::atomic<bool> startSimulation(false); // Flag to start the simulation
 
 void HandleUserInput() {
     while (true) {
-        float degree1, degree2;
-        std::cin >> degree1;
-        std::cin >> degree2;
+        std::string command;
+        std::cin >> command;
 
-        const float M_PI = 3.14159265358979323846f;
+        if (command == "sim" && std::cin >> command && command == "auto" && std::cin >> command && command == "1") {
+            startSimulation = true;
+            std::cout << "Starting auto simulation..." << std::endl;
+        }
+        else {
+            float degree1, degree2;
+            std::cin >> degree1;
+            std::cin >> degree2;
 
-        float newAngle1 = degree1 * (M_PI / 180.0f); // Convert degree to radians
-        float newAngle2 = degree2 * (M_PI / 180.0f); // Convert degree to radians
+            const float M_PI = 3.14159265358979323846f;
 
-        angle1 = newAngle1;
-        angle2 = newAngle2;
-        newInputReceived = true; // Set the flag to indicate new input
+            float newAngle1 = degree1 * (M_PI / 180.0f); // Convert degree to radians
+            float newAngle2 = degree2 * (M_PI / 180.0f); // Convert degree to radians
+
+            angle1 = newAngle1;
+            angle2 = newAngle2;
+            newInputReceived = true; // Set the flag to indicate new input
+        }
     }
 }
 
@@ -68,6 +78,10 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
         GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
+        if (startSimulation) {
+            robotArm.StartAutoSimulation(); // Start the auto simulation
+        }
+
         robotArm.Update();
         robotArm.Render();
 
@@ -79,4 +93,9 @@ int main() {
     GLCall(glfwTerminate());
     return 0;
 }
+
+
+
+
+
 

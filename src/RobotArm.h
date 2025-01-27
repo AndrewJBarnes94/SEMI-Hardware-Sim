@@ -13,6 +13,7 @@ public:
     void Update();
     void Render();
     void RenderDot(float x, float y, float size, float r, float g, float b);
+    void StartAutoSimulation(); // Add this line
 
 private:
     Shader shader;
@@ -31,9 +32,15 @@ private:
     float autoAngle2;
     int autoDirection;
     int currentPhase;
+    bool animationComplete;
 };
 
 #endif // ROBOT_ARM_H
+
+
+
+
+
 
 
 

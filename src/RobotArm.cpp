@@ -8,7 +8,7 @@ const float M_PI = 3.14159265358979323846f;
 
 RobotArm::RobotArm(std::atomic<float>& angle1, std::atomic<float>& angle2, std::atomic<bool>& newInputReceived, float scale)
     : shader("res/shaders/basic.shader"), angle1(angle1), angle2(angle2), newInputReceived(newInputReceived), scale(scale),
-    appendage_1(scale), appendage_2(scale), autoUpdateEnabled(true), autoAngle1(-25.0f * (M_PI / 180.0f)), autoAngle2(25.0f * (M_PI / 180.0f)), autoDirection(1), currentPhase(0) {
+    appendage_1(scale), appendage_2(scale), autoUpdateEnabled(false), autoAngle1(-25.0f * (M_PI / 180.0f)), autoAngle2(25.0f * (M_PI / 180.0f)), autoDirection(1), currentPhase(0), animationComplete(false) {
 }
 
 RobotArm::~RobotArm() {}
@@ -22,6 +22,10 @@ void RobotArm::Initialize(float posX, float posY, float initialRotationDegrees) 
     appendage_2.Initialize();
 
     shader.Bind();
+}
+
+void RobotArm::StartAutoSimulation() {
+    autoUpdateEnabled = true;
 }
 
 void RobotArm::Update() {
@@ -48,14 +52,24 @@ void RobotArm::Update() {
     }
     */
 
+    if (animationComplete || !autoUpdateEnabled) {
+        return; // Stop updating if the animation is complete or auto-update is not enabled
+    }
+
     // Auto-update simulation
-    const float increment = 0.01f; // Increment value for smooth movement
+    const float increment = 0.01f; // Faster increment value for smooth movement
     const float angles[][2] = {
         {-25.0f, 25.0f},
         {25.0f, -25.0f},
         {-25.0f, 25.0f},
         {155.0f, 205.0f},
-        {205.0f, 155.0f}
+        {205.0f, 155.0f},
+        {155.0f, 205.0f},
+        {205.0f, 155.0f},
+        {155.0f, 205.0f},
+        {-25.0f, 25.0f},
+        {25.0f, -25.0f},
+        {-25.0f, 25.0f}
     };
     const int numPhases = sizeof(angles) / sizeof(angles[0]);
 
@@ -84,10 +98,9 @@ void RobotArm::Update() {
         }
     }
 
-    // Reverse direction if all phases are completed
+    // Check if all phases are completed
     if (currentPhase >= numPhases) {
-        autoDirection *= -1;
-        currentPhase = 0;
+        animationComplete = true; // Mark the animation as complete
     }
 
     // Debugging output
@@ -161,6 +174,9 @@ void RobotArm::RenderDot(float x, float y, float size, float r, float g, float b
     GLCall(glDeleteBuffers(1, &vbo));
     GLCall(glDeleteBuffers(1, &ebo));
 }
+
+
+
 
 
 
