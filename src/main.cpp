@@ -46,7 +46,7 @@ int main() {
     }
 
     // Create window
-    GLFWwindow* window = glfwCreateWindow(1000, 1500, "Rotating Arm", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(1000, 1000, "Rotating Arm", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window." << std::endl;
         glfwTerminate();
@@ -93,9 +93,3 @@ int main() {
     GLCall(glfwTerminate());
     return 0;
 }
-
-
-
-
-
-

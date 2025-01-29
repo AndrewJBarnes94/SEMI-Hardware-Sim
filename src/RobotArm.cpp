@@ -174,11 +174,3 @@ void RobotArm::RenderDot(float x, float y, float size, float r, float g, float b
     GLCall(glDeleteBuffers(1, &vbo));
     GLCall(glDeleteBuffers(1, &ebo));
 }
-
-
-
-
-
-
-
-
