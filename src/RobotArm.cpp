@@ -8,7 +8,7 @@ const float M_PI = 3.14159265358979323846f;
 
 RobotArm::RobotArm(std::atomic<float>& angle1, std::atomic<float>& angle2, std::atomic<bool>& newInputReceived, float scale)
     : shader("res/shaders/basic.shader"), angle1(angle1), angle2(angle2), newInputReceived(newInputReceived), scale(scale),
-    appendage_1(scale), appendage_2(scale), autoUpdateEnabled(false), autoAngle1(-25.0f * (M_PI / 180.0f)), autoAngle2(25.0f * (M_PI / 180.0f)), autoDirection(1), currentPhase(0), animationComplete(false) {
+    appendage_1(scale), appendage_2(scale), endEffector(scale), autoUpdateEnabled(false), autoAngle1(-25.0f * (M_PI / 180.0f)), autoAngle2(25.0f * (M_PI / 180.0f)), autoAngle3(90.0f * (M_PI / 180.0f)), autoDirection(1), currentPhase(0), animationComplete(false) {
 }
 
 RobotArm::~RobotArm() {}
@@ -20,6 +20,7 @@ void RobotArm::Initialize(float posX, float posY, float initialRotationDegrees) 
 
     appendage_1.Initialize();
     appendage_2.Initialize();
+    endEffector.Initialize(); // Initialize the end effector
 
     shader.Bind();
 }
@@ -58,31 +59,33 @@ void RobotArm::Update() {
 
     // Auto-update simulation
     const float increment = 0.01f; // Faster increment value for smooth movement
-    const float angles[][2] = {
-        {-25.0f, 25.0f},
-        {25.0f, -25.0f},
-        {-25.0f, 25.0f},
-        {155.0f, 205.0f},
-        {205.0f, 155.0f},
-        {155.0f, 205.0f},
-        {205.0f, 155.0f},
-        {155.0f, 205.0f},
-        {-25.0f, 25.0f},
-        {25.0f, -25.0f},
-        {-25.0f, 25.0f}
+    const float angles[][3] = {
+        {-25.0f, 25.0f, 90.0f},
+        {25.0f, -25.0f, 90.0f},
+        {-25.0f, 25.0f, 90.0f},
+        {155.0f, 205.0f, 90.0f},
+        {205.0f, 155.0f, 270.0f},
+        {155.0f, 205.0f, 270.0f},
+        {205.0f, 155.0f, 270.0f},
+        {155.0f, 205.0f, 270.0f},
+        {-25.0f, 25.0f, 90.0f},
+        {25.0f, -25.0f, 90.0f},
+        {-25.0f, 25.0f, 90.0f}
     };
     const int numPhases = sizeof(angles) / sizeof(angles[0]);
 
     // Convert current phase angles to radians
     float targetAngle1 = angles[currentPhase][0] * (M_PI / 180.0f);
     float targetAngle2 = angles[currentPhase][1] * (M_PI / 180.0f);
+    float targetAngle3 = angles[currentPhase][2] * (M_PI / 180.0f);
 
     // Update auto angles
     if (currentPhase == 3) {
         // Incremental movement from -25, 25 to 155, 205
         autoAngle1 += autoDirection * increment;
         autoAngle2 += autoDirection * increment;
-        if (autoAngle1 >= targetAngle1 && autoAngle2 >= targetAngle2) {
+        autoAngle3 += autoDirection * increment;
+        if (autoAngle1 >= targetAngle1 && autoAngle2 >= targetAngle2 && autoAngle3 >= targetAngle3) {
             currentPhase++;
         }
     }
@@ -93,7 +96,10 @@ void RobotArm::Update() {
         if (std::abs(targetAngle2 - autoAngle2) > 0.0001f) {
             autoAngle2 += autoDirection * increment * (targetAngle2 - autoAngle2) / std::abs(targetAngle2 - autoAngle2);
         }
-        if (std::abs(autoAngle1 - targetAngle1) < increment && std::abs(autoAngle2 - targetAngle2) < increment) {
+        if (std::abs(targetAngle3 - autoAngle3) > 0.0001f) {
+            autoAngle3 += autoDirection * increment * (targetAngle3 - autoAngle3) / std::abs(targetAngle3 - autoAngle3);
+        }
+        if (std::abs(autoAngle1 - targetAngle1) < increment && std::abs(autoAngle2 - targetAngle2) < increment && std::abs(autoAngle3 - targetAngle3) < increment) {
             currentPhase++;
         }
     }
@@ -106,14 +112,21 @@ void RobotArm::Update() {
     // Debugging output
     float autoAngle1Degrees = autoAngle1 * (180.0f / M_PI);
     float autoAngle2Degrees = autoAngle2 * (180.0f / M_PI);
+    float autoAngle3Degrees = autoAngle3 * (180.0f / M_PI);
     std::cout << "Auto-update. Phase: " << currentPhase << ", Angle1: " << autoAngle1 << " radians (" << autoAngle1Degrees << " degrees), "
-        << "Angle2: " << autoAngle2 << " radians (" << autoAngle2Degrees << " degrees)" << std::endl;
+        << "Angle2: " << autoAngle2 << " radians (" << autoAngle2Degrees << " degrees), "
+        << "Angle3: " << autoAngle3 << " radians (" << autoAngle3Degrees << " degrees)" << std::endl;
 
     // Update positions with rotation based on the current auto angles
     appendage_1.UpdateRotation(autoAngle1, 0.0f, 0.0f);
-    auto redDotPosition_1 = appendage_1.CalculateRedDotPosition();
+    auto redDotPosition_1 = appendage_1.CalculateRedDotPosition("right");
     appendage_2.UpdateRotation(autoAngle2, redDotPosition_1.first, redDotPosition_1.second);
     appendage_2.TranslateToPosition(redDotPosition_1.first, redDotPosition_1.second);
+
+    // Update the end effector position
+    auto redDotPosition_2 = appendage_2.CalculateRedDotPosition("left");
+    endEffector.UpdateRotation(autoAngle3, redDotPosition_2.first, redDotPosition_2.second);
+    endEffector.TranslateToPosition(redDotPosition_2.first, redDotPosition_2.second);
 }
 
 void RobotArm::Render() {
@@ -127,9 +140,12 @@ void RobotArm::Render() {
     // Draw appendage 2
     appendage_2.Render(shader);
 
+    // Draw end effector
+    endEffector.Render(shader);
+
     // Calculate red dot positions
-    auto redDotPosition_1 = appendage_1.CalculateRedDotPosition();
-    auto redDotPosition_2 = appendage_2.CalculateRedDotPosition();
+    auto redDotPosition_1 = appendage_1.CalculateRedDotPosition("right");
+    auto redDotPosition_2 = appendage_2.CalculateRedDotPosition("right");
 
     // Render red dots at the positions
     //RenderDot(redDotPosition_1.first, redDotPosition_1.second, 0.01f, 1.0f, 0.0f, 0.0f);

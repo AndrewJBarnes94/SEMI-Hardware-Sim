@@ -1,3 +1,4 @@
+// File: src/RobotArm.h
 
 #ifndef ROBOT_ARM_H
 #define ROBOT_ARM_H
@@ -5,6 +6,7 @@
 #include <atomic>
 #include "Shader.h"
 #include "RobotArmAppendage.h"
+#include "RobotArmEndEffector.h"
 
 class RobotArm {
 public:
@@ -14,12 +16,13 @@ public:
     void Update();
     void Render();
     void RenderDot(float x, float y, float size, float r, float g, float b);
-    void StartAutoSimulation(); // Add this line
+    void StartAutoSimulation();
 
 private:
     Shader shader;
     RobotArmAppendage appendage_1;
     RobotArmAppendage appendage_2;
+    RobotArmEndEffector endEffector; // Add this line
     std::atomic<float>& angle1;
     std::atomic<float>& angle2;
     std::atomic<bool>& newInputReceived;
@@ -31,6 +34,7 @@ private:
     bool autoUpdateEnabled;
     float autoAngle1;
     float autoAngle2;
+	float autoAngle3;
     int autoDirection;
     int currentPhase;
     bool animationComplete;

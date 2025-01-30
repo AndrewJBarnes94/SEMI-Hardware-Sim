@@ -14,11 +14,11 @@ public:
     void Initialize();
     void UpdateRotation(float angle, float centerX, float centerY);
     void Render(const Shader& shader);
-    std::pair<float, float> CalculateRectangleHeightMidpoint() const;
+    std::pair<float, float> CalculateRectangleHeightMidpoint(std::string side) const;
     void TranslateToCenter(float* positions, int numVertices, float offsetX, float offsetY);
     void TranslateArbitrary(float* positions, int numVertices, float offsetX, float offsetY);
     void TranslateToPosition(float x, float y);
-    std::pair<float, float> CalculateRedDotPosition() const; // Add this line
+    std::pair<float, float> CalculateRedDotPosition(std::string side) const; // Add this line
 
     unsigned int circleVao, circleVbo, circleEbo;
     unsigned int rectangleVao, rectangleVbo, rectangleEbo;

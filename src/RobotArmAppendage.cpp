@@ -199,11 +199,19 @@ void RobotArmAppendage::Render(const Shader& shader) {
     GLCall(glDrawElements(GL_TRIANGLES, numRectangleIndices, GL_UNSIGNED_INT, nullptr));
 }
 
-std::pair<float, float> RobotArmAppendage::CalculateRectangleHeightMidpoint() const {
+std::pair<float, float> RobotArmAppendage::CalculateRectangleHeightMidpoint(std::string side) const {
     // Midpoint of the rectangle's height on the left side
-    float midpointX = (rectanglePositions[4] + rectanglePositions[6]) / 2;
-    float midpointY = (rectanglePositions[5] + rectanglePositions[7]) / 2;
-    return { midpointX, midpointY };
+    if (side == "left") {
+        float midpointX = (rectanglePositions[0] + rectanglePositions[2]) / 2;
+        float midpointY = (rectanglePositions[1] + rectanglePositions[3]) / 2;
+        return { midpointX, midpointY };
+    }
+    // Midpoint of the rectangle's height on the right side
+    else if (side == "right") {
+        float midpointX = (rectanglePositions[4] + rectanglePositions[6]) / 2;
+        float midpointY = (rectanglePositions[5] + rectanglePositions[7]) / 2;
+        return { midpointX, midpointY };
+    }
 }
 
 void RobotArmAppendage::TranslateToCenter(float* positions, int numVertices, float offsetX, float offsetY) {
@@ -213,14 +221,14 @@ void RobotArmAppendage::TranslateToCenter(float* positions, int numVertices, flo
     }
 }
 
-std::pair<float, float> RobotArmAppendage::CalculateRedDotPosition() const {
+std::pair<float, float> RobotArmAppendage::CalculateRedDotPosition(std::string side) const {
     // Calculate the red dot position based on the rectangle's height midpoint
-    return CalculateRectangleHeightMidpoint();
+    return CalculateRectangleHeightMidpoint(side);
 }
 
 void RobotArmAppendage::TranslateToPosition(float x, float y) {
     // Calculate the offset needed to translate the appendage to the specified position
-    auto redDotPosition = CalculateRedDotPosition();
+    auto redDotPosition = CalculateRedDotPosition("right");
     float offsetX = x - redDotPosition.first;
     float offsetY = y - redDotPosition.second;
 
