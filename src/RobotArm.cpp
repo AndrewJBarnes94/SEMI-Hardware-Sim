@@ -78,7 +78,6 @@ void RobotArm::Update() {
     float targetAngle1 = angles[currentPhase][0] * (M_PI / 180.0f);
     float targetAngle2 = angles[currentPhase][1] * (M_PI / 180.0f);
     float targetAngle3 = angles[currentPhase][2] * (M_PI / 180.0f);
-
     // Update auto angles
     if (currentPhase == 3) {
         // Incremental movement from -25, 25 to 155, 205
@@ -113,9 +112,6 @@ void RobotArm::Update() {
     float autoAngle1Degrees = autoAngle1 * (180.0f / M_PI);
     float autoAngle2Degrees = autoAngle2 * (180.0f / M_PI);
     float autoAngle3Degrees = autoAngle3 * (180.0f / M_PI);
-    std::cout << "Auto-update. Phase: " << currentPhase << ", Angle1: " << autoAngle1 << " radians (" << autoAngle1Degrees << " degrees), "
-        << "Angle2: " << autoAngle2 << " radians (" << autoAngle2Degrees << " degrees), "
-        << "Angle3: " << autoAngle3 << " radians (" << autoAngle3Degrees << " degrees)" << std::endl;
 
     // Update positions with rotation based on the current auto angles
     appendage_1.UpdateRotation(autoAngle1, 0.0f, 0.0f);
