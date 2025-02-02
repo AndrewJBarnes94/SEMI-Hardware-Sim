@@ -3,9 +3,9 @@
 #include <iostream>
 #include <sstream>
 
-Server::Server(int port, std::atomic<float>& angle1, std::atomic<float>& angle2, std::atomic<bool>& newInputReceived)
+Server::Server(int port, std::atomic<float>& angle1, std::atomic<float>& angle2, std::atomic<float>& angle3, std::atomic<bool>& newInputReceived)
     : acceptor(io_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)),
-    socket(io_context), angle1(angle1), angle2(angle2), newInputReceived(newInputReceived) {
+    socket(io_context), angle1(angle1), angle2(angle2), angle3(angle3), newInputReceived(newInputReceived) {
     acceptor.set_option(asio::socket_base::reuse_address(true));
 }
 
@@ -52,12 +52,13 @@ void Server::HandleClient() {
         else {
             std::string command(data_, length);
             std::istringstream iss(command);
-            float newAngle1, newAngle2;
-            if (iss >> newAngle1 >> newAngle2) {
+            float newAngle1, newAngle2, newAngle3;
+            if (iss >> newAngle1 >> newAngle2 >> newAngle3) {
                 angle1 = newAngle1;
                 angle2 = newAngle2;
+                angle3 = newAngle3;
                 newInputReceived = true;
-                std::cout << "Received angles: " << newAngle1 << ", " << newAngle2 << std::endl;
+                std::cout << "Received angles: " << newAngle1 << ", " << newAngle2 << ", " << newAngle3 << std::endl;
             }
             HandleClient();
         }

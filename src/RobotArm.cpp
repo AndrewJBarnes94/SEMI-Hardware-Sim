@@ -6,8 +6,8 @@
 
 const float M_PI = 3.14159265358979323846f;
 
-RobotArm::RobotArm(std::atomic<float>& angle1, std::atomic<float>& angle2, std::atomic<bool>& newInputReceived, float scale)
-    : shader("res/shaders/basic.shader"), angle1(angle1), angle2(angle2), newInputReceived(newInputReceived), scale(scale),
+RobotArm::RobotArm(std::atomic<float>& angle1, std::atomic<float>& angle2, std::atomic<float>& angle3, std::atomic<bool>& newInputReceived, float scale)
+    : shader("res/shaders/basic.shader"), angle1(angle1), angle2(angle2), angle3(angle3), newInputReceived(newInputReceived), scale(scale),
     appendage_1(scale), appendage_2(scale), endEffector(scale) {
 }
 
@@ -26,26 +26,25 @@ void RobotArm::Initialize(float posX, float posY, float initialRotationDegrees) 
 }
 
 void RobotArm::Update() {
-    if (!newInputReceived) {
-        return;
-    }
+    std::cout << "Updating robot arm with angles: angle1 = " << angle1 << ", angle2 = " << angle2 << ", angle3 = " << angle3 << std::endl;
 
-    std::cout << "Updating robot arm with angles: angle1 = " << angle1 << ", angle2 = " << angle2 << std::endl;
+    // Convert angles to radians
+    float angle1Rad = angle1 * (M_PI / 180.0f);
+    float angle2Rad = angle2 * (M_PI / 180.0f);
+    float angle3Rad = angle3 * (M_PI / 180.0f);
 
-    appendage_1.UpdateRotation(angle1, 0.0f, 0.0f);
+    appendage_1.UpdateRotation(angle1Rad, 0.0f, 0.0f);
     auto redDotPosition_1 = appendage_1.CalculateRedDotPosition("right");
-    appendage_2.UpdateRotation(angle2, redDotPosition_1.first, redDotPosition_1.second);
+    appendage_2.UpdateRotation(angle2Rad, redDotPosition_1.first, redDotPosition_1.second);
     appendage_2.TranslateToPosition(redDotPosition_1.first, redDotPosition_1.second);
 
     auto redDotPosition_2 = appendage_2.CalculateRedDotPosition("left");
-    endEffector.UpdateRotation(0.0f, redDotPosition_2.first, redDotPosition_2.second);
+    endEffector.UpdateRotation(angle3Rad, redDotPosition_2.first, redDotPosition_2.second);
     endEffector.TranslateToPosition(redDotPosition_2.first, redDotPosition_2.second);
 
     // Reset newInputReceived to false after processing the update
     newInputReceived = false;
 }
-
-
 
 void RobotArm::Render() {
     shader.Bind();
@@ -93,10 +92,10 @@ void RobotArm::RenderDot(float x, float y, float size, float r, float g, float b
     GLCall(glDeleteBuffers(1, &ebo));
 }
 
-void RobotArm::SetAngles(float angle1, float angle2) {
+void RobotArm::SetAngles(float angle1, float angle2, float angle3) {
     this->angle1 = angle1;
     this->angle2 = angle2;
+    this->angle3 = angle3;
     newInputReceived = true;
-    std::cout << "SetAngles called: angle1 = " << angle1 << ", angle2 = " << angle2 << std::endl;
+    std::cout << "SetAngles called: angle1 = " << angle1 << ", angle2 = " << angle2 << ", angle3 = " << angle3 << std::endl;
 }
-

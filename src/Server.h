@@ -7,7 +7,7 @@
 
 class Server : public std::enable_shared_from_this<Server> {
 public:
-    Server(int port, std::atomic<float>& angle1, std::atomic<float>& angle2, std::atomic<bool>& newInputReceived);
+    Server(int port, std::atomic<float>& angle1, std::atomic<float>& angle2, std::atomic<float>& angle3, std::atomic<bool>& newInputReceived);
     ~Server();
 
     void Start();
@@ -23,6 +23,7 @@ private:
     asio::ip::tcp::socket socket;
     std::atomic<float>& angle1;
     std::atomic<float>& angle2;
+    std::atomic<float>& angle3;
     std::atomic<bool>& newInputReceived;
     char data_[128]; // Declare the data_ member
 };

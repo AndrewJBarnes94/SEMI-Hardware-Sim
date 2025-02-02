@@ -10,6 +10,7 @@
 
 std::atomic<float> angle1(0.0f);
 std::atomic<float> angle2(0.0f);
+std::atomic<float> angle3(0.0f);
 std::atomic<bool> newInputReceived(false);
 
 int main() {
@@ -40,11 +41,11 @@ int main() {
 
     GLCall(glClearColor(0.2f, 0.3f, 0.4f, 1.0f));
 
-    RobotArm robotArm(angle1, angle2, newInputReceived, 0.5f);
+    RobotArm robotArm(angle1, angle2, angle3, newInputReceived, 0.5f);
     robotArm.Initialize(90.0f, 90.0f, 45.0f);
 
     // Start the server
-    auto server = std::make_shared<Server>(12345, angle1, angle2, newInputReceived);
+    auto server = std::make_shared<Server>(12345, angle1, angle2, angle3, newInputReceived);
     server->Start();
     std::cout << "Server started on port 12345" << std::endl;
 
@@ -52,7 +53,7 @@ int main() {
         GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
         if (newInputReceived) {
-            std::cout << "New input received: angle1 = " << angle1 << ", angle2 = " << angle2 << std::endl;
+            std::cout << "New input received: angle1 = " << angle1 << ", angle2 = " << angle2 << ", angle3 = " << angle3 << std::endl;
             robotArm.Update();
             newInputReceived = false;
         }

@@ -1,40 +1,36 @@
-// File: src/RobotArmEndEffector.h
+#pragma once
 
-#ifndef ROBOT_ARM_END_EFFECTOR_H
-#define ROBOT_ARM_END_EFFECTOR_H
-
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include "Shader.h"
+#include <utility>
 
 class RobotArmEndEffector {
 public:
     RobotArmEndEffector(float scale);
     ~RobotArmEndEffector();
+
     void Initialize();
     void UpdateRotation(float angle, float centerX, float centerY);
-    void Render(const Shader& shader);
-    std::pair<float, float> CalculateRectangleHeightMidpoint() const;
-    void TranslateToCenter(float* positions, int numVertices, float offsetX, float offsetY);
-    void TranslateArbitrary(float* positions, int numVertices, float offsetX, float offsetY);
     void TranslateToPosition(float x, float y);
-    std::pair<float, float> CalculateRedDotPosition() const; // Add this line
-
-    unsigned int circleVao, circleVbo, circleEbo;
-    unsigned int rectangleVao, rectangleVbo, rectangleEbo;
-    float circlePositions[84]; // 2 * (20 + 1) * 2
-    float rectanglePositions[8]; // 4 * 2
-    float initialCirclePositions[84]; // Store initial positions
-    float initialRectanglePositions[8]; // Store initial positions
-    unsigned int circleIndices[120]; // 2 * 3 * 20
-    unsigned int rectangleIndices[6];
-    int numCircleVertices;
-    int numRectangleVertices;
-    int numCircleIndices; // Add this line
-    int numRectangleIndices; // Add this line
+    void Render(const Shader& shader);
+    std::pair<float, float> CalculateRedDotPosition() const;
 
 private:
+    void TranslateArbitrary(float* positions, int numVertices, float offsetX, float offsetY);
+    std::pair<float, float> CalculateRectangleHeightMidpoint() const;
+    void TranslateToCenter(float* positions, int numVertices, float offsetX, float offsetY);
+
     float scale;
+    int numCircleVertices;
+    int numRectangleVertices;
+    int numCircleIndices;
+    int numRectangleIndices;
+    float circlePositions[42]; // 21 vertices * 2 (x, y)
+    float initialCirclePositions[42];
+    unsigned int circleIndices[60]; // 20 triangles * 3 indices
+    float rectanglePositions[8]; // 4 vertices * 2 (x, y)
+    float initialRectanglePositions[8];
+    unsigned int rectangleIndices[6]; // 2 triangles * 3 indices
+    unsigned int circleVao, circleVbo, circleEbo;
+    unsigned int rectangleVao, rectangleVbo, rectangleEbo;
 };
 
-#endif // ROBOT_ARM_END_EFFECTOR_H
