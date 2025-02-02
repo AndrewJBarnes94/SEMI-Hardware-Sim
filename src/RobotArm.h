@@ -1,5 +1,4 @@
-// File: src/RobotArm.h
-
+// File: RobotArm.h
 #ifndef ROBOT_ARM_H
 #define ROBOT_ARM_H
 
@@ -16,28 +15,19 @@ public:
     void Update();
     void Render();
     void RenderDot(float x, float y, float size, float r, float g, float b);
-    void StartAutoSimulation();
+    void SetAngles(float angle1, float angle2);
 
 private:
     Shader shader;
     RobotArmAppendage appendage_1;
     RobotArmAppendage appendage_2;
-    RobotArmEndEffector endEffector; // Add this line
+    RobotArmEndEffector endEffector;
     std::atomic<float>& angle1;
     std::atomic<float>& angle2;
     std::atomic<bool>& newInputReceived;
     float scale;
     float posX, posY;
     float initialRotationRadians;
-
-    // Auto-update variables
-    bool autoUpdateEnabled;
-    float autoAngle1;
-    float autoAngle2;
-	float autoAngle3;
-    int autoDirection;
-    int currentPhase;
-    bool animationComplete;
 };
 
 #endif // ROBOT_ARM_H
