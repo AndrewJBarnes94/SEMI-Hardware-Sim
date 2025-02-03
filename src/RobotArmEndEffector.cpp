@@ -1,5 +1,3 @@
-// File: src/RobotArmEndEffector.cpp
-
 #include "RobotArmEndEffector.h"
 #include <cmath>
 #include "ErrorHandling.h"
@@ -9,8 +7,12 @@ const float M_PI = 3.14159265358979323846f;
 RobotArmEndEffector::RobotArmEndEffector(float scale) : scale(scale) {
     numCircleVertices = (20 + 1);
     numRectangleVertices = 4;
+    numSquareVertices = 4; // Initialize numSquareVertices
     numCircleIndices = 3 * 20;
     numRectangleIndices = 6;
+    numSquareIndices = 6; // Initialize numSquareIndices
+    numRightTriangleVertices1 = 3;
+	numRightTriangleIndices1 = 3;
 }
 
 RobotArmEndEffector::~RobotArmEndEffector() {
@@ -20,6 +22,12 @@ RobotArmEndEffector::~RobotArmEndEffector() {
     GLCall(glDeleteVertexArrays(1, &rectangleVao));
     GLCall(glDeleteBuffers(1, &rectangleVbo));
     GLCall(glDeleteBuffers(1, &rectangleEbo));
+    GLCall(glDeleteVertexArrays(1, &squareVao));
+    GLCall(glDeleteBuffers(1, &squareVbo));
+    GLCall(glDeleteBuffers(1, &squareEbo));
+	GLCall(glDeleteBuffers(1, &rightTriangleVbo1));
+	GLCall(glDeleteBuffers(1, &rightTriangleEbo1));
+	GLCall(glDeleteVertexArrays(1, &rightTriangleVao1));
 }
 
 void RobotArmEndEffector::Initialize() {
@@ -54,12 +62,51 @@ void RobotArmEndEffector::Initialize() {
     rectanglePositions[7] = scale * 0.2f;
     initialRectanglePositions[7] = rectanglePositions[7];
 
-    // Translate the entire geometry so that the center of the left half-circle is at the origin
+    // Square vertices
+    squarePositions[0] = scale * -0.4f;  // Top right
+    initialSquarePositions[0] = squarePositions[0];
+    squarePositions[1] = scale * 0.2f;
+    initialSquarePositions[1] = squarePositions[1];
+    squarePositions[2] = scale * -0.4f; // Bottom right
+    initialSquarePositions[2] = squarePositions[2];
+    squarePositions[3] = scale * -0.2f;
+    initialSquarePositions[3] = squarePositions[3];
+    squarePositions[4] = scale * -0.6f; // Bottom left
+    initialSquarePositions[4] = squarePositions[4];
+    squarePositions[5] = scale * -0.2f;
+    initialSquarePositions[5] = squarePositions[5];
+    squarePositions[6] = scale * -0.6f;  // Top left
+    initialSquarePositions[6] = squarePositions[6];
+    squarePositions[7] = scale * 0.2f;
+    initialSquarePositions[7] = squarePositions[7];
+
+    // Right triangle1 vertices
+    rightTrianglePositions1[0] = scale * -0.4f;  // Bottom right
+    rightTrianglePositions1[1] = scale * 0.2f;
+
+    rightTrianglePositions1[2] = scale * -0.6f;  // Bottom left
+    rightTrianglePositions1[3] = scale * 0.2f;
+
+    rightTrianglePositions1[4] = scale * -0.6f;  // Top left
+    rightTrianglePositions1[5] = scale * 0.3f;
+
+    initialRightTrianglePositions1[0] = rightTrianglePositions1[0];
+    initialRightTrianglePositions1[1] = rightTrianglePositions1[1];
+    initialRightTrianglePositions1[2] = rightTrianglePositions1[2];
+    initialRightTrianglePositions1[3] = rightTrianglePositions1[3];
+    initialRightTrianglePositions1[4] = rightTrianglePositions1[4];
+    initialRightTrianglePositions1[5] = rightTrianglePositions1[5];
+
+    // Translate the entire geometry to center
     TranslateToCenter(circlePositions, numCircleVertices, -scale * 0.4f, 0.0f);
     TranslateToCenter(rectanglePositions, numRectangleVertices, -scale * 0.4f, 0.0f);
+    TranslateToCenter(squarePositions, numSquareVertices, -scale * 0.4f, 0.0f);
+    TranslateToCenter(rightTrianglePositions1, numRightTriangleVertices1, -scale * 0.4f, 0.0f);
 
     TranslateToCenter(initialCirclePositions, numCircleVertices, -scale * 0.4f, 0.0f);
     TranslateToCenter(initialRectanglePositions, numRectangleVertices, -scale * 0.4f, 0.0f);
+    TranslateToCenter(initialSquarePositions, numSquareVertices, -scale * 0.4f, 0.0f);
+    TranslateToCenter(initialRightTrianglePositions1, numRightTriangleVertices1, -scale * 0.4f, 0.0f);
 
     index = 0;
 
@@ -77,6 +124,19 @@ void RobotArmEndEffector::Initialize() {
     rectangleIndices[3] = 0; // Top right
     rectangleIndices[4] = 2; // Bottom left
     rectangleIndices[5] = 3; // Top left
+
+    // Square indices
+    squareIndices[0] = 0; // Top right
+    squareIndices[1] = 1; // Bottom right
+    squareIndices[2] = 2; // Bottom left
+    squareIndices[3] = 0; // Top right
+    squareIndices[4] = 2; // Bottom left
+    squareIndices[5] = 3; // Top left
+
+    // Right triangle1 indices
+    rightTriangleIndices1[0] = 0; // Bottom right
+    rightTriangleIndices1[1] = 1; // Bottom left
+    rightTriangleIndices1[2] = 2; // Top left
 
     // Vertex Array Object and Buffer for circles
     GLCall(glGenVertexArrays(1, &circleVao));
@@ -109,7 +169,40 @@ void RobotArmEndEffector::Initialize() {
 
     GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr));
     GLCall(glEnableVertexAttribArray(0));
+
+    // Vertex Array Object and Buffer for square
+    GLCall(glGenVertexArrays(1, &squareVao));
+    GLCall(glGenBuffers(1, &squareVbo));
+    GLCall(glGenBuffers(1, &squareEbo));
+
+    // Initialize VAO and VBO for square
+    GLCall(glBindVertexArray(squareVao));
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, squareVbo));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numSquareVertices * 2, squarePositions, GL_DYNAMIC_DRAW));
+
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, squareEbo));
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * numSquareIndices, squareIndices, GL_STATIC_DRAW));
+
+    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr));
+    GLCall(glEnableVertexAttribArray(0));
+
+    // Vertex Array Object and Buffer for right triangle1
+    GLCall(glGenVertexArrays(1, &rightTriangleVao1));
+    GLCall(glGenBuffers(1, &rightTriangleVbo1));
+    GLCall(glGenBuffers(1, &rightTriangleEbo1));
+
+    // Initialize VAO and VBO for right triangle1
+    GLCall(glBindVertexArray(rightTriangleVao1));
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, rightTriangleVbo1));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numRightTriangleVertices1 * 2, rightTrianglePositions1, GL_DYNAMIC_DRAW));
+
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rightTriangleEbo1));
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * numRightTriangleIndices1, rightTriangleIndices1, GL_STATIC_DRAW));
+
+    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr));
+    GLCall(glEnableVertexAttribArray(0));
 }
+
 
 void RobotArmEndEffector::UpdateRotation(float angle, float centerX, float centerY) {
     for (int i = 0; i < numCircleVertices * 2; i += 2) {
@@ -130,13 +223,40 @@ void RobotArmEndEffector::UpdateRotation(float angle, float centerX, float cente
         rectanglePositions[i + 1] = sin(-angle) * x + cos(-angle) * y + centerY; // New y
     }
 
+    for (int i = 0; i < numSquareVertices * 2; i += 2) {
+        float x = initialSquarePositions[i] - centerX;
+        float y = initialSquarePositions[i + 1] - centerY;
+
+        // Apply rotation (negate angle for clockwise rotation)
+        squarePositions[i] = cos(-angle) * x - sin(-angle) * y + centerX; // New x
+        squarePositions[i + 1] = sin(-angle) * x + cos(-angle) * y + centerY; // New y
+    }
+
+	for (int i = 0; i < numRightTriangleVertices1 * 2; i += 2) {
+		float x = initialRightTrianglePositions1[i] - centerX;
+		float y = initialRightTrianglePositions1[i + 1] - centerY;
+
+		// Apply rotation (negate angle for clockwise rotation)
+		rightTrianglePositions1[i] = cos(-angle) * x - sin(-angle) * y + centerX; // New x
+		rightTrianglePositions1[i + 1] = sin(-angle) * x + cos(-angle) * y + centerY; // New y
+
+	}
+
     // Update the vertex buffer with the new positions
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, circleVbo));
     GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * numCircleVertices * 2, circlePositions));
 
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, rectangleVbo));
     GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * numRectangleVertices * 2, rectanglePositions));
+
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, squareVbo));
+    GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * numSquareVertices * 2, squarePositions));
+
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, rightTriangleVbo1));
+	GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * numRightTriangleVertices1 * 2, rightTrianglePositions1));
+
 }
+
 
 void RobotArmEndEffector::TranslateArbitrary(float* positions, int numVertices, float offsetX, float offsetY) {
     for (int i = 0; i < numVertices * 2; i += 2) {
@@ -152,6 +272,27 @@ void RobotArmEndEffector::TranslateArbitrary(float* positions, int numVertices, 
         GLCall(glBindBuffer(GL_ARRAY_BUFFER, rectangleVbo));
         GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * numRectangleVertices * 2, rectanglePositions));
     }
+    else if (positions == squarePositions) {
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, squareVbo));
+        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * numSquareVertices * 2, squarePositions));
+	}
+    else if (positions == rightTrianglePositions1) {
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, rightTriangleVbo1));
+        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * numRightTriangleVertices1 * 2, rightTrianglePositions1));
+    }
+}
+
+void RobotArmEndEffector::TranslateToPosition(float x, float y) {
+    // Calculate the offset needed to translate the appendage to the specified position
+    auto redDotPosition = CalculateRedDotPosition();
+    float offsetX = x - redDotPosition.first;
+    float offsetY = y - redDotPosition.second;
+
+    // Translate the entire geometry
+    TranslateArbitrary(circlePositions, numCircleVertices, offsetX, offsetY);
+    TranslateArbitrary(rectanglePositions, numRectangleVertices, offsetX, offsetY);
+    TranslateArbitrary(squarePositions, numSquareVertices, offsetX, offsetY);
+	TranslateArbitrary(rightTrianglePositions1, numRightTriangleVertices1, offsetX, offsetY);
 }
 
 void RobotArmEndEffector::Render(const Shader& shader) {
@@ -179,6 +320,17 @@ void RobotArmEndEffector::Render(const Shader& shader) {
     // Draw the rectangle fill
     GLCall(glBindVertexArray(rectangleVao));
     GLCall(glDrawElements(GL_TRIANGLES, numRectangleIndices, GL_UNSIGNED_INT, nullptr));
+
+    // Draw the square fill
+    GLCall(glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f)); // Red color for debugging
+    GLCall(glBindVertexArray(squareVao));
+    GLCall(glDrawElements(GL_TRIANGLES, numSquareIndices, GL_UNSIGNED_INT, nullptr));
+
+	// Draw the right triangle1 fill
+	GLCall(glUniform4f(location, 0.0f, 1.0f, 0.0f, 1.0f)); // Green color for debugging
+	GLCall(glBindVertexArray(rightTriangleVao1));
+	GLCall(glDrawElements(GL_TRIANGLES, numRightTriangleIndices1, GL_UNSIGNED_INT, nullptr));
+
 }
 
 std::pair<float, float> RobotArmEndEffector::CalculateRectangleHeightMidpoint() const {
@@ -199,15 +351,3 @@ std::pair<float, float> RobotArmEndEffector::CalculateRedDotPosition() const {
     // Calculate the red dot position based on the rectangle's height midpoint
     return CalculateRectangleHeightMidpoint();
 }
-
-void RobotArmEndEffector::TranslateToPosition(float x, float y) {
-    // Calculate the offset needed to translate the appendage to the specified position
-    auto redDotPosition = CalculateRedDotPosition();
-    float offsetX = x - redDotPosition.first;
-    float offsetY = y - redDotPosition.second;
-
-    // Translate the entire geometry
-    TranslateArbitrary(circlePositions, numCircleVertices, offsetX, offsetY);
-    TranslateArbitrary(rectanglePositions, numRectangleVertices, offsetX, offsetY);
-}
-
