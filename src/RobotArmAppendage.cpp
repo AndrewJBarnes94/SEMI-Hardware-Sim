@@ -212,7 +212,10 @@ std::pair<float, float> RobotArmAppendage::CalculateRectangleHeightMidpoint(std:
         float midpointY = (rectanglePositions[5] + rectanglePositions[7]) / 2;
         return { midpointX, midpointY };
     }
+    // Default return value for unexpected side values
+    return { 0.0f, 0.0f };
 }
+
 
 void RobotArmAppendage::TranslateToCenter(float* positions, int numVertices, float offsetX, float offsetY) {
     for (int i = 0; i < numVertices * 2; i += 2) {

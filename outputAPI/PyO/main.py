@@ -20,7 +20,7 @@ if __name__ == "__main__":
     # Number of iterations
     num_steps = 360
     increment = 1.0  # Increase each angle by 1 degree per step
-    delay = 0.05  # 10 milliseconds
+    delay = 0.02  # 10 milliseconds
 
     for i in range(num_steps):
         # Calculate new angles
