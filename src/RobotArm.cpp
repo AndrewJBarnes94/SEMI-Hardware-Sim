@@ -56,8 +56,8 @@ void RobotArm::Render() {
     auto redDotPosition_1 = appendage_1.CalculateRedDotPosition("right");
     auto redDotPosition_2 = appendage_2.CalculateRedDotPosition("left");
 
-    RenderDot(redDotPosition_1.first, redDotPosition_1.second, 0.01f, 1.0f, 0.0f, 0.0f);
-    RenderDot(redDotPosition_2.first, redDotPosition_2.second, 0.01f, 1.0f, 0.0f, 0.0f);
+    //RenderDot(redDotPosition_1.first, redDotPosition_1.second, 0.01f, 1.0f, 0.0f, 0.0f);
+    //RenderDot(redDotPosition_2.first, redDotPosition_2.second, 0.01f, 1.0f, 0.0f, 0.0f);
 }
 
 void RobotArm::RenderDot(float x, float y, float size, float r, float g, float b) {

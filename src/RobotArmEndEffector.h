@@ -25,6 +25,8 @@ private:
     int numSquareVertices;
     int numRightTriangleVertices1;
 	int numRightTriangleVertices2;
+    int numRightTriangleVertices3;
+    int numRightTriangleVertices4;
     int numSmallRectangleVertices1;
 	int numSmallRectangleVertices2;
 
@@ -33,6 +35,8 @@ private:
 	int numSquareIndices;
 	int numRightTriangleIndices1;
 	int numRightTriangleIndices2;
+	int numRightTriangleIndices3;
+	int numRightTriangleIndices4;
 	int numSmallRectangleIndices1;
 	int numSmallRectangleIndices2;
     
@@ -56,6 +60,14 @@ private:
 	float initialRightTrianglePositions2[6];
 	unsigned int rightTriangleIndices2[3]; // 1 triangle * 3 indices
 
+	float rightTrianglePositions3[6]; // 3 vertices * 2 (x, y)
+	float initialRightTrianglePositions3[6];
+	unsigned int rightTriangleIndices3[3]; // 1 triangle * 3 indices
+
+	float rightTrianglePositions4[6]; // 3 vertices * 2 (x, y)
+	float initialRightTrianglePositions4[6];
+	unsigned int rightTriangleIndices4[3]; // 1 triangle * 3 indices
+
 	float smallRectanglePositions1[8]; // 4 vertices * 2 (x, y)
 	float initialSmallRectanglePositions1[8];
 	unsigned int smallRectangleIndices1[6]; // 2 triangles * 3 indices
@@ -70,6 +82,8 @@ private:
 	unsigned int squareVao, squareVbo, squareEbo;
 	unsigned int rightTriangleVao1, rightTriangleVbo1, rightTriangleEbo1;
 	unsigned int rightTriangleVao2, rightTriangleVbo2, rightTriangleEbo2;
+	unsigned int rightTriangleVao3, rightTriangleVbo3, rightTriangleEbo3;
+	unsigned int rightTriangleVao4, rightTriangleVbo4, rightTriangleEbo4;
 	unsigned int smallRectangleVao1, smallRectangleVbo1, smallRectangleEbo1;
 	unsigned int smallRectangleVao2, smallRectangleVbo2, smallRectangleEbo2;
 };

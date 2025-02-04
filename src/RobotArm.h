@@ -28,7 +28,7 @@ private:
     float posX;
     float posY;
     float initialRotationRadians;
-    RobotArmAppendage appendage_1; // Add missing member
-    RobotArmAppendage appendage_2; // Add missing member
-    RobotArmEndEffector endEffector; // Add missing member
+    RobotArmAppendage appendage_1; 
+    RobotArmAppendage appendage_2;
+    RobotArmEndEffector endEffector;
 };

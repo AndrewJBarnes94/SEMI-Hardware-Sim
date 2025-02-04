@@ -41,7 +41,7 @@ int main() {
 
     GLCall(glClearColor(0.2f, 0.3f, 0.4f, 1.0f));
 
-    RobotArm robotArm(angle1, angle2, angle3, newInputReceived, 0.5f);
+    RobotArm robotArm(angle1, angle2, angle3, newInputReceived, 0.3f);
     robotArm.Initialize(90.0f, 90.0f, 45.0f);
 
     // Start the server
