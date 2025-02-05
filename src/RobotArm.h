@@ -3,6 +3,7 @@
 
 #include <atomic>
 #include "Shader.h"
+#include "RobotVacuumSeal.h"
 #include "RobotArmAppendage.h"
 #include "RobotArmEndEffector.h"
 
@@ -28,6 +29,8 @@ private:
     float posX;
     float posY;
     float initialRotationRadians;
+
+	RobotVacuumSeal vacuumSeal;
     RobotArmAppendage appendage_1; 
     RobotArmAppendage appendage_2;
     RobotArmEndEffector endEffector;

@@ -173,31 +173,42 @@ void RobotArmAppendage::TranslateArbitrary(float* positions, int numVertices, fl
 }
 
 void RobotArmAppendage::Render(const Shader& shader) {
+    shader.Bind(); // Ensure the shader is bound
+
     int location = shader.GetUniformLocation("u_Color");
 
-    // Draw the outline
-    GLCall(glLineWidth(2.0f)); // Set the line width for the outline
-    GLCall(glUniform4f(location, 0.0f, 0.0f, 0.0f, 1.0f)); // Set color to black
+    if (location != -1) { // Check if the uniform location is valid
+        // Draw the outline
+        GLCall(glLineWidth(2.0f)); // Set the line width for the outline
+        GLCall(glUniform4f(location, 0.0f, 0.0f, 0.0f, 1.0f)); // Set color to black
 
-    // Draw the circles outline
-    GLCall(glBindVertexArray(circleVao));
-    GLCall(glDrawElements(GL_LINE_LOOP, numCircleIndices, GL_UNSIGNED_INT, nullptr));
+        // Draw the circles outline
+        GLCall(glBindVertexArray(circleVao));
+        GLCall(glDrawElements(GL_LINE_LOOP, numCircleIndices, GL_UNSIGNED_INT, nullptr));
 
-    // Draw the rectangle outline
-    GLCall(glBindVertexArray(rectangleVao));
-    GLCall(glDrawElements(GL_LINE_LOOP, numRectangleIndices, GL_UNSIGNED_INT, nullptr));
+        // Draw the rectangle outline
+        GLCall(glBindVertexArray(rectangleVao));
+        GLCall(glDrawElements(GL_LINE_LOOP, numRectangleIndices, GL_UNSIGNED_INT, nullptr));
 
-    // Draw the fill
-    GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
+        // Draw the fill
+        GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
 
-    // Draw the circles fill
-    GLCall(glBindVertexArray(circleVao));
-    GLCall(glDrawElements(GL_TRIANGLES, numCircleIndices, GL_UNSIGNED_INT, nullptr));
+        // Draw the circles fill
+        GLCall(glBindVertexArray(circleVao));
+        GLCall(glDrawElements(GL_TRIANGLES, numCircleIndices, GL_UNSIGNED_INT, nullptr));
 
-    // Draw the rectangle fill
-    GLCall(glBindVertexArray(rectangleVao));
-    GLCall(glDrawElements(GL_TRIANGLES, numRectangleIndices, GL_UNSIGNED_INT, nullptr));
+        // Draw the rectangle fill
+        GLCall(glBindVertexArray(rectangleVao));
+        GLCall(glDrawElements(GL_TRIANGLES, numRectangleIndices, GL_UNSIGNED_INT, nullptr));
+    }
+    else {
+        std::cerr << "Uniform location for 'u_Color' is invalid." << std::endl;
+    }
+
+    glBindVertexArray(0); // Unbind the VAO
+    shader.Unbind(); // Unbind the shader program
 }
+
 
 std::pair<float, float> RobotArmAppendage::CalculateRectangleHeightMidpoint(std::string side) const {
     // Midpoint of the rectangle's height on the left side

@@ -613,94 +613,105 @@ void RobotArmEndEffector::TranslateToPosition(float x, float y) {
 }
 
 void RobotArmEndEffector::Render(const Shader& shader) {
+    shader.Bind(); // Ensure the shader is bound
+
     int location = shader.GetUniformLocation("u_Color");
 
-    // Draw the outline
-    GLCall(glLineWidth(2.0f)); // Set the line width for the outline
-    GLCall(glUniform4f(location, 0.0f, 0.0f, 0.0f, 1.0f)); // Set color to black
+    if (location != -1) { // Check if the uniform location is valid
+        // Draw the outline
+        GLCall(glLineWidth(2.0f)); // Set the line width for the outline
+        GLCall(glUniform4f(location, 0.0f, 0.0f, 0.0f, 1.0f)); // Set color to black
 
-    // Draw the circles outline
-    GLCall(glBindVertexArray(circleVao));
-    GLCall(glDrawElements(GL_LINE_LOOP, numCircleIndices, GL_UNSIGNED_INT, nullptr));
+        // Draw the circles outline
+        GLCall(glBindVertexArray(circleVao));
+        GLCall(glDrawElements(GL_LINE_LOOP, numCircleIndices, GL_UNSIGNED_INT, nullptr));
 
-    // Draw the rectangle outline
-    GLCall(glBindVertexArray(rectangleVao));
-    GLCall(glDrawElements(GL_LINE_LOOP, numRectangleIndices, GL_UNSIGNED_INT, nullptr));
+        // Draw the rectangle outline
+        GLCall(glBindVertexArray(rectangleVao));
+        GLCall(glDrawElements(GL_LINE_LOOP, numRectangleIndices, GL_UNSIGNED_INT, nullptr));
 
-	// Draw the square outline
-	GLCall(glBindVertexArray(squareVao));
-	GLCall(glDrawElements(GL_LINE_LOOP, numSquareIndices, GL_UNSIGNED_INT, nullptr));
+        // Draw the square outline
+        GLCall(glBindVertexArray(squareVao));
+        GLCall(glDrawElements(GL_LINE_LOOP, numSquareIndices, GL_UNSIGNED_INT, nullptr));
 
-	// Draw small rectangle 1 outline
-	GLCall(glBindVertexArray(smallRectangleVao1));
-	GLCall(glDrawElements(GL_LINE_LOOP, numSmallRectangleIndices1, GL_UNSIGNED_INT, nullptr));
+        // Draw small rectangle 1 outline
+        GLCall(glBindVertexArray(smallRectangleVao1));
+        GLCall(glDrawElements(GL_LINE_LOOP, numSmallRectangleIndices1, GL_UNSIGNED_INT, nullptr));
 
-	// Draw small rectangle 2 outline
-	GLCall(glBindVertexArray(smallRectangleVao2));
-	GLCall(glDrawElements(GL_LINE_LOOP, numSmallRectangleIndices2, GL_UNSIGNED_INT, nullptr));
+        // Draw small rectangle 2 outline
+        GLCall(glBindVertexArray(smallRectangleVao2));
+        GLCall(glDrawElements(GL_LINE_LOOP, numSmallRectangleIndices2, GL_UNSIGNED_INT, nullptr));
 
-	// Draw right triangle 1 outline
-	GLCall(glBindVertexArray(rightTriangleVao1));
-	GLCall(glDrawElements(GL_LINE_LOOP, numRightTriangleIndices1, GL_UNSIGNED_INT, nullptr));
+        // Draw right triangle 1 outline
+        GLCall(glBindVertexArray(rightTriangleVao1));
+        GLCall(glDrawElements(GL_LINE_LOOP, numRightTriangleIndices1, GL_UNSIGNED_INT, nullptr));
 
-	// Draw right triangle 2 outline
-	GLCall(glBindVertexArray(rightTriangleVao2));
-	GLCall(glDrawElements(GL_LINE_LOOP, numRightTriangleIndices2, GL_UNSIGNED_INT, nullptr));
+        // Draw right triangle 2 outline
+        GLCall(glBindVertexArray(rightTriangleVao2));
+        GLCall(glDrawElements(GL_LINE_LOOP, numRightTriangleIndices2, GL_UNSIGNED_INT, nullptr));
 
-	// Draw right triangle 3 outline
-	GLCall(glBindVertexArray(rightTriangleVao3));
-	GLCall(glDrawElements(GL_LINE_LOOP, numRightTriangleIndices3, GL_UNSIGNED_INT, nullptr));
+        // Draw right triangle 3 outline
+        GLCall(glBindVertexArray(rightTriangleVao3));
+        GLCall(glDrawElements(GL_LINE_LOOP, numRightTriangleIndices3, GL_UNSIGNED_INT, nullptr));
 
-	// Draw right triangle 4 outline
-	GLCall(glBindVertexArray(rightTriangleVao4));
-	GLCall(glDrawElements(GL_LINE_LOOP, numRightTriangleIndices4, GL_UNSIGNED_INT, nullptr));
+        // Draw right triangle 4 outline
+        GLCall(glBindVertexArray(rightTriangleVao4));
+        GLCall(glDrawElements(GL_LINE_LOOP, numRightTriangleIndices4, GL_UNSIGNED_INT, nullptr));
 
-    // Draw the fill
-    GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
+        // Draw the fill
+        GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
 
-    // Draw the circles fill
-    GLCall(glBindVertexArray(circleVao));
-    GLCall(glDrawElements(GL_TRIANGLES, numCircleIndices, GL_UNSIGNED_INT, nullptr));
+        // Draw the circles fill
+        GLCall(glBindVertexArray(circleVao));
+        GLCall(glDrawElements(GL_TRIANGLES, numCircleIndices, GL_UNSIGNED_INT, nullptr));
 
-    // Draw the rectangle fill
-    GLCall(glBindVertexArray(rectangleVao));
-    GLCall(glDrawElements(GL_TRIANGLES, numRectangleIndices, GL_UNSIGNED_INT, nullptr));
+        // Draw the rectangle fill
+        GLCall(glBindVertexArray(rectangleVao));
+        GLCall(glDrawElements(GL_TRIANGLES, numRectangleIndices, GL_UNSIGNED_INT, nullptr));
 
-    // Draw the square fill
-	GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
-	GLCall(glBindVertexArray(squareVao));
-    GLCall(glDrawElements(GL_TRIANGLES, numSquareIndices, GL_UNSIGNED_INT, nullptr));
+        // Draw the square fill
+        GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
+        GLCall(glBindVertexArray(squareVao));
+        GLCall(glDrawElements(GL_TRIANGLES, numSquareIndices, GL_UNSIGNED_INT, nullptr));
 
-	// Draw the right triangle1 fill
-	GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
-	GLCall(glBindVertexArray(rightTriangleVao1));
-	GLCall(glDrawElements(GL_TRIANGLES, numRightTriangleIndices1, GL_UNSIGNED_INT, nullptr));
+        // Draw the right triangle1 fill
+        GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
+        GLCall(glBindVertexArray(rightTriangleVao1));
+        GLCall(glDrawElements(GL_TRIANGLES, numRightTriangleIndices1, GL_UNSIGNED_INT, nullptr));
 
-	// Draw the right triangle2 fill
-	GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
-	GLCall(glBindVertexArray(rightTriangleVao2));
-	GLCall(glDrawElements(GL_TRIANGLES, numRightTriangleIndices2, GL_UNSIGNED_INT, nullptr));
+        // Draw the right triangle2 fill
+        GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
+        GLCall(glBindVertexArray(rightTriangleVao2));
+        GLCall(glDrawElements(GL_TRIANGLES, numRightTriangleIndices2, GL_UNSIGNED_INT, nullptr));
 
-	// Draw the right triangle3 fill
-	GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
-	GLCall(glBindVertexArray(rightTriangleVao3));
-	GLCall(glDrawElements(GL_TRIANGLES, numRightTriangleIndices3, GL_UNSIGNED_INT, nullptr));
+        // Draw the right triangle3 fill
+        GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
+        GLCall(glBindVertexArray(rightTriangleVao3));
+        GLCall(glDrawElements(GL_TRIANGLES, numRightTriangleIndices3, GL_UNSIGNED_INT, nullptr));
 
-	// Draw the right triangle4 fill
-	GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
-	GLCall(glBindVertexArray(rightTriangleVao4));
-	GLCall(glDrawElements(GL_TRIANGLES, numRightTriangleIndices4, GL_UNSIGNED_INT, nullptr));
+        // Draw the right triangle4 fill
+        GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
+        GLCall(glBindVertexArray(rightTriangleVao4));
+        GLCall(glDrawElements(GL_TRIANGLES, numRightTriangleIndices4, GL_UNSIGNED_INT, nullptr));
 
-	// Draw the small rectangle1 fill
-	GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
-	GLCall(glBindVertexArray(smallRectangleVao1));
-	GLCall(glDrawElements(GL_TRIANGLES, numSmallRectangleIndices1, GL_UNSIGNED_INT, nullptr));
+        // Draw the small rectangle1 fill
+        GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
+        GLCall(glBindVertexArray(smallRectangleVao1));
+        GLCall(glDrawElements(GL_TRIANGLES, numSmallRectangleIndices1, GL_UNSIGNED_INT, nullptr));
 
-	// Draw the small rectangle2 fill
-	GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
-	GLCall(glBindVertexArray(smallRectangleVao2));
-	GLCall(glDrawElements(GL_TRIANGLES, numSmallRectangleIndices2, GL_UNSIGNED_INT, nullptr));
+        // Draw the small rectangle2 fill
+        GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
+        GLCall(glBindVertexArray(smallRectangleVao2));
+        GLCall(glDrawElements(GL_TRIANGLES, numSmallRectangleIndices2, GL_UNSIGNED_INT, nullptr));
+    }
+    else {
+        std::cerr << "Uniform location for 'u_Color' is invalid." << std::endl;
+    }
+
+    glBindVertexArray(0); // Unbind the VAO
+    shader.Unbind(); // Unbind the shader program
 }
+
 
 std::pair<float, float> RobotArmEndEffector::CalculateRectangleHeightMidpoint() const {
     // Midpoint of the rectangle's height on the left side

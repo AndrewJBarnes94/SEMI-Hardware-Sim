@@ -7,7 +7,7 @@
 const float M_PI = 3.14159265358979323846f;
 
 RobotArm::RobotArm(std::atomic<float>& angle1, std::atomic<float>& angle2, std::atomic<float>& angle3, std::atomic<bool>& newInputReceived, float scale)
-    : shader("res/shaders/basic.shader"), angle1(angle1), angle2(angle2), angle3(angle3), newInputReceived(newInputReceived), scale(scale),
+	: shader("res/shaders/basic.shader"), angle1(angle1), angle2(angle2), angle3(angle3), newInputReceived(newInputReceived), scale(scale), vacuumSeal(scale),
     appendage_1(scale), appendage_2(scale), endEffector(scale) {
 }
 
@@ -21,6 +21,7 @@ void RobotArm::Initialize(float posX, float posY, float initialRotationDegrees) 
     appendage_1.Initialize();
     appendage_2.Initialize();
     endEffector.Initialize();
+    vacuumSeal.Initialize();
 
     shader.Bind();
 }
@@ -49,9 +50,12 @@ void RobotArm::Update() {
 void RobotArm::Render() {
     shader.Bind();
 
+    vacuumSeal.Render(shader);
     appendage_1.Render(shader);
     appendage_2.Render(shader);
     endEffector.Render(shader);
+
+    shader.Unbind();
 
     auto redDotPosition_1 = appendage_1.CalculateRedDotPosition("right");
     auto redDotPosition_2 = appendage_2.CalculateRedDotPosition("left");
@@ -59,6 +63,7 @@ void RobotArm::Render() {
     //RenderDot(redDotPosition_1.first, redDotPosition_1.second, 0.01f, 1.0f, 0.0f, 0.0f);
     //RenderDot(redDotPosition_2.first, redDotPosition_2.second, 0.01f, 1.0f, 0.0f, 0.0f);
 }
+
 
 void RobotArm::RenderDot(float x, float y, float size, float r, float g, float b) {
     int location = shader.GetUniformLocation("u_Color");
