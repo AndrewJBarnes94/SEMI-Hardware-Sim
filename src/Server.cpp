@@ -1,4 +1,3 @@
-// File: Server.cpp
 #include "Server.h"
 #include <iostream>
 #include <sstream>

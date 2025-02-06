@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <cmath>
 #include <iostream>
+#include "../ErrorHandling.h"
 
 const float M_PI = 3.14159265358979323846f;
 
@@ -72,20 +73,26 @@ void RobotVacuumSeal::Initialize() {
 }
 
 void RobotVacuumSeal::Render(const Shader& shader) {
-    shader.Bind();
+    shader.Bind(); // Bind the shader
 
     int location = shader.GetUniformLocation("u_Color");
-    if (location != -1) {
-        // Metallic grey color
-        glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f);
+
+    if (location != -1) { // Check if the uniform location is valid
+        // Draw the fill
+        glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f); // Metallic gray
+        glBindVertexArray(vao);
+        glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr);
+
+        // Draw the outline
+        glLineWidth(4.0f); // Set the line width for the outline
+        glUniform4f(location, 0.0f, 0.0f, 0.0f, 1.0f); // Black color
+        glDrawArrays(GL_LINE_LOOP, 1, 40); // Use only outer vertices (skip the center)
     }
     else {
-        std::cerr << "Uniform 'u_Color' not found or optimized out!" << std::endl;
+        std::cerr << "Uniform location for 'u_Color' is invalid." << std::endl;
     }
 
-    glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr);
-    glBindVertexArray(0);
-
-    shader.Unbind();
+    glBindVertexArray(0); // Unbind the VAO
+    shader.Unbind();      // Unbind the shader
 }
+

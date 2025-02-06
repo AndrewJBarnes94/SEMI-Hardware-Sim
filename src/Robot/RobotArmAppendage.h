@@ -5,7 +5,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <utility> // Include this for std::pair
-#include "Shader.h" // Include Shader class
+#include "../Shader.h" // Include Shader class
 
 class RobotArmAppendage {
 public:

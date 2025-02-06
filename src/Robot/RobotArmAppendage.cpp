@@ -1,7 +1,7 @@
 // File: src/RobotArmAppendage.cpp
 #include "RobotArmAppendage.h"
 #include <cmath>
-#include "ErrorHandling.h"
+#include "../ErrorHandling.h"
 
 const float M_PI = 3.14159265358979323846f;
 
@@ -179,7 +179,7 @@ void RobotArmAppendage::Render(const Shader& shader) {
 
     if (location != -1) { // Check if the uniform location is valid
         // Draw the outline
-        GLCall(glLineWidth(2.0f)); // Set the line width for the outline
+        GLCall(glLineWidth(5.0f)); // Set the line width for the outline
         GLCall(glUniform4f(location, 0.0f, 0.0f, 0.0f, 1.0f)); // Set color to black
 
         // Draw the circles outline
