@@ -47,7 +47,7 @@ int main() {
     shader.Bind(); // Bind shader once before rendering
 
     // Initialize Chamber
-    Chamber chamber(0.8f);
+    Chamber chamber(0.475f);
     chamber.Initialize();
 
     // Initialize Robot Arm
