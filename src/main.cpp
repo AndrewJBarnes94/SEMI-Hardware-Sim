@@ -5,6 +5,7 @@
 #include <atomic>
 #include "Shader.h"
 #include "Chamber/Chamber.h"
+#include "Chamber/ProcessModule.h"
 #include "Robot/RobotArm.h"
 #include "ErrorHandling.h"
 #include "Server.h"
@@ -54,6 +55,9 @@ int main() {
     RobotArm robotArm(angle1, angle2, angle3, newInputReceived, 0.3f);
     robotArm.Initialize(90.0f, 90.0f, 45.0f);
 
+    ProcessModule pm(0.8);
+	pm.Initialize();
+
     // Start the server
     auto server = std::make_shared<Server>(12345, angle1, angle2, angle3, newInputReceived);
     server->Start();
@@ -73,6 +77,8 @@ int main() {
 
         // Render Robot Arm
         robotArm.Render();
+
+        pm.Render(shader);
 
         server->Poll(); // Poll the io_context to handle asynchronous operations
 
