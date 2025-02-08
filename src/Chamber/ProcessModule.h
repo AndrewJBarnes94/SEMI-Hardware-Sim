@@ -6,7 +6,17 @@
 
 class ProcessModule {
 public:
-    ProcessModule(float scale);
+    ProcessModule(
+        float scale,
+        float topRightX,
+        float topRightY,
+        float bottomRightX,
+        float bottomRightY,
+        float bottomLeftX,
+        float bottomLeftY,
+        float topLeftX,
+        float topLeftY
+    );
     ~ProcessModule();
     void Initialize();
     void Render(const Shader& shader);
@@ -19,6 +29,11 @@ private:
     float positions[8];
     unsigned int* indices; // Now properly allocated in constructor
     unsigned int vao, vbo, ebo;
+
+	float topRightX, topRightY;
+	float bottomRightX, bottomRightY;
+	float bottomLeftX, bottomLeftY;
+	float topLeftX, topLeftY;
 };
 
 #endif // PROCESSMODULE_H

@@ -5,7 +5,26 @@
 
 const float M_PI = 3.14159265358979323846f;
 
-ProcessModule::ProcessModule(float scale) : scale(scale) {
+ProcessModule::ProcessModule(
+    float scale,
+    float topRightX,
+    float topRightY,
+    float bottomRightX,
+    float bottomRightY,
+    float bottomLeftX,
+    float bottomLeftY,
+    float topLeftX,
+    float topLeftY
+) : scale(scale),
+topRightX(topRightX),
+topRightY(topRightY),
+bottomRightX(bottomRightX),
+bottomRightY(bottomRightY),
+bottomLeftX(bottomLeftX),
+bottomLeftY(bottomLeftY),
+topLeftX(topLeftX),
+topLeftY(topLeftY) {
+    
     numVertices = 4;  // 4 vertices for the square
     numIndices = 6;   // 2 triangles (3 indices each)
 
@@ -30,24 +49,24 @@ ProcessModule::~ProcessModule() {
 
 void ProcessModule::Initialize() {
     // Define positions
-    positions[0] = scale * -0.4f; // Top right
+    positions[0] = scale * topRightX; // Top right
     initialPositions[0] = positions[0];
-    positions[1] = scale * 0.2f;
+    positions[1] = scale * topRightY;
     initialPositions[1] = positions[1];
 
-    positions[2] = scale * -0.4f; // Bottom right
+    positions[2] = scale * bottomRightX; // Bottom right
     initialPositions[2] = positions[2];
-    positions[3] = scale * -0.2f;
+    positions[3] = scale * bottomRightY;
     initialPositions[3] = positions[3];
 
-    positions[4] = scale * -0.6f; // Bottom left
+    positions[4] = scale * bottomLeftX; // Bottom left
     initialPositions[4] = positions[4];
-    positions[5] = scale * -0.2f;
+    positions[5] = scale * bottomLeftY;
     initialPositions[5] = positions[5];
 
-    positions[6] = scale * -0.6f; // Top left
+    positions[6] = scale * topLeftX; // Top left
     initialPositions[6] = positions[6];
-    positions[7] = scale * 0.2f;
+    positions[7] = scale * topLeftY;
     initialPositions[7] = positions[7];
 
     // Generate buffers

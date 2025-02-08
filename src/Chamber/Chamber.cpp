@@ -65,14 +65,30 @@ void Chamber::Initialize() {
 
 
 void Chamber::Render(const Shader& shader) {
-    shader.Bind(); // Bind shader before setting uniform
+    shader.Bind(); // Ensure the shader is bound
 
     int location = shader.GetUniformLocation("u_Color");
-    if (location != -1) {
-        GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Metallic gray
+
+    if (location != -1) { // Check if the uniform location is valid
+
+        // === Draw the Outline ===
+        GLCall(glLineWidth(5.0f)); // Set the line width for the outline
+        GLCall(glUniform4f(location, 0.0f, 0.0f, 0.0f, 1.0f)); // Set color to black
+
+        GLCall(glBindVertexArray(vao));
+        GLCall(glDrawElements(GL_LINE_LOOP, 6, GL_UNSIGNED_INT, nullptr)); // Hexagon outline
+
+        // === Draw the Filled Hexagon ===
+        GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f)); // Set color to metallic gray/silver
+        GLCall(glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr)); // Hexagon fill
+
+    }
+    else {
+        std::cerr << "Uniform location for 'u_Color' is invalid." << std::endl;
     }
 
-    GLCall(glBindVertexArray(vao));
-    GLCall(glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr));
-    GLCall(glBindVertexArray(0));
+    glBindVertexArray(0); // Unbind the VAO
+    shader.Unbind(); // Unbind the shader program
 }
+
+

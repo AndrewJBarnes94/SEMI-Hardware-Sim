@@ -55,8 +55,41 @@ int main() {
     RobotArm robotArm(angle1, angle2, angle3, newInputReceived, 0.3f);
     robotArm.Initialize(90.0f, 90.0f, 45.0f);
 
-    ProcessModule pm(0.8);
-	pm.Initialize();
+    ProcessModule pm1(
+        0.8f, // Scale
+        -0.6f, 0.25f,
+        -0.6f, -0.25f,
+        -1.1f, -0.25f,
+        -1.1f, 0.25f
+    );
+	pm1.Initialize();
+
+    ProcessModule pm2(
+        0.8f, // Scale
+        -0.0835f, 0.6446f,
+        -0.5165f, 0.3946f,
+        -0.7665f, 0.8276f,
+        -0.3335f, 1.0776f
+    );
+    pm2.Initialize();
+
+    ProcessModule pm3(
+        0.8f, // Scale
+        0.5165f, 0.3946f,
+        0.0835f, 0.6446f,
+        0.3335f, 1.0776f,
+        0.7665f, 0.8276f
+    );
+    pm3.Initialize();
+
+    ProcessModule pm4(
+        0.8f, // Scale
+		0.6f, 0.25f,
+		0.6f, -0.25f,
+		1.1f, -0.25f,
+		1.1f, 0.25f
+	);
+	pm4.Initialize();
 
     // Start the server
     auto server = std::make_shared<Server>(12345, angle1, angle2, angle3, newInputReceived);
@@ -78,7 +111,10 @@ int main() {
         // Render Robot Arm
         robotArm.Render();
 
-        pm.Render(shader);
+        pm1.Render(shader);
+        pm2.Render(shader);
+        pm3.Render(shader);
+        pm4.Render(shader);
 
         server->Poll(); // Poll the io_context to handle asynchronous operations
 
