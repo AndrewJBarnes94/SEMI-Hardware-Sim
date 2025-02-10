@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "Chamber/Chamber.h"
 #include "Chamber/ProcessModule.h"
+#include "Chamber/Loadport.h"
 #include "Robot/RobotArm.h"
 #include "ErrorHandling.h"
 #include "Server.h"
@@ -56,6 +57,9 @@ int main() {
     // Initialize Robot Arm
     RobotArm robotArm(angle1, angle2, angle3, newInputReceived, 0.3f * masterScale);
     robotArm.Initialize(90.0f, 90.0f, 45.0f);
+
+    Loadport loadport1(0.5f * masterScale);
+    loadport1.Initialize();
 
     ProcessModule pm1(
         0.8f * masterScale,
@@ -112,6 +116,9 @@ int main() {
 
         // Render Robot Arm
         robotArm.Render();
+
+        // Render Loadport 1
+        loadport1.Render(shader);
 
         pm1.Render(shader);
         pm2.Render(shader);
