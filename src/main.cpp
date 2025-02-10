@@ -47,16 +47,18 @@ int main() {
     Shader shader("res/shaders/basic.shader");
     shader.Bind(); // Bind shader once before rendering
 
+    float masterScale = 0.5;
+
     // Initialize Chamber
-    Chamber chamber(0.475f);
+    Chamber chamber(0.475f * masterScale);
     chamber.Initialize();
 
     // Initialize Robot Arm
-    RobotArm robotArm(angle1, angle2, angle3, newInputReceived, 0.3f);
+    RobotArm robotArm(angle1, angle2, angle3, newInputReceived, 0.3f * masterScale);
     robotArm.Initialize(90.0f, 90.0f, 45.0f);
 
     ProcessModule pm1(
-        0.8f, // Scale
+        0.8f * masterScale,
         -0.6f, 0.25f,
         -0.6f, -0.25f,
         -1.1f, -0.25f,
@@ -65,7 +67,7 @@ int main() {
 	pm1.Initialize();
 
     ProcessModule pm2(
-        0.8f, // Scale
+        0.8f * masterScale,
         -0.0835f, 0.6446f,
         -0.5165f, 0.3946f,
         -0.7665f, 0.8276f,
@@ -74,7 +76,7 @@ int main() {
     pm2.Initialize();
 
     ProcessModule pm3(
-        0.8f, // Scale
+        0.8f * masterScale,
         0.5165f, 0.3946f,
         0.0835f, 0.6446f,
         0.3335f, 1.0776f,
@@ -83,7 +85,7 @@ int main() {
     pm3.Initialize();
 
     ProcessModule pm4(
-        0.8f, // Scale
+        0.8f * masterScale,
 		0.6f, 0.25f,
 		0.6f, -0.25f,
 		1.1f, -0.25f,

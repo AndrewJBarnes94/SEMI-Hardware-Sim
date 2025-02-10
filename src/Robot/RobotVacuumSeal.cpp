@@ -32,7 +32,7 @@ void RobotVacuumSeal::GenerateCircleVertices() {
     positions[index++] = 0.0f;
 
     // Circle vertices
-    float radius = 0.18f; // Hardcoded smaller radius
+    float radius = 0.6f * scale; 
     for (int i = 0; i <= 40; ++i) {
         float theta = 2.0f * M_PI * i / 40; // 40 segments for smoother circle
         positions[index++] = radius * cos(theta);
