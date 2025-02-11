@@ -82,13 +82,13 @@ void Chamber::Initialize() {
     }
 
     extensionPositions1[0] = -0.205681f;
-    extensionPositions1[1] = -0.11875f;
+    extensionPositions1[1] = -0.08875f;
     extensionPositions1[2] = 0.0f;
-    extensionPositions1[3] = -0.2375f;
+    extensionPositions1[3] = -0.2075f;
     extensionPositions1[4] = 0.0f;
-    extensionPositions1[5] = -0.32f;
+    extensionPositions1[5] = -0.28f;
     extensionPositions1[6] = -0.205681f;
-    extensionPositions1[7] = -0.22f;
+    extensionPositions1[7] = -0.19f;
 
     extensionIndices1[0] = 0;
     extensionIndices1[1] = 1;
@@ -98,13 +98,13 @@ void Chamber::Initialize() {
     extensionIndices1[5] = 3;
 
     extensionPositions2[0] = 0.205681f;
-    extensionPositions2[1] = -0.11875f;
+    extensionPositions2[1] = -0.08875f;
     extensionPositions2[2] = 0.0f;
-    extensionPositions2[3] = -0.2375f;
+    extensionPositions2[3] = -0.2075f;
     extensionPositions2[4] = 0.0f;
-    extensionPositions2[5] = -0.32f;
+    extensionPositions2[5] = -0.28f;
     extensionPositions2[6] = 0.205681f;
-    extensionPositions2[7] = -0.22f;
+    extensionPositions2[7] = -0.19f;
 
     extensionIndices2[0] = 0;
     extensionIndices2[1] = 1;

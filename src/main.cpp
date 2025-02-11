@@ -64,75 +64,93 @@ int main() {
 
     ProcessModule pm1(
         0.8f * masterScale,
-        -0.6f, 0.25f,
-        -0.6f, -0.25f,
-        -1.1f, -0.25f,
-        -1.1f, 0.25f
+        -0.6f, 0.3f,
+        -0.6f, -0.3f,
+        -1.1f, -0.3f,
+        -1.1f, 0.3f
     );
 	pm1.Initialize();
 
     SlitValve slitValve1(
         0.8f * masterScale,
-        -0.515f, 0.25f,
-        -0.515f, -0.25f,
-        -0.6f, -0.25f,
-        -0.6f, 0.25f
+        -0.515f, 0.3f,
+        -0.515f, -0.3f,
+        -0.6f, -0.3f,
+        -0.6f, 0.3f
     );
     slitValve1.Initialize();
 
     ProcessModule pm2(
         0.8f * masterScale,
-        -0.0835f, 0.6446f,
-        -0.5165f, 0.3946f,
-        -0.7665f, 0.8276f,
-        -0.3335f, 1.0776f
+        -0.040f, 0.670f,
+        -0.560f, 0.370f,
+        -0.810f, 0.803f,
+        -0.290f, 1.103f
     );
     pm2.Initialize();
 
     SlitValve slitValve2(
         0.8f * masterScale,
-        -0.0410f, 0.5710f,
-        -0.4740f, 0.3210f,
-        -0.5165f, 0.3946f,
-        -0.0835f, 0.6446f
+        0.002f, 0.596f,
+        -0.517f, 0.296f,
+        -0.560f, 0.370f,
+        -0.040f, 0.670f
     );
     slitValve2.Initialize();
 
     ProcessModule pm3(
         0.8f * masterScale,
-        0.5165f, 0.3946f,
-        0.0835f, 0.6446f,
-        0.3335f, 1.0776f,
-        0.7665f, 0.8276f
+        0.560f, 0.370f,
+        0.040f, 0.670f,
+        0.290f, 1.103f,
+        0.810f, 0.803f
     );
     pm3.Initialize();
 
     SlitValve slitValve3(
         0.8f * masterScale,
-        0.4740f, 0.3210f,
-        0.0410f, 0.5710f,
-        0.0835f, 0.6446f,
-        0.5165f, 0.3946f
+        0.517f, 0.296f,
+        -0.002f, 0.596f,
+        0.040f, 0.670f,
+        0.560f, 0.370f
     );
     slitValve3.Initialize();
 
     ProcessModule pm4(
         0.8f * masterScale,
-		0.6f, 0.25f,
-		0.6f, -0.25f,
-		1.1f, -0.25f,
-		1.1f, 0.25f
+        0.600f, -0.300f,
+        0.600f, 0.300f,
+        1.100f, 0.300f,
+        1.100f, -0.300f
 	);
 	pm4.Initialize();
 
     SlitValve slitValve4(
         0.8f * masterScale,
-        0.5150f, -0.2500f,
-        0.5150f, 0.2500f,
-        0.6000f, 0.2500f,
-        0.6000f, -0.2500f
+        0.515f, -0.300f,
+        0.515f, 0.300f,
+        0.600f, 0.300f,
+        0.600f, -0.300f
     );
     slitValve4.Initialize();
+
+    SlitValve slitValve5(
+        0.8f * masterScale,
+        -0.002f, -0.714f,
+        0.517f, -0.489f,
+        0.560f, -0.563f,
+        0.040f, -0.789f
+    );
+    slitValve5.Initialize();
+
+    SlitValve slitValve6(
+        0.8f * masterScale,
+        0.002f, -0.744f,
+        -0.517f, -0.519f,
+        -0.560f, -0.593f,
+        -0.040f, -0.819f
+    );
+    slitValve6.Initialize();
 
     // Start the server
     auto server = std::make_shared<Server>(12345, angle1, angle2, angle3, newInputReceived);
@@ -165,6 +183,9 @@ int main() {
         slitValve3.Render(shader);
         pm4.Render(shader);
         slitValve4.Render(shader);
+
+        slitValve5.Render(shader);
+        slitValve6.Render(shader);
 
         server->Poll(); // Poll the io_context to handle asynchronous operations
 
