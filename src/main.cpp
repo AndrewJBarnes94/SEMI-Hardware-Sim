@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "Chamber/Chamber.h"
 #include "Chamber/ProcessModule.h"
+#include "InputDrivenComponents/SlitValve.h"
 #include "Chamber/Loadport.h"
 #include "Robot/RobotArm.h"
 #include "ErrorHandling.h"
@@ -48,7 +49,7 @@ int main() {
     Shader shader("res/shaders/basic.shader");
     shader.Bind(); // Bind shader once before rendering
 
-    float masterScale = 0.5;
+    float masterScale = 0.5f;
 
     // Initialize Chamber
     Chamber chamber(0.475f * masterScale);
@@ -70,6 +71,15 @@ int main() {
     );
 	pm1.Initialize();
 
+    SlitValve slitValve1(
+        0.8f * masterScale,
+        -0.515f, 0.25f,
+        -0.515f, -0.25f,
+        -0.6f, -0.25f,
+        -0.6f, 0.25f
+    );
+    slitValve1.Initialize();
+
     ProcessModule pm2(
         0.8f * masterScale,
         -0.0835f, 0.6446f,
@@ -78,6 +88,15 @@ int main() {
         -0.3335f, 1.0776f
     );
     pm2.Initialize();
+
+    SlitValve slitValve2(
+        0.8f * masterScale,
+        -0.0410f, 0.5710f,
+        -0.4740f, 0.3210f,
+        -0.5165f, 0.3946f,
+        -0.0835f, 0.6446f
+    );
+    slitValve2.Initialize();
 
     ProcessModule pm3(
         0.8f * masterScale,
@@ -88,6 +107,15 @@ int main() {
     );
     pm3.Initialize();
 
+    SlitValve slitValve3(
+        0.8f * masterScale,
+        0.4740f, 0.3210f,
+        0.0410f, 0.5710f,
+        0.0835f, 0.6446f,
+        0.5165f, 0.3946f
+    );
+    slitValve3.Initialize();
+
     ProcessModule pm4(
         0.8f * masterScale,
 		0.6f, 0.25f,
@@ -96,6 +124,15 @@ int main() {
 		1.1f, 0.25f
 	);
 	pm4.Initialize();
+
+    SlitValve slitValve4(
+        0.8f * masterScale,
+        0.5150f, -0.2500f,
+        0.5150f, 0.2500f,
+        0.6000f, 0.2500f,
+        0.6000f, -0.2500f
+    );
+    slitValve4.Initialize();
 
     // Start the server
     auto server = std::make_shared<Server>(12345, angle1, angle2, angle3, newInputReceived);
@@ -121,9 +158,13 @@ int main() {
         loadport1.Render(shader);
 
         pm1.Render(shader);
+        slitValve1.Render(shader);
         pm2.Render(shader);
+        slitValve2.Render(shader);
         pm3.Render(shader);
+        slitValve3.Render(shader);
         pm4.Render(shader);
+        slitValve4.Render(shader);
 
         server->Poll(); // Poll the io_context to handle asynchronous operations
 
