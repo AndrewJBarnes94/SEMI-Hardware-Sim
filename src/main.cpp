@@ -54,6 +54,7 @@ int main() {
     // Initialize Chamber
     Chamber chamber(0.475f * masterScale);
     chamber.Initialize();
+    chamber.getPositionMap("center");
 
     // Initialize Robot Arm
     RobotArm robotArm(angle1, angle2, angle3, newInputReceived, 0.3f * masterScale);
@@ -152,6 +153,8 @@ int main() {
     );
     slitValve6.Initialize();
 
+
+
     // Start the server
     auto server = std::make_shared<Server>(12345, angle1, angle2, angle3, newInputReceived);
     server->Start();
@@ -166,14 +169,14 @@ int main() {
             newInputReceived = false;
         }
 
-        // Render Chamber
+        // Render Chamber with a specific point
         chamber.Render(shader);
 
         // Render Robot Arm
         robotArm.Render();
 
         // Render Loadport 1
-        loadport1.Render(shader);
+        //loadport1.Render(shader);
 
         pm1.Render(shader);
         slitValve1.Render(shader);
@@ -184,8 +187,8 @@ int main() {
         pm4.Render(shader);
         slitValve4.Render(shader);
 
-        slitValve5.Render(shader);
-        slitValve6.Render(shader);
+        //slitValve5.Render(shader);
+        //slitValve6.Render(shader);
 
         server->Poll(); // Poll the io_context to handle asynchronous operations
 

@@ -18,7 +18,7 @@ if __name__ == "__main__":
     start_angle3 = -90.0
 
     # Number of iterations
-    num_steps = 360
+    num_steps = 45
     increment = 0.5  # Increase each angle by 1 degree per step
     delay = 0.02
 

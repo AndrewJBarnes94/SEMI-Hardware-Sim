@@ -69,10 +69,6 @@ void Chamber::Initialize() {
         positions[(i + 1) * 2 + 1] = sin(angle) * scale;
     }
 
-    for (int i = 0; i < 14; i++) {
-        std::cout << positions[i] << std::endl;
-    }
-
     // Define indices for 6 triangles forming the hexagon
     int index = 0;
     for (int i = 1; i <= 6; ++i) {
@@ -191,17 +187,80 @@ void Chamber::Render(const Shader& shader) {
         // Draw extension2
         GLCall(glUniform4f(location, 0.75f, 0.75f, 0.75f, 1.0f));
         GLCall(glBindVertexArray(extensionVao2));
-        GLCall(glDrawElements(GL_TRIANGLES, numExtensionIndices1, GL_UNSIGNED_INT, nullptr));
+        GLCall(glDrawElements(GL_TRIANGLES, numExtensionIndices2, GL_UNSIGNED_INT, nullptr));
+
+        std::map<std::string, std::vector<float>> positionMap = getPositionMap("none");
+        if (!positionMap.empty()) {
+            std::vector<float> position = positionMap.begin()->second;
+
+            unsigned int pointVao, pointVbo;
+            GLCall(glGenVertexArrays(1, &pointVao));
+            GLCall(glGenBuffers(1, &pointVbo));
+
+            GLCall(glBindVertexArray(pointVao));
+            GLCall(glBindBuffer(GL_ARRAY_BUFFER, pointVbo));
+            GLCall(glBufferData(GL_ARRAY_BUFFER, position.size() * sizeof(float), position.data(), GL_STATIC_DRAW));
+            GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0));
+            GLCall(glEnableVertexAttribArray(0));
+
+            GLCall(glPointSize(15.0f)); // Set the point size to make it larger
+            GLCall(glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f)); // Set color to red
+            GLCall(glDrawArrays(GL_POINTS, 0, 1));
+
+            GLCall(glBindVertexArray(0));
+            GLCall(glDeleteVertexArrays(1, &pointVao));
+            GLCall(glDeleteBuffers(1, &pointVbo));
+        }
+
+        GLenum err;
+        while ((err = glGetError()) != GL_NO_ERROR) {
+            std::cerr << "OpenGL Error: " << err << std::endl;
+        }
+
+        glBindVertexArray(0);
+        shader.Unbind();
+    }
+}
+
+
+
+std::vector<float> Chamber::getPositions() {
+    std::vector<float> allPositions;
+
+    allPositions.insert(allPositions.end(), positions, positions + numVertices * 2);
+    allPositions.insert(allPositions.end(), extensionPositions1, extensionPositions1 + numExtensionVertices1 * 2);
+    allPositions.insert(allPositions.end(), extensionPositions2, extensionPositions2 + numExtensionVertices2 * 2);
+
+    return allPositions;
+}
+
+std::map<std::string, std::vector<float>> Chamber::getPositionMap(const std::string& point) {
+    std::vector<float> positions = getPositions();
+
+	std::map<std::string, std::vector<float>> positionMap;
+    if (point == "center") {
+        positionMap["center"] = { positions[0], positions[1] };
+    }
+    else if (point == "topRight") {
+        positionMap["topRight"] = { positions[2], positions[3] };
+    }
+    else if (point == "top") {
+        positionMap["top"] = { positions[4], positions[5] };
+    }
+    else if (point == "topLeft") {
+        positionMap["topLeft"] = { positions[6], positions[7] };
+    }
+    else if (point == "bottomLeft") {
+        positionMap["bottomLeft"] = { positions[20], positions[21] };
+    }
+    else if (point == "bottom") {
+        positionMap["bottom"] = { positions[26], positions[27] };
+    }
+    else if (point == "bottomRight") {
+        positionMap["bottomRight"] = { positions[28], positions[29] };
     }
     else {
-        std::cerr << "Uniform location for 'u_Color' is invalid." << std::endl;
+        // do nothing
     }
-
-    GLenum err;
-    while ((err = glGetError()) != GL_NO_ERROR) {
-        std::cerr << "OpenGL Error: " << err << std::endl;
-    }
-
-    glBindVertexArray(0);
-    shader.Unbind();
+	return positionMap;
 }
