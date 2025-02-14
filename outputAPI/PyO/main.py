@@ -11,27 +11,39 @@ def send_command(angle1, angle2, angle3):
         s.sendall(command.encode())
         print(f"Sent: {command}")
 
-if __name__ == "__main__":
-    # Initial angles
+def pickAL():
     start_angle1 = 35.0
     start_angle2 = -35.0
     start_angle3 = -90.0
 
-    # Number of iterations
     num_steps = 45
     increment = 0.5  # Increase each angle by 1 degree per step
-    delay = 0.02
+    delay = 0.03
 
     for i in range(num_steps):
-        # Calculate new angles
         angle1 = start_angle1 + (i * increment)
         angle2 = start_angle2 + (i * increment)
         angle3 = start_angle3 + (i * increment)
 
-        # Send the command
         send_command(angle1, angle2, angle3)
+        time.sleep(delay)
 
-        # Wait before sending the next command
+    for i in range(30):
+        angle1 = angle1 - (i * increment * 0.5)
+        angle2 = angle2 + (i * increment * 0.55)
+
+        send_command(angle1, angle2, angle3)
+        time.sleep(delay)
+
+    for i in range(30):
+        angle1 = angle1 + (i * increment * 0.5)
+        angle2 = angle2 - (i * increment * 0.55)
+
+        send_command(angle1, angle2, angle3)
         time.sleep(delay)
 
     print("Command sequence completed.")
+
+
+if __name__ == "__main__":
+    pickAL()
