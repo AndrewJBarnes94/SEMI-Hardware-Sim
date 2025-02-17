@@ -77,14 +77,14 @@ void Chamber::Initialize() {
         indices[index++] = (i % 6) + 1;
     }
 
-    extensionPositions1[0] = -0.205681f;
-    extensionPositions1[1] = -0.08875f;
-    extensionPositions1[2] = 0.0f;
-    extensionPositions1[3] = -0.2075f;
-    extensionPositions1[4] = 0.0f;
-    extensionPositions1[5] = -0.28f;
-    extensionPositions1[6] = -0.205681f;
-    extensionPositions1[7] = -0.19f;
+    extensionPositions1[0] = -0.411362f * scale / 0.475f;
+    extensionPositions1[1] = -0.1775f * scale / 0.475f;
+    extensionPositions1[2] = 0.0f * scale / 0.475f;
+    extensionPositions1[3] = -0.415f * scale / 0.475f;
+    extensionPositions1[4] = 0.0f * scale / 0.475f;
+    extensionPositions1[5] = -0.56f * scale / 0.475f;
+    extensionPositions1[6] = -0.411362f * scale / 0.475f;
+    extensionPositions1[7] = -0.38f * scale / 0.475f;
 
     extensionIndices1[0] = 0;
     extensionIndices1[1] = 1;
@@ -93,14 +93,14 @@ void Chamber::Initialize() {
     extensionIndices1[4] = 2;
     extensionIndices1[5] = 3;
 
-    extensionPositions2[0] = 0.205681f;
-    extensionPositions2[1] = -0.08875f;
-    extensionPositions2[2] = 0.0f;
-    extensionPositions2[3] = -0.2075f;
-    extensionPositions2[4] = 0.0f;
-    extensionPositions2[5] = -0.28f;
-    extensionPositions2[6] = 0.205681f;
-    extensionPositions2[7] = -0.19f;
+    extensionPositions2[0] = 0.411362f * scale / 0.475f;
+    extensionPositions2[1] = -0.1775f * scale / 0.475f;
+    extensionPositions2[2] = 0.0f * scale / 0.475f;
+    extensionPositions2[3] = -0.415f * scale / 0.475f;
+    extensionPositions2[4] = 0.0f * scale / 0.475f;
+    extensionPositions2[5] = -0.56f * scale / 0.475f;
+    extensionPositions2[6] = 0.411362f * scale / 0.475f;
+    extensionPositions2[7] = -0.38f * scale / 0.475f;
 
     extensionIndices2[0] = 0;
     extensionIndices2[1] = 1;
@@ -189,9 +189,9 @@ void Chamber::Render(const Shader& shader) {
         GLCall(glBindVertexArray(extensionVao2));
         GLCall(glDrawElements(GL_TRIANGLES, numExtensionIndices2, GL_UNSIGNED_INT, nullptr));
 
-        std::map<std::string, std::vector<float>> positionMap = getPositionMap("none");
+        std::vector<float> positionMap = getPositionMap("bottom");
         if (!positionMap.empty()) {
-            std::vector<float> position = positionMap.begin()->second;
+            std::vector<float> position = positionMap;
 
             unsigned int pointVao, pointVbo;
             GLCall(glGenVertexArrays(1, &pointVao));
@@ -224,6 +224,7 @@ void Chamber::Render(const Shader& shader) {
 
 
 
+
 std::vector<float> Chamber::getPositions() {
     std::vector<float> allPositions;
 
@@ -234,33 +235,40 @@ std::vector<float> Chamber::getPositions() {
     return allPositions;
 }
 
-std::map<std::string, std::vector<float>> Chamber::getPositionMap(const std::string& point) {
+std::vector<float> Chamber::getPositionMap(const std::string& point) {
     std::vector<float> positions = getPositions();
 
 	std::map<std::string, std::vector<float>> positionMap;
     if (point == "center") {
         positionMap["center"] = { positions[0], positions[1] };
+        return positionMap["center"];
     }
     else if (point == "topRight") {
         positionMap["topRight"] = { positions[2], positions[3] };
+        return positionMap["topRight"];
     }
     else if (point == "top") {
         positionMap["top"] = { positions[4], positions[5] };
+        return positionMap["top"];
     }
     else if (point == "topLeft") {
         positionMap["topLeft"] = { positions[6], positions[7] };
+        return positionMap["topLeft"];
     }
     else if (point == "bottomLeft") {
         positionMap["bottomLeft"] = { positions[20], positions[21] };
+        return positionMap["bottomLeft"];
     }
     else if (point == "bottom") {
         positionMap["bottom"] = { positions[26], positions[27] };
+        return positionMap["bottom"];
     }
     else if (point == "bottomRight") {
         positionMap["bottomRight"] = { positions[28], positions[29] };
+        return positionMap["bottomRight"];
     }
     else {
-        // do nothing
+        return {};
     }
-	return positionMap;
+	
 }

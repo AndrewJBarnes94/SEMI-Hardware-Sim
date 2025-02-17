@@ -1,8 +1,13 @@
 // File: main.cpp
+#include <WinSock2.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <fstream>
 #include <atomic>
+#include <map>
+#include <thread>
+#include <windows.h>
 #include "Shader.h"
 #include "Chamber/Chamber.h"
 #include "Chamber/ProcessModule.h"
@@ -11,20 +16,70 @@
 #include "Robot/RobotArm.h"
 #include "ErrorHandling.h"
 #include "Server.h"
+#include <tlhelp32.h>
+#include <string>
+#include <thread>
+
+// Ensure platform-specific functions are available
+#define GLFW_EXPOSE_NATIVE_WIN32  
+#include <GLFW/glfw3native.h>
+
+// Function to attach a console in debug mode
+void AttachConsoleIfDebug() {
+#ifdef _DEBUG  // Only create a console in debug mode
+    if (AllocConsole()) {
+        freopen("CONOUT$", "w", stdout);
+        freopen("CONOUT$", "w", stderr);
+        freopen("CONIN$", "r", stdin);
+        std::cout << "Debug console attached!" << std::endl;
+    }
+#endif
+}
 
 std::atomic<float> angle1(0.0f);
 std::atomic<float> angle2(0.0f);
 std::atomic<float> angle3(0.0f);
 std::atomic<bool> newInputReceived(false);
 
-int main() {
+// Function to get HWND from GLFW window
+HWND GetOpenGLWindowHandle(GLFWwindow* window) {
+    return glfwGetWin32Window(window);
+}
+
+// **Non-blocking wait for C# to attach window**
+void waitForEmbedding(HWND hWnd) {
+    int timeout = 20;  // Wait for up to 2 seconds (100ms * 20)
+    std::cout << "Waiting for C# application to embed OpenGL window...\n";
+
+    while (timeout-- > 0) {
+        if (GetParent(hWnd) != NULL) {  // C# has attached it
+            std::cout << "Embedded! Showing OpenGL window.\n";
+            //ShowWindow(hWnd, SW_SHOW);
+            return;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Shorter wait time
+    }
+
+    std::cerr << "Warning: C# did not attach OpenGL window in time. Running standalone.\n";
+    ShowWindow(hWnd, SW_SHOW);  // Show anyway if C# does not attach
+}
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    AttachConsoleIfDebug();  // Attach console only in Debug mode
+
+    AttachConsoleIfDebug();  // Attach console only in Debug mode
+
+    //HWND hwnd = GetConsoleWindow();
+    //ShowWindow(hwnd, SW_SHOW);  // Hide the console
+
     // Initialize GLFW
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW." << std::endl;
         return -1;
     }
 
-    // Create window
+    // Create a **hidden** OpenGL window (for embedding)
+    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     GLFWwindow* window = glfwCreateWindow(2000, 2000, "Robot Arm Control", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window." << std::endl;
@@ -42,12 +97,22 @@ int main() {
     }
 
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
-
     GLCall(glClearColor(0.2f, 0.3f, 0.4f, 1.0f));
+
+    HWND hWnd = GetOpenGLWindowHandle(window);
+
+    // **Start non-blocking wait in a separate thread**
+    waitForEmbedding(hWnd);
+
+    // Show the OpenGL window and ensure rendering
+    glfwShowWindow(window);
+    glfwMakeContextCurrent(window);
+    glfwSwapBuffers(window);
+    glfwPollEvents();
 
     // Load Shader
     Shader shader("res/shaders/basic.shader");
-    shader.Bind(); // Bind shader once before rendering
+    shader.Bind();
 
     float masterScale = 0.5f;
 
@@ -70,7 +135,7 @@ int main() {
         -1.1f, -0.3f,
         -1.1f, 0.3f
     );
-	pm1.Initialize();
+    pm1.Initialize();
 
     SlitValve slitValve1(
         0.8f * masterScale,
@@ -123,8 +188,8 @@ int main() {
         0.600f, 0.300f,
         1.100f, 0.300f,
         1.100f, -0.300f
-	);
-	pm4.Initialize();
+    );
+    pm4.Initialize();
 
     SlitValve slitValve4(
         0.8f * masterScale,

@@ -14,7 +14,7 @@ public:
     void Initialize();
     void Render(const Shader& shader);
 
-    std::map<std::string, std::vector<float>> getPositionMap(const std::string& point);
+    std::vector<float> getPositionMap(const std::string& point);
 
 private:
     float scale;
