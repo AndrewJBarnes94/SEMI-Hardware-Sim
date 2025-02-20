@@ -1,0 +1,7 @@
+C:\Users\AJ\Documents\BroCode_Software\PT_Sim\obj\Debug\net481\PT_Sim.csproj.AssemblyReference.cache
+C:\Users\AJ\Documents\BroCode_Software\PT_Sim\obj\Debug\net481\PT_Sim.Form1.resources
+C:\Users\AJ\Documents\BroCode_Software\PT_Sim\obj\Debug\net481\PT_Sim.csproj.GenerateResource.cache
+C:\Users\AJ\Documents\BroCode_Software\PT_Sim\obj\Debug\net481\PT_Sim.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\AJ\Documents\BroCode_Software\PT_Sim\obj\Debug\net481\PT_Sim.AssemblyInfoInputs.cache
+C:\Users\AJ\Documents\BroCode_Software\PT_Sim\obj\Debug\net481\PT_Sim.AssemblyInfo.cs
+C:\Users\AJ\Documents\BroCode_Software\PT_Sim\obj\Debug\net481\PT_Sim.csproj.CoreCompileInputs.cache
