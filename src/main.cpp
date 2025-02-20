@@ -28,9 +28,10 @@
 void AttachConsoleIfDebug() {
 #ifdef _DEBUG  // Only create a console in debug mode
     if (AllocConsole()) {
-        freopen("CONOUT$", "w", stdout);
-        freopen("CONOUT$", "w", stderr);
-        freopen("CONIN$", "r", stdin);
+        FILE* stream;
+        freopen_s(&stream, "CONOUT$", "w", stdout);
+        freopen_s(&stream, "CONOUT$", "w", stderr);
+        freopen_s(&stream, "CONIN$", "r", stdin);
         std::cout << "Debug console attached!" << std::endl;
     }
 #endif
@@ -62,6 +63,15 @@ void waitForEmbedding(HWND hWnd) {
 
     std::cerr << "Warning: C# did not attach OpenGL window in time. Running standalone.\n";
     ShowWindow(hWnd, SW_SHOW);  // Show anyway if C# does not attach
+}
+
+float UpdateRotation(float x, float y, float initialX, float initialY, float angle, float centerX, float centerY) {
+    float xDiff = initialX - centerX;
+    float yDiff = initialY - centerY;
+    // Apply rotation (negate angle for clockwise rotation)
+    x = cos(-angle) * xDiff - sin(-angle) * yDiff + centerX; // New x
+    y = sin(-angle) * xDiff + cos(-angle) * yDiff + centerY; // New y
+    return x;
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
@@ -128,6 +138,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     Loadport loadport1(0.5f * masterScale);
     loadport1.Initialize();
 
+    float slitValveTRx = -0.515f;   // top right x-value
+    float slitValveTRy = 0.3f;      // top right y-value
+	float slitValveBRx = -0.515f;     // bottom right x-value
+	float slitValveBRy = -0.3f;      // bottom right y-value
+	float slitValveBLx = -0.6f;      // bottom left x-value
+	float slitValveBLy = -0.3f;      // bottom left y-value
+	float slitValveTLx = -0.6f;      // top left x-value
+	float slitValveTLy = 0.3f;       // top left y-value
+
+
     ProcessModule pm1(
         0.8f * masterScale,
         -0.6f, 0.3f,
@@ -139,10 +159,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     SlitValve slitValve1(
         0.8f * masterScale,
-        -0.515f, 0.3f,
-        -0.515f, -0.3f,
-        -0.6f, -0.3f,
-        -0.6f, 0.3f
+        slitValveTRx, slitValveTRy,
+        slitValveBRx, slitValveBRy,
+        slitValveBLx, slitValveBLy,
+        slitValveTLx, slitValveTLy
     );
     slitValve1.Initialize();
 
