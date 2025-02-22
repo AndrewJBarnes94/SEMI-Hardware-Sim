@@ -5,13 +5,13 @@ namespace PT_Sim
 {
     public partial class Form1 : Form
     {
-        private GLRenderPanel glPanel;
+        private HA600 glPanel;
 
         public Form1()
         {
             InitializeComponent();
 
-            this.BackColor = System.Drawing.Color.FromArgb(100, 100, 100); // Dark Grey Backgrounf
+            this.BackColor = System.Drawing.Color.FromArgb(0, 0, 0); // Dark Grey Backgrounf
 
             this.WindowState = FormWindowState.Maximized;
 
@@ -20,7 +20,7 @@ namespace PT_Sim
 
         private void InitializeOpenGL()
         {
-            glPanel = new GLRenderPanel();
+            glPanel = new HA600();
             glPanel.Dock = DockStyle.Fill;
             panel1.Controls.Add(glPanel);
 

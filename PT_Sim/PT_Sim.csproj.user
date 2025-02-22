@@ -4,7 +4,7 @@
     <Compile Update="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="GLRenderPanel.cs">
+    <Compile Update="HA600\HA600.cs">
       <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
