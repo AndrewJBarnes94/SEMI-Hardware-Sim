@@ -26,6 +26,9 @@ public class HA600 : GLControl
     private ProcessModule _processModule3;
     private ProcessModule _processModule4;
 
+    private CLP _AL;
+    private CLP _BL;
+
 
     public HA600()
         : base(new GraphicsMode(32, 24, 0, 4))
@@ -35,6 +38,8 @@ public class HA600 : GLControl
         this.Paint += OnPaint;
         this.Resize += OnResize;
     }
+
+    private CLPPositions _CLPPositions;
 
     private void OnLoad(object sender, EventArgs e)
     {
@@ -88,7 +93,17 @@ public class HA600 : GLControl
         _processModule4 = _processModulePositions.GetProcessModule4();
         _processModule4.Initialize();
 
+        // Initialize CLPPositions with the correct slit valves
+        _CLPPositions = new CLPPositions(_slitValve5, _slitValve6);
+
+        // Retrieve and initialize the CLP objects
+        _AL = _CLPPositions.GetAL();
+        _AL.Initialize();  // Assuming CLP has an Initialize() method
+
+        _BL = _CLPPositions.GetBL();
+        _BL.Initialize();
     }
+
 
     private void OnPaint(object sender, PaintEventArgs e)
     {
@@ -106,6 +121,9 @@ public class HA600 : GLControl
         _slitValve6.Render(_shader);
         
         _chamber.Render(_shader);
+
+        _AL.Render(_shader);
+        _BL.Render(_shader);
 
         SwapBuffers();
     }

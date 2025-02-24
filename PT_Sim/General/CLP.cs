@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 using PT_Sim;
-
-
-public class ProcessModule
+public class CLP
 {
-    private float _scale;
-    
+    private float scale;
+
     private int numVertices;
     private int numIndices;
     private float[] positions;
     private uint[] indices;
+    private uint[] indices2;
 
     private int vao, vbo, ebo;
 
@@ -19,9 +18,9 @@ public class ProcessModule
     private float posCx, posCy;
     private float posDx, posDy;
 
-    public ProcessModule(float scale, float posAx, float posAy, float posBx, float posBy, float posCx, float posCy, float posDx, float posDy)
+    public CLP(float scale, float posAx, float posAy, float posBx, float posBy, float posCx, float posCy, float posDx, float posDy)
     {
-        this._scale = scale;
+        this.scale = scale;
         numVertices = 4;
         numIndices = 6;
         positions = new float[]
@@ -38,7 +37,7 @@ public class ProcessModule
         };
     }
 
-    ~ProcessModule()
+    ~CLP()
     {
         GL.DeleteVertexArray(vao);
         GL.DeleteBuffer(vbo);
@@ -112,4 +111,3 @@ public class ProcessModule
     }
 
 }
-
