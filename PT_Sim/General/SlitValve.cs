@@ -1,46 +1,55 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using System.Collections.Generic;
+using OpenTK.Graphics.OpenGL;
 using PT_Sim;
-using System;
-using System.Collections.Generic;
 
-public class HA600TMChamber
+public class SlitValve
 {
     private float scale;
+
     private int numVertices;
     private int numIndices;
     private float[] positions;
     private uint[] indices;
+
     private int vao, vbo, ebo;
 
-    public HA600TMChamber(float scale)
+    private float posAx, posAy;
+    private float posBx, posBy;
+    private float posCx, posCy;
+    private float posDx, posDy;
+
+    public SlitValve(float scale, float posAx, float posAy, float posBx, float posBy, float posCx, float posCy, float posDx, float posDy)
     {
         this.scale = scale;
-        numVertices = 7;
-        numIndices = 18;
+
+        this.posAx = posAx;
+        this.posAy = posAy;
+        this.posBx = posBx;
+        this.posBy = posBy;
+        this.posCx = posCx;
+        this.posCy = posCy;
+        this.posDx = posDx;
+        this.posDy = posDy;
+
+        numVertices = 4;
+        numIndices = 6;
 
         positions = new float[]
         {
-            0.0f * scale, 0.0f * scale,             // Center
-            0.0f * scale, 0.5f * scale,             // Top
-            0.4330127f * scale, 0.25f * scale,      // Top-right
-            0.4330126f * scale, -0.4f * scale,      // Bottom-right
-            0.0f * scale, -0.5894737f * scale,      // Bottom
-            -0.4330126f * scale, -0.4f * scale,     // Bottom-left
-            -0.4330127f * scale, 0.25f * scale      // Top-left
+            posAx * scale, posAy * scale,
+            posBx * scale, posBy * scale,
+            posCx * scale, posCy * scale,
+            posDx * scale, posDy * scale
         };
 
         indices = new uint[]
         {
             0, 1, 2,
-            0, 2, 3,
-            0, 3, 4,
-            0, 4, 5,
-            0, 5, 6,
-            0, 6, 1
+            1, 3, 2
         };
     }
 
-    ~HA600TMChamber()
+    ~SlitValve()
     {
         GL.DeleteVertexArray(vao);
         GL.DeleteBuffer(vbo);
@@ -70,10 +79,11 @@ public class HA600TMChamber
         GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);
         GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
+        // Setup vertex attributes
         GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
         GL.EnableVertexAttribArray(0);
 
-        GL.BindVertexArray(0); // Unbind VAO
+        GL.BindVertexArray(0);
     }
 
     public void Render(Shader shader)
@@ -84,10 +94,13 @@ public class HA600TMChamber
         if (location != -1)
         {
             GL.LineWidth(2.0f);
+            
+            // Draw Outline using Line Loop (No extra indices needed!)
             GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
             GL.BindVertexArray(vao);
             GL.DrawElements(PrimitiveType.LineLoop, numIndices, DrawElementsType.UnsignedInt, 0);
 
+            // Draw Filled Interior (Gray)
             GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
             GL.DrawElements(PrimitiveType.Triangles, numIndices, DrawElementsType.UnsignedInt, 0);
 
@@ -101,13 +114,10 @@ public class HA600TMChamber
     {
         Dictionary<string, List<float>> positionMap = new Dictionary<string, List<float>>
         {
-            { "center", new List<float> { positions[0], positions[1] } },
-            { "top", new List<float> { positions[2], positions[3] } },
-            { "topRight", new List<float> { positions[4], positions[5] } },
-            { "bottomRight", new List<float> { positions[6], positions[7] } },
-            { "bottom", new List<float> { positions[8], positions[9] } },
-            { "bottomLeft", new List<float> { positions[10], positions[11] } },
-            { "topLeft", new List<float> { positions[12], positions[13] } }
+            { "A", new List<float> { posAx, posAy } },
+            { "B", new List<float> { posBx, posBy } },
+            { "C", new List<float> { posCx, posCy } },
+            { "D", new List<float> { posDx, posDy } }
         };
 
         return positionMap[point];

@@ -5,11 +5,27 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using PT_Sim;
+using PT_Sim.General;
 
 public class HA600 : GLControl
 {
     private Shader _shader;
     private HA600TMChamber _chamber;
+
+    private SlitValvePositions _slitValvePositions;
+    private SlitValve _slitValve1;
+    private SlitValve _slitValve2;
+    private SlitValve _slitValve3;
+    private SlitValve _slitValve4;
+    private SlitValve _slitValve5;
+    private SlitValve _slitValve6;
+
+    private ProcessModulePositions _processModulePositions;
+    private ProcessModule _processModule1;
+    private ProcessModule _processModule2;
+    private ProcessModule _processModule3;
+    private ProcessModule _processModule4;
+
 
     public HA600()
         : base(new GraphicsMode(32, 24, 0, 4))
@@ -28,27 +44,67 @@ public class HA600 : GLControl
         // Load and compile shaders
         _shader = new Shader("vertexShader.glsl", "fragmentShader.glsl");
 
-        float scale = 1.0f;
+        float scale = 0.8f;
 
-        // Initialize Chamber_600
         _chamber = new HA600TMChamber(scale);
         _chamber.Initialize();
 
-        Logger.Log(_chamber.GetPositionMap("center"));
-        Logger.Log(_chamber.GetPositionMap("top"));
-        Logger.Log(_chamber.GetPositionMap("topRight"));
-        Logger.Log(_chamber.GetPositionMap("bottomRight"));
-        Logger.Log(_chamber.GetPositionMap("bottom"));
-        Logger.Log(_chamber.GetPositionMap("bottomLeft"));
-        Logger.Log(_chamber.GetPositionMap("topLeft"));
+        _slitValvePositions = new SlitValvePositions(_chamber);
+
+        _slitValve1 = _slitValvePositions.GetSlitValve1();
+        _slitValve1.Initialize();
+
+        _slitValve2 = _slitValvePositions.GetSlitValve2();
+        _slitValve2.Initialize();
+
+        _slitValve3 = _slitValvePositions.GetSlitValve3();
+        _slitValve3.Initialize();
+
+        _slitValve4 = _slitValvePositions.GetSlitValve4();
+        _slitValve4.Initialize();
+
+        _slitValve5 = _slitValvePositions.GetSlitValve5();
+        _slitValve5.Initialize();
+
+        _slitValve6 = _slitValvePositions.GetSlitValve6();
+        _slitValve6.Initialize();
+
+        _processModulePositions = new ProcessModulePositions(
+            _slitValve1,
+            _slitValve2,
+            _slitValve3,
+            _slitValve4
+        );
+
+        _processModule1 = _processModulePositions.GetProcessModule1();
+        _processModule1.Initialize();
+
+        _processModule2 = _processModulePositions.GetProcessModule2();
+        _processModule2.Initialize();
+
+        _processModule3 = _processModulePositions.GetProcessModule3();
+        _processModule3.Initialize();
+
+        _processModule4 = _processModulePositions.GetProcessModule4();
+        _processModule4.Initialize();
 
     }
 
     private void OnPaint(object sender, PaintEventArgs e)
     {
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+        _processModule1.Render(_shader);
+        _processModule2.Render(_shader);
+        _processModule3.Render(_shader);
+        _processModule4.Render(_shader);
 
-        // Render Chamber_600
+        _slitValve1.Render(_shader);
+        _slitValve2.Render(_shader);
+        _slitValve4.Render(_shader);
+        _slitValve3.Render(_shader);
+        _slitValve5.Render(_shader);
+        _slitValve6.Render(_shader);
+        
         _chamber.Render(_shader);
 
         SwapBuffers();
