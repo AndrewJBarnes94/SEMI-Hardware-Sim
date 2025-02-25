@@ -6,13 +6,16 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using PT_Sim;
 using PT_Sim.General;
+using PT_Sim.General.HAVacuumRobot;
 
 public class HA600 : GLControl
 {
     private Shader _shader;
+
     private HA600TMChamber _chamber;
 
     private SlitValvePositions _slitValvePositions;
+
     private SlitValve _slitValve1;
     private SlitValve _slitValve2;
     private SlitValve _slitValve3;
@@ -21,6 +24,7 @@ public class HA600 : GLControl
     private SlitValve _slitValve6;
 
     private ProcessModulePositions _processModulePositions;
+
     private ProcessModule _processModule1;
     private ProcessModule _processModule2;
     private ProcessModule _processModule3;
@@ -93,12 +97,11 @@ public class HA600 : GLControl
         _processModule4 = _processModulePositions.GetProcessModule4();
         _processModule4.Initialize();
 
-        // Initialize CLPPositions with the correct slit valves
         _CLPPositions = new CLPPositions(_slitValve5, _slitValve6);
 
-        // Retrieve and initialize the CLP objects
+
         _AL = _CLPPositions.GetAL();
-        _AL.Initialize();  // Assuming CLP has an Initialize() method
+        _AL.Initialize();
 
         _BL = _CLPPositions.GetBL();
         _BL.Initialize();
@@ -112,6 +115,8 @@ public class HA600 : GLControl
         _processModule2.Render(_shader);
         _processModule3.Render(_shader);
         _processModule4.Render(_shader);
+        _AL.Render(_shader);
+        _BL.Render(_shader);
 
         _slitValve1.Render(_shader);
         _slitValve2.Render(_shader);
@@ -121,9 +126,6 @@ public class HA600 : GLControl
         _slitValve6.Render(_shader);
         
         _chamber.Render(_shader);
-
-        _AL.Render(_shader);
-        _BL.Render(_shader);
 
         SwapBuffers();
     }
