@@ -6,7 +6,6 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using PT_Sim;
 using PT_Sim.General;
-using PT_Sim.General.HAVacuumRobot;
 
 public class HA600 : GLControl
 {
@@ -33,6 +32,7 @@ public class HA600 : GLControl
     private CLP _AL;
     private CLP _BL;
 
+    private HAVacuumRobot _robot;
 
     public HA600()
         : base(new GraphicsMode(32, 24, 0, 4))
@@ -105,6 +105,10 @@ public class HA600 : GLControl
 
         _BL = _CLPPositions.GetBL();
         _BL.Initialize();
+
+        _robot = new HAVacuumRobot(scale);
+        _robot.Initialize();
+
     }
 
 
@@ -126,6 +130,8 @@ public class HA600 : GLControl
         _slitValve6.Render(_shader);
         
         _chamber.Render(_shader);
+
+        _robot.Render(_shader);
 
         SwapBuffers();
     }

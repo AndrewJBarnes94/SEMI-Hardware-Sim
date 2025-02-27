@@ -3,48 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\general\\havacuumrobot\\robot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\havacuumrobot\\robot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\general\\havacuumrobot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\havacuumrobot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\general\\havacuumrobot\\robotendeffector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\havacuumrobot\\robotendeffector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\fragmentshader.glsl||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:fragmentshader.glsl||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\general\\havacuumrobot\\robotarmsegment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\havacuumrobot\\robotarmsegment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\vertexshader.glsl||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:vertexshader.glsl||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\ha600\\ha600tmchamber.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:ha600\\ha600tmchamber.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\ha600\\ha600.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:ha600\\ha600.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\general\\havacuumrobot\\robotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\havacuumrobot\\robotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\ha600\\processmodulepositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:ha600\\processmodulepositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\general\\processmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\processmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\ha600\\clppositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:ha600\\clppositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\general\\clp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\clp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\ha600\\slitvalvepositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:ha600\\slitvalvepositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\general\\slitvalve.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\slitvalve.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -53,7 +29,7 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 234,
+          "DockedWidth": 222,
           "SelectedChildIndex": 2,
           "Children": [
             {
@@ -66,142 +42,73 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Robot.cs",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\HAVacuumRobot\\Robot.cs",
-              "RelativeDocumentMoniker": "General\\HAVacuumRobot\\Robot.cs",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\HAVacuumRobot\\Robot.cs",
-              "RelativeToolTip": "General\\HAVacuumRobot\\Robot.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAQwCwAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "HA600TMChamber.cs",
+              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\HA600\\HA600TMChamber.cs",
+              "RelativeDocumentMoniker": "HA600\\HA600TMChamber.cs",
+              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\HA600\\HA600TMChamber.cs",
+              "RelativeToolTip": "HA600\\HA600TMChamber.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAkwEkAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T11:35:14.844Z",
+              "WhenOpened": "2025-02-27T02:41:53.692Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "RobotBase.cs",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\HAVacuumRobot\\RobotBase.cs",
-              "RelativeDocumentMoniker": "General\\HAVacuumRobot\\RobotBase.cs",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\HAVacuumRobot\\RobotBase.cs",
-              "RelativeToolTip": "General\\HAVacuumRobot\\RobotBase.cs",
-              "ViewState": "AgIAAFcAAAAAAAAAAAAAACcAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T11:34:34.196Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "RobotEndEffector.cs",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\HAVacuumRobot\\RobotEndEffector.cs",
-              "RelativeDocumentMoniker": "General\\HAVacuumRobot\\RobotEndEffector.cs",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\HAVacuumRobot\\RobotEndEffector.cs",
-              "RelativeToolTip": "General\\HAVacuumRobot\\RobotEndEffector.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAAAAwCoAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T11:32:55.53Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "RobotArmSegment.cs",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\HAVacuumRobot\\RobotArmSegment.cs",
-              "RelativeDocumentMoniker": "General\\HAVacuumRobot\\RobotArmSegment.cs",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\HAVacuumRobot\\RobotArmSegment.cs",
-              "RelativeToolTip": "General\\HAVacuumRobot\\RobotArmSegment.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T11:32:24.891Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "CLPPositions.cs",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\HA600\\CLPPositions.cs",
-              "RelativeDocumentMoniker": "HA600\\CLPPositions.cs",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\HA600\\CLPPositions.cs",
-              "RelativeToolTip": "HA600\\CLPPositions.cs",
-              "ViewState": "AgIAAEAAAAAAAAAAAAAUwEkAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-24T03:48:11.503Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "CLP.cs",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\CLP.cs",
-              "RelativeDocumentMoniker": "General\\CLP.cs",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\CLP.cs",
-              "RelativeToolTip": "General\\CLP.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAAAqwCkAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-24T03:39:39.648Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "SlitValve.cs",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\SlitValve.cs",
-              "RelativeDocumentMoniker": "General\\SlitValve.cs",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\SlitValve.cs",
-              "RelativeToolTip": "General\\SlitValve.cs",
-              "ViewState": "AgIAAEYAAAAAAAAAAAAAwGoAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-23T17:52:37.272Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "SlitValvePositions.cs",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\HA600\\SlitValvePositions.cs",
-              "RelativeDocumentMoniker": "HA600\\SlitValvePositions.cs",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\HA600\\SlitValvePositions.cs",
-              "RelativeToolTip": "HA600\\SlitValvePositions.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAUwGEAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-23T14:59:20.747Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "HA600.cs",
               "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\HA600\\HA600.cs",
               "RelativeDocumentMoniker": "HA600\\HA600.cs",
               "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\HA600\\HA600.cs",
               "RelativeToolTip": "HA600\\HA600.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAiwCIAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAYwIUAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-24T04:22:21.475Z",
+              "WhenOpened": "2025-02-27T02:40:31.925Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 212,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "vertexShader.glsl",
+              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\vertexShader.glsl",
+              "RelativeDocumentMoniker": "vertexShader.glsl",
+              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\vertexShader.glsl",
+              "RelativeToolTip": "vertexShader.glsl",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-02-27T03:13:38.453Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "ProcessModule.cs",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\ProcessModule.cs",
-              "RelativeDocumentMoniker": "General\\ProcessModule.cs",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\ProcessModule.cs",
-              "RelativeToolTip": "General\\ProcessModule.cs",
-              "ViewState": "AgIAAE8AAAAAAAAAAAAkwGwAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-23T19:36:36.611Z",
+              "DocumentIndex": 1,
+              "Title": "fragmentShader.glsl",
+              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\fragmentShader.glsl",
+              "RelativeDocumentMoniker": "fragmentShader.glsl",
+              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\fragmentShader.glsl",
+              "RelativeToolTip": "fragmentShader.glsl",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-02-27T03:09:49.161Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ProcessModulePositions.cs",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\HA600\\ProcessModulePositions.cs",
-              "RelativeDocumentMoniker": "HA600\\ProcessModulePositions.cs",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\HA600\\ProcessModulePositions.cs",
-              "RelativeToolTip": "HA600\\ProcessModulePositions.cs",
-              "ViewState": "AgIAAE8AAAAAAAAAAAAkwH0AAAAFAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "HAVacuumRobot.cs",
+              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\HAVacuumRobot.cs",
+              "RelativeDocumentMoniker": "General\\HAVacuumRobot.cs",
+              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\HAVacuumRobot.cs",
+              "RelativeToolTip": "General\\HAVacuumRobot.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAMwDEAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-23T19:36:46.175Z",
+              "WhenOpened": "2025-02-27T02:40:52.896Z",
               "EditorCaption": ""
             }
           ]
