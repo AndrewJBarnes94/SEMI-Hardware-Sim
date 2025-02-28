@@ -7,14 +7,6 @@
       "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\havacuumrobot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\fragmentshader.glsl||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:fragmentshader.glsl||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\vertexshader.glsl||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:vertexshader.glsl||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\pt_sim\\ha600\\ha600tmchamber.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:ha600\\ha600tmchamber.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -30,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 222,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,7 +34,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "HA600TMChamber.cs",
               "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\HA600\\HA600TMChamber.cs",
               "RelativeDocumentMoniker": "HA600\\HA600TMChamber.cs",
@@ -55,7 +47,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "HA600.cs",
               "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\HA600\\HA600.cs",
               "RelativeDocumentMoniker": "HA600\\HA600.cs",
@@ -63,40 +55,7 @@
               "RelativeToolTip": "HA600\\HA600.cs",
               "ViewState": "AgIAAFoAAAAAAAAAAAAYwIUAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-27T02:40:31.925Z",
-              "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedWidth": 212,
-          "SelectedChildIndex": 2,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "vertexShader.glsl",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\vertexShader.glsl",
-              "RelativeDocumentMoniker": "vertexShader.glsl",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\vertexShader.glsl",
-              "RelativeToolTip": "vertexShader.glsl",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-02-27T03:13:38.453Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "fragmentShader.glsl",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\fragmentShader.glsl",
-              "RelativeDocumentMoniker": "fragmentShader.glsl",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\fragmentShader.glsl",
-              "RelativeToolTip": "fragmentShader.glsl",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-02-27T03:09:49.161Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-27T02:40:31.925Z"
             },
             {
               "$type": "Document",
@@ -106,7 +65,7 @@
               "RelativeDocumentMoniker": "General\\HAVacuumRobot.cs",
               "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\PT_Sim\\General\\HAVacuumRobot.cs",
               "RelativeToolTip": "General\\HAVacuumRobot.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAMwDEAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAjwFUAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-27T02:40:52.896Z",
               "EditorCaption": ""

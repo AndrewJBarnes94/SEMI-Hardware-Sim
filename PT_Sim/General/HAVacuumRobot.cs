@@ -77,13 +77,13 @@ class HAVacuumRobot
             // Render Base Circle
             GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
             GL.BindVertexArray(baseVao);
-            GL.DrawElements(PrimitiveType.LineLoop, baseNumIndices, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, baseNumIndices, DrawElementsType.UnsignedInt, 0);
             GL.BindVertexArray(0);
 
             // Render Segment1 (Half-Circle)
             GL.Uniform4(location, 1.0f, 0.0f, 0.0f, 1.0f); // Red color
             GL.BindVertexArray(segment1Vao);
-            GL.DrawElements(PrimitiveType.LineLoop, segment1NumIndices, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, segment1NumIndices, DrawElementsType.UnsignedInt, 0);
             GL.BindVertexArray(0);
         }
 
