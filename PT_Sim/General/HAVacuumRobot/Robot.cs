@@ -1,42 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenTK.Graphics.OpenGL4;
-using System;
+using OpenTK.Graphics.OpenGL;
+using PT_Sim;
 
-public class RobotArm
+public class Robot
 {
     private Shader shader;
-    private volatile float angle1, angle2, angle3;
-    private volatile bool newInputReceived;
-    private float scale, posX, posY, initialRotationRadians;
+    private float scale;
+    private float posX, posY, initialRotationRadians;
+    private float angle1, angle2, angle3;
+    private bool newInputReceived;
+    private RobotArmEndEffector endEffector;
+    private RobotArmAppendage appendage_1, appendage_2;
+    private Base vacuumSeal;
 
-    private RobotBase vacuumSeal;
-    private RobotArmSegment appendage_1, appendage_2;
-    private RobotEndEffector endEffector;
+    private const float PI = 3.14159265358979323846f;
 
-    public RobotArm(ref float angle1, ref float angle2, ref float angle3, ref bool newInputReceived, float scale)
+    public Robot(ref float angle1, ref float angle2, ref float angle3, ref bool newInputReceived, float scale)
     {
-        shader = new Shader("res/shaders/basic.shader"); // Assumes you have a Shader class
+        this.shader = new Shader("vertexShader.glsl", "fragmentShader.glsl");
         this.angle1 = angle1;
         this.angle2 = angle2;
         this.angle3 = angle3;
         this.newInputReceived = newInputReceived;
         this.scale = scale;
-
-        vacuumSeal = new RobotBase(scale);
-        appendage_1 = new RobotArmSegment(scale);
-        appendage_2 = new RobotArmSegment(scale);
-        endEffector = new RobotEndEffector(scale);
+        this.vacuumSeal = new Base(scale);
+        this.appendage_1 = new RobotArmAppendage(scale);
+        this.appendage_2 = new RobotArmAppendage(scale);
+        this.endEffector = new RobotArmEndEffector(scale);
     }
 
     public void Initialize(float posX, float posY, float initialRotationDegrees)
     {
         this.posX = posX;
         this.posY = posY;
-        this.initialRotationRadians = initialRotationDegrees * ((float)Math.PI / 180.0f);
+        this.initialRotationRadians = initialRotationDegrees * (PI / 180.0f);
 
         appendage_1.Initialize();
         appendage_2.Initialize();
@@ -46,14 +44,12 @@ public class RobotArm
         shader.Bind();
     }
 
-    public void Update()
+    public void Update(float angle1, float angle2, float angle3)
     {
-        Console.WriteLine($"Updating robot arm with angles: angle1 = {angle1}, angle2 = {angle2}, angle3 = {angle3}");
-
         // Convert angles to radians
-        float angle1Rad = angle1 * ((float)Math.PI / 180.0f);
-        float angle2Rad = angle2 * ((float)Math.PI / 180.0f);
-        float angle3Rad = angle3 * ((float)Math.PI / 180.0f);
+        float angle1Rad = angle1 * (PI / 180.0f);
+        float angle2Rad = angle2 * (PI / 180.0f);
+        float angle3Rad = angle3 * (PI / 180.0f);
 
         appendage_1.UpdateRotation(angle1Rad, 0.0f, 0.0f);
         var redDotPosition_1 = appendage_1.CalculateRedDotPosition("right");
@@ -82,9 +78,8 @@ public class RobotArm
         var redDotPosition_1 = appendage_1.CalculateRedDotPosition("right");
         var redDotPosition_2 = appendage_2.CalculateRedDotPosition("left");
 
-        // Uncomment if you want to render debug dots
-        // RenderDot(redDotPosition_1.Item1, redDotPosition_1.Item2, 0.01f, 1.0f, 0.0f, 0.0f);
-        // RenderDot(redDotPosition_2.Item1, redDotPosition_2.Item2, 0.01f, 1.0f, 0.0f, 0.0f);
+        //RenderDot(redDotPosition_1.Item1, redDotPosition_1.Item2, 0.01f, 1.0f, 0.0f, 0.0f);
+        //RenderDot(redDotPosition_2.Item1, redDotPosition_2.Item2, 0.01f, 1.0f, 0.0f, 0.0f);
     }
 
     private void RenderDot(float x, float y, float size, float r, float g, float b)
@@ -99,20 +94,21 @@ public class RobotArm
             x - size, y + size
         };
 
-        int[] dotIndices = { 0, 1, 2, 2, 3, 0 };
+        uint[] dotIndices = { 0, 1, 2, 2, 3, 0 };
 
-        int vao = GL.GenVertexArray();
-        int vbo = GL.GenBuffer();
-        int ebo = GL.GenBuffer();
+        int vao, vbo, ebo;
+        GL.GenVertexArrays(1, out vao);
+        GL.GenBuffers(1, out vbo);
+        GL.GenBuffers(1, out ebo);
 
         GL.BindVertexArray(vao);
         GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
         GL.BufferData(BufferTarget.ArrayBuffer, dotVertices.Length * sizeof(float), dotVertices, BufferUsageHint.StaticDraw);
         GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);
-        GL.BufferData(BufferTarget.ElementArrayBuffer, dotIndices.Length * sizeof(int), dotIndices, BufferUsageHint.StaticDraw);
-        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, dotIndices.Length * sizeof(uint), dotIndices, BufferUsageHint.StaticDraw);
+        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), IntPtr.Zero);
         GL.EnableVertexAttribArray(0);
-        GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, 0);
+        GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
 
         GL.DeleteVertexArray(vao);
         GL.DeleteBuffer(vbo);

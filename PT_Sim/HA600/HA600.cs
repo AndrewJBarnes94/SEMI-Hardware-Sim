@@ -32,7 +32,11 @@ public class HA600 : GLControl
     private CLP _AL;
     private CLP _BL;
 
-    private HAVacuumRobot _robot;
+    private Robot _robot;
+    private float angle1 = 45.0f;
+    private float angle2 = 90.0f;
+    private float angle3 = 180.0f;
+    private bool newInputReceived = false;
 
     public HA600()
         : base(new GraphicsMode(32, 24, 0, 4))
@@ -53,7 +57,7 @@ public class HA600 : GLControl
         // Load and compile shaders
         _shader = new Shader("vertexShader.glsl", "fragmentShader.glsl");
 
-        float scale = 0.8f;
+        float scale = 0.6f;
 
         _chamber = new HA600TMChamber(scale);
         _chamber.Initialize();
@@ -99,18 +103,16 @@ public class HA600 : GLControl
 
         _CLPPositions = new CLPPositions(_slitValve5, _slitValve6);
 
-
         _AL = _CLPPositions.GetAL();
         _AL.Initialize();
 
         _BL = _CLPPositions.GetBL();
         _BL.Initialize();
 
-        _robot = new HAVacuumRobot(scale);
-        _robot.Initialize();
-
+        // Initialize Robot
+        _robot = new Robot(ref angle1, ref angle2, ref angle3, ref newInputReceived, scale);
+        _robot.Initialize(90.0f, 90.0f, 45.0f);
     }
-
 
     private void OnPaint(object sender, PaintEventArgs e)
     {
@@ -128,10 +130,16 @@ public class HA600 : GLControl
         _slitValve3.Render(_shader);
         _slitValve5.Render(_shader);
         _slitValve6.Render(_shader);
-        
+
         _chamber.Render(_shader);
 
-        _robot.Render(_shader);
+        // Update and render the robot
+        if (newInputReceived)
+        {
+            _robot.Update(angle1, angle2, angle3);
+            newInputReceived = false;
+        }
+        _robot.Render();
 
         SwapBuffers();
     }
@@ -139,5 +147,14 @@ public class HA600 : GLControl
     private void OnResize(object sender, EventArgs e)
     {
         GL.Viewport(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+    }
+
+    public void SetRobotAngles(float angle1, float angle2, float angle3)
+    {
+        this.angle1 = angle1;
+        this.angle2 = angle2;
+        this.angle3 = angle3;
+        newInputReceived = true;
+        Invalidate(); // Force repaint to update the robot
     }
 }
