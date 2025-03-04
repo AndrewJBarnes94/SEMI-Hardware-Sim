@@ -12,6 +12,9 @@ public class HA600 : GLControl
     private Shader _shader;
 
     private HA600TMChamber _chamber;
+    
+    private HA75Aligner _alignerAL;
+    private HA75Aligner _alignerBL;
 
     private SlitValvePositions _slitValvePositions;
 
@@ -62,6 +65,12 @@ public class HA600 : GLControl
         _chamber = new HA600TMChamber(scale);
         _chamber.Initialize();
 
+        _alignerAL = new HA75Aligner(scale);
+        _alignerAL.Initialize();
+
+        _alignerBL = new HA75Aligner(scale);
+        _alignerBL.Initialize();
+
         _slitValvePositions = new SlitValvePositions(_chamber);
 
         _slitValve1 = _slitValvePositions.GetSlitValve1();
@@ -111,7 +120,8 @@ public class HA600 : GLControl
 
         // Initialize Robot
         _robot = new Robot(ref angle1, ref angle2, ref angle3, ref newInputReceived, scale);
-        _robot.Initialize(90.0f, 90.0f, 45.0f);
+        _robot.Initialize(0.0f, 0.0f, 0.0f);
+        SetRobotAngles(30.0f, -30.0f, -90.0f);
     }
 
     private void OnPaint(object sender, PaintEventArgs e)
@@ -132,6 +142,9 @@ public class HA600 : GLControl
         _slitValve6.Render(_shader);
 
         _chamber.Render(_shader);
+
+        _alignerAL.Render(_shader);
+        _alignerBL.Render(_shader);
 
         // Update and render the robot
         if (newInputReceived)
