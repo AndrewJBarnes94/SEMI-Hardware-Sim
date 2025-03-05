@@ -27,9 +27,33 @@ class HA75Aligner
 
     private const float PI = 3.14159265358979323846f;
 
-    public HA75Aligner(float scale)
+    private float posAx, posAy;
+    private float posBx, posBy;
+    private float posCx, posCy;
+    private float posDx, posDy;
+
+    public HA75Aligner(
+        float scale,
+        float posAx,
+        float posAy,
+        float posBx,
+        float posBy,
+        float posCx,
+        float posCy,
+        float posDx,
+        float posDy
+    )
     {
         this.scale = scale;
+
+        this.posAx = posAx;
+        this.posAy = posAy;
+        this.posBx = posBx;
+        this.posBy = posBy;
+        this.posCx = posCx;
+        this.posCy = posCy;
+        this.posDx = posDx;
+        this.posDy = posDy;
 
         this.numHousingRectangleVertices = 4;
         this.numChuckVertices = 2 * (20 + 1);
@@ -38,10 +62,10 @@ class HA75Aligner
 
         this.housingRectanglePositions = new float[]
         {
-            -0.5f, -0.5f,
-            0.5f, -0.5f,
-            0.5f, 0.5f,
-            -0.5f, 0.5f
+            posAx * scale, posAy * scale,
+            posBx * scale, posBy * scale,
+            posCx * scale, posCy * scale,
+            posDx * scale, posDy * scale
         };
 
         housingRectangleIndices = new int[]
@@ -103,5 +127,36 @@ class HA75Aligner
             
             GL.BindVertexArray(0);
         }
+
+        shader.Unbind();
+    }
+
+    public List<float> GetPositionMap(string point)
+    {
+        Dictionary<string, List<float>> positionMap = new Dictionary<string, List<float>>
+        {
+            { "topLeft", new List<float>
+                {
+                    housingRectanglePositions[0], housingRectanglePositions[1]
+                }
+            },
+            { "topRight", new List<float> 
+                {
+                    housingRectanglePositions[2], housingRectanglePositions[3]
+                }
+            },
+            { "bottomRight", new List<float>
+                {
+                    housingRectanglePositions[4], housingRectanglePositions[5]
+                }
+            },
+            { "bottomLeft", new List<float>
+                {
+                    housingRectanglePositions[6], housingRectanglePositions[7]
+                }
+            }
+        };
+
+        return positionMap[point];
     }
 }

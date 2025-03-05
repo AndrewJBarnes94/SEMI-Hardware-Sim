@@ -18,7 +18,17 @@ public class SlitValve
     private float posCx, posCy;
     private float posDx, posDy;
 
-    public SlitValve(float scale, float posAx, float posAy, float posBx, float posBy, float posCx, float posCy, float posDx, float posDy)
+    public SlitValve(
+        float scale,
+        float posAx,
+        float posAy,
+        float posBx,
+        float posBy,
+        float posCx,
+        float posCy,
+        float posDx,
+        float posDy
+    )
     {
         this.scale = scale;
 

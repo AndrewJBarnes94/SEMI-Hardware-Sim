@@ -68,9 +68,6 @@ public class HA600 : GLControl
         _alignerAL = new HA75Aligner(scale);
         _alignerAL.Initialize();
 
-        _alignerBL = new HA75Aligner(scale);
-        _alignerBL.Initialize();
-
         _slitValvePositions = new SlitValvePositions(_chamber);
 
         _slitValve1 = _slitValvePositions.GetSlitValve1();
