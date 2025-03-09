@@ -28,7 +28,7 @@ namespace PT_Sim.General
         {
             return y1 - m * x1;
         }
-
+        
         public static (float, float) FindPerpendicularPoint_Vector(float x0, float y0, float m, float d)
         {
             // Perpendicular slope (negative reciprocal)

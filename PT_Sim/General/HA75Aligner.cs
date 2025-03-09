@@ -71,7 +71,7 @@ class HA75Aligner
         housingRectangleIndices = new int[]
         {
            0, 1, 2,
-           2, 3, 0
+           1, 3, 2
         };
     }
 
