@@ -20,10 +20,10 @@ class HA75Aligner
     private int chuckVao, chuckVbo, chuckEbo;
 
     private float[] housingRectanglePositions;
-    private float[] chuckPosiotions;
+    private float[] chuckPositions;
 
     private int[] housingRectangleIndices;
-    private int[] chuckIndices;
+    private uint[] chuckIndices;
 
     private const float PI = 3.14159265358979323846f;
 
@@ -31,6 +31,9 @@ class HA75Aligner
     private float posBx, posBy;
     private float posCx, posCy;
     private float posDx, posDy;
+
+    private float chuckCenterX, chuckCenterY;
+    private float chuckRadius;
 
     public HA75Aligner(
         float scale,
@@ -41,7 +44,10 @@ class HA75Aligner
         float posCx,
         float posCy,
         float posDx,
-        float posDy
+        float posDy,
+        float chuckCenterX,
+        float chuckCenterY,
+        float chuckRadius
     )
     {
         this.scale = scale;
@@ -55,10 +61,15 @@ class HA75Aligner
         this.posDx = posDx;
         this.posDy = posDy;
 
+        this.chuckCenterX = chuckCenterX;
+        this.chuckCenterY = chuckCenterY;
+        this.chuckRadius = chuckRadius;
+
         this.numHousingRectangleVertices = 4;
-        this.numChuckVertices = 2 * (20 + 1);
+        this.numChuckVertices = 21; // 20 segments + center
+
         this.numHousingRectangleIndices = 6;
-        this.numChuckIndices = 2 * 3 * 20;
+        this.numChuckIndices = 3 * 20; // 20 triangles
 
         this.housingRectanglePositions = new float[]
         {
@@ -73,6 +84,31 @@ class HA75Aligner
            0, 1, 2,
            1, 3, 2
         };
+
+        // Initialize chuck positions and indices
+        chuckPositions = new float[numChuckVertices * 2];
+        chuckIndices = new uint[numChuckIndices];
+
+        // Center of the chuck
+        chuckPositions[0] = chuckCenterX * scale;
+        chuckPositions[1] = chuckCenterY * scale;
+
+        // Chuck vertices
+        for (int i = 1; i <= 20; ++i)
+        {
+            float theta = 2.0f * PI * i / 20;
+            chuckPositions[2 * i] = chuckCenterX * scale + chuckRadius * scale * (float)Math.Cos(theta); // x
+            chuckPositions[2 * i + 1] = chuckCenterY * scale + chuckRadius * scale * (float)Math.Sin(theta); // y
+        }
+
+        // Chuck indices
+        int index = 0;
+        for (int i = 1; i <= 20; ++i)
+        {
+            chuckIndices[index++] = 0;
+            chuckIndices[index++] = (uint)i;
+            chuckIndices[index++] = (uint)(i % 20 + 1);
+        }
     }
 
     ~HA75Aligner()
@@ -80,6 +116,10 @@ class HA75Aligner
         GL.DeleteVertexArray(housingRectangleVao);
         GL.DeleteBuffer(housingRectangleVbo);
         GL.DeleteBuffer(housingRectangleEbo);
+
+        GL.DeleteVertexArray(chuckVao);
+        GL.DeleteBuffer(chuckVbo);
+        GL.DeleteBuffer(chuckEbo);
     }
 
     public void Initialize()
@@ -108,6 +148,23 @@ class HA75Aligner
         GL.EnableVertexAttribArray(0);
 
         GL.BindVertexArray(0); // Unbind VAO
+
+        // Initialize chuck VAO, VBO, and EBO
+        GL.GenVertexArrays(1, out chuckVao);
+        GL.GenBuffers(1, out chuckVbo);
+        GL.GenBuffers(1, out chuckEbo);
+
+        GL.BindVertexArray(chuckVao);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, chuckVbo);
+        GL.BufferData(BufferTarget.ArrayBuffer, chuckPositions.Length * sizeof(float), chuckPositions, BufferUsageHint.StaticDraw);
+
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, chuckEbo);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, chuckIndices.Length * sizeof(uint), chuckIndices, BufferUsageHint.StaticDraw);
+
+        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+        GL.EnableVertexAttribArray(0);
+
+        GL.BindVertexArray(0); // Unbind VAO
     }
 
     public void Render(Shader shader)
@@ -124,7 +181,15 @@ class HA75Aligner
 
             GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
             GL.DrawElements(PrimitiveType.Triangles, numHousingRectangleIndices, DrawElementsType.UnsignedInt, 0);
-            
+
+            // Render the chuck
+            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
+            GL.BindVertexArray(chuckVao);
+            GL.DrawElements(PrimitiveType.LineLoop, numChuckIndices, DrawElementsType.UnsignedInt, 0);
+
+            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
+            GL.DrawElements(PrimitiveType.Triangles, numChuckIndices, DrawElementsType.UnsignedInt, 0);
+
             GL.BindVertexArray(0);
         }
 
@@ -140,7 +205,7 @@ class HA75Aligner
                     housingRectanglePositions[0], housingRectanglePositions[1]
                 }
             },
-            { "topRight", new List<float> 
+            { "topRight", new List<float>
                 {
                     housingRectanglePositions[2], housingRectanglePositions[3]
                 }

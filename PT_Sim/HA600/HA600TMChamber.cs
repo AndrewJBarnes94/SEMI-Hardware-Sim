@@ -1,5 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using PT_Sim;
+using PT_Sim.General;
 using System;
 using System.Collections.Generic;
 
@@ -18,13 +19,15 @@ public class HA600TMChamber
         numVertices = 7;
         numIndices = 18;
 
+        float bottomYValue = Formulas.pythagorean(-0.4330126f, -0.4f);
+
         positions = new float[]
         {
             0.0f * scale, 0.0f * scale,             // Center
             0.0f * scale, 0.5f * scale,             // Top
             0.4330127f * scale, 0.25f * scale,      // Top-right
             0.4330126f * scale, -0.4f * scale,      // Bottom-right
-            0.0f * scale, -0.5894737f * scale,      // Bottom
+            0.0f * scale, -bottomYValue * scale,    // Bottom
             -0.4330126f * scale, -0.4f * scale,     // Bottom-left
             -0.4330127f * scale, 0.25f * scale      // Top-left
         };

@@ -28,7 +28,7 @@ namespace PT_Sim.General
         {
             return y1 - m * x1;
         }
-        
+
         public static (float, float) FindPerpendicularPoint_Vector(float x0, float y0, float m, float d)
         {
             // Perpendicular slope (negative reciprocal)
@@ -45,6 +45,27 @@ namespace PT_Sim.General
             return (x1, y1);
         }
 
+        public static (float, float) FindIntersectionPoint(float m1, float b1, float m2, float b2)
+        {
+            // Check if the lines are parallel
+            if (m1 == m2)
+            {
+                throw new ArgumentException("The lines are parallel and do not intersect.");
+            }
 
+            // Calculate the intersection point
+            float x = (b2 - b1) / (m1 - m2);
+            float y = m1 * x + b1;
+
+            return (x, y);
+        }
+
+        public static (float, float) FindMiddlePoint(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
+        {
+            float middleX = (x1 + x2 + x3 + x4) / 4;
+            float middleY = (y1 + y2 + y3 + y4) / 4;
+
+            return (middleX, middleY);
+        }
     }
 }
