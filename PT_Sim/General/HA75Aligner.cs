@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
 using PT_Sim;
+using PT_Sim.General;
 
 class HA75Aligner
 {
@@ -12,18 +13,26 @@ class HA75Aligner
 
     private int numHousingRectangleVertices;
     private int numChuckVertices;
+    private int numHalfCircleVertices;
 
     private int numHousingRectangleIndices;
     private int numChuckIndices;
+    private int numHalfCircleIndices;
 
     private int housingRectangleVao, housingRectangleVbo, housingRectangleEbo;
     private int chuckVao, chuckVbo, chuckEbo;
+    private int halfCircle1Vao, halfCircle1Vbo, halfCircle1Ebo;
+    private int halfCircle2Vao, halfCircle2Vbo, halfCircle2Ebo;
 
     private float[] housingRectanglePositions;
     private float[] chuckPositions;
+    private float[] halfCircle1Positions;
+    private float[] halfCircle2Positions;
 
     private int[] housingRectangleIndices;
     private uint[] chuckIndices;
+    private uint[] halfCircle1Indices;
+    private uint[] halfCircle2Indices;
 
     private const float PI = 3.14159265358979323846f;
 
@@ -47,7 +56,15 @@ class HA75Aligner
         float posDy,
         float chuckCenterX,
         float chuckCenterY,
-        float chuckRadius
+        float chuckRadius,
+        float halfCircle1StartX,
+        float halfCircle1StartY,
+        float halfCircle1EndX,
+        float halfCircle1EndY,
+        float halfCircle2StartX,
+        float halfCircle2StartY,
+        float halfCircle2EndX,
+        float halfCircle2EndY
     )
     {
         this.scale = scale;
@@ -67,9 +84,11 @@ class HA75Aligner
 
         this.numHousingRectangleVertices = 4;
         this.numChuckVertices = 21; // 20 segments + center
+        this.numHalfCircleVertices = 11; // 10 segments + center
 
         this.numHousingRectangleIndices = 6;
         this.numChuckIndices = 3 * 20; // 20 triangles
+        this.numHalfCircleIndices = 3 * 10; // 10 triangles
 
         this.housingRectanglePositions = new float[]
         {
@@ -109,6 +128,70 @@ class HA75Aligner
             chuckIndices[index++] = (uint)i;
             chuckIndices[index++] = (uint)(i % 20 + 1);
         }
+
+        // Initialize half circle 1 positions and indices
+        halfCircle1Positions = new float[numHalfCircleVertices * 2];
+        halfCircle1Indices = new uint[numHalfCircleIndices];
+
+        // Center of the half circle 1
+        float halfCircle1CenterX = (halfCircle1StartX + halfCircle1EndX) / 2;
+        float halfCircle1CenterY = (halfCircle1StartY + halfCircle1EndY) / 2;
+        float halfCircle1Radius = Formulas.distance(halfCircle1StartX, halfCircle1StartY, halfCircle1EndX, halfCircle1EndY) / 2;
+
+        // Calculate the angle of the line segment
+        float angle1 = (float)Math.Atan2(halfCircle1EndY - halfCircle1StartY, halfCircle1EndX - halfCircle1StartX);
+
+        halfCircle1Positions[0] = halfCircle1CenterX * scale;
+        halfCircle1Positions[1] = halfCircle1CenterY * scale;
+
+        // Half circle 1 vertices
+        for (int i = 0; i <= 10; ++i)
+        {
+            float theta = angle1 + -PI * i / 10;
+            halfCircle1Positions[2 * i] = halfCircle1CenterX * scale + halfCircle1Radius * scale * (float)Math.Cos(theta); // x
+            halfCircle1Positions[2 * i + 1] = halfCircle1CenterY * scale + halfCircle1Radius * scale * (float)Math.Sin(theta); // y
+        }
+
+        // Half circle 1 indices
+        index = 0;
+        for (int i = 1; i <= 10; ++i)
+        {
+            halfCircle1Indices[index++] = 0;
+            halfCircle1Indices[index++] = (uint)i;
+            halfCircle1Indices[index++] = (uint)(i % 10 + 1);
+        }
+
+        // Initialize half circle 2 positions and indices
+        halfCircle2Positions = new float[numHalfCircleVertices * 2];
+        halfCircle2Indices = new uint[numHalfCircleIndices];
+
+        // Center of the half circle 2
+        float halfCircle2CenterX = (halfCircle2StartX + halfCircle2EndX) / 2;
+        float halfCircle2CenterY = (halfCircle2StartY + halfCircle2EndY) / 2;
+        float halfCircle2Radius = Formulas.distance(halfCircle2StartX, halfCircle2StartY, halfCircle2EndX, halfCircle2EndY) / 2;
+
+        // Calculate the angle of the line segment
+        float angle2 = (float)Math.Atan2(halfCircle2EndY - halfCircle2StartY, halfCircle2EndX - halfCircle2StartX);
+
+        halfCircle2Positions[0] = halfCircle2CenterX * scale;
+        halfCircle2Positions[1] = halfCircle2CenterY * scale;
+
+        // Half circle 2 vertices
+        for (int i = 0; i <= 10; ++i)
+        {
+            float theta = angle2 + -PI * i / 10;
+            halfCircle2Positions[2 * i] = halfCircle2CenterX * scale + halfCircle2Radius * scale * (float)Math.Cos(theta); // x
+            halfCircle2Positions[2 * i + 1] = halfCircle2CenterY * scale + halfCircle2Radius * scale * (float)Math.Sin(theta); // y
+        }
+
+        // Half circle 2 indices
+        index = 0;
+        for (int i = 1; i <= 10; ++i)
+        {
+            halfCircle2Indices[index++] = 0;
+            halfCircle2Indices[index++] = (uint)i;
+            halfCircle2Indices[index++] = (uint)(i % 10 + 1);
+        }
     }
 
     ~HA75Aligner()
@@ -120,6 +203,14 @@ class HA75Aligner
         GL.DeleteVertexArray(chuckVao);
         GL.DeleteBuffer(chuckVbo);
         GL.DeleteBuffer(chuckEbo);
+
+        GL.DeleteVertexArray(halfCircle1Vao);
+        GL.DeleteBuffer(halfCircle1Vbo);
+        GL.DeleteBuffer(halfCircle1Ebo);
+
+        GL.DeleteVertexArray(halfCircle2Vao);
+        GL.DeleteBuffer(halfCircle2Vbo);
+        GL.DeleteBuffer(halfCircle2Ebo);
     }
 
     public void Initialize()
@@ -165,6 +256,40 @@ class HA75Aligner
         GL.EnableVertexAttribArray(0);
 
         GL.BindVertexArray(0); // Unbind VAO
+
+        // Initialize half circle 1 VAO, VBO, and EBO
+        GL.GenVertexArrays(1, out halfCircle1Vao);
+        GL.GenBuffers(1, out halfCircle1Vbo);
+        GL.GenBuffers(1, out halfCircle1Ebo);
+
+        GL.BindVertexArray(halfCircle1Vao);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, halfCircle1Vbo);
+        GL.BufferData(BufferTarget.ArrayBuffer, halfCircle1Positions.Length * sizeof(float), halfCircle1Positions, BufferUsageHint.StaticDraw);
+
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, halfCircle1Ebo);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, halfCircle1Indices.Length * sizeof(uint), halfCircle1Indices, BufferUsageHint.StaticDraw);
+
+        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+        GL.EnableVertexAttribArray(0);
+
+        GL.BindVertexArray(0); // Unbind VAO
+
+        // Initialize half circle 2 VAO, VBO, and EBO
+        GL.GenVertexArrays(1, out halfCircle2Vao);
+        GL.GenBuffers(1, out halfCircle2Vbo);
+        GL.GenBuffers(1, out halfCircle2Ebo);
+
+        GL.BindVertexArray(halfCircle2Vao);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, halfCircle2Vbo);
+        GL.BufferData(BufferTarget.ArrayBuffer, halfCircle2Positions.Length * sizeof(float), halfCircle2Positions, BufferUsageHint.StaticDraw);
+
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, halfCircle2Ebo);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, halfCircle2Indices.Length * sizeof(uint), halfCircle2Indices, BufferUsageHint.StaticDraw);
+
+        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+        GL.EnableVertexAttribArray(0);
+
+        GL.BindVertexArray(0); // Unbind VAO
     }
 
     public void Render(Shader shader)
@@ -174,22 +299,51 @@ class HA75Aligner
 
         if (location != -1)
         {
+            // Draw the perimeter with a black line
             GL.LineWidth(2.0f);
             GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
+
+            // Draw the perimeter of the housing rectangle
             GL.BindVertexArray(housingRectangleVao);
             GL.DrawElements(PrimitiveType.LineLoop, numHousingRectangleIndices, DrawElementsType.UnsignedInt, 0);
 
+            // Draw the perimeter of half circle 1
+            GL.BindVertexArray(halfCircle1Vao);
+            GL.DrawElements(PrimitiveType.LineLoop, numHalfCircleIndices, DrawElementsType.UnsignedInt, 0);
+
+            // Draw the perimeter of half circle 2
+            GL.BindVertexArray(halfCircle2Vao);
+            GL.DrawElements(PrimitiveType.LineLoop, numHalfCircleIndices, DrawElementsType.UnsignedInt, 0);
+
+            // Draw the perimeter of the chuck on top
+            GL.BindVertexArray(chuckVao);
+            GL.DrawElements(PrimitiveType.LineLoop, numChuckIndices, DrawElementsType.UnsignedInt, 0);
+
+            // Draw the filled areas with a gray color
             GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
+
+            // Draw the filled area of the housing rectangle
+            GL.BindVertexArray(housingRectangleVao);
             GL.DrawElements(PrimitiveType.Triangles, numHousingRectangleIndices, DrawElementsType.UnsignedInt, 0);
 
-            // Render the chuck
+            // Draw the filled area of half circle 1
+            GL.BindVertexArray(halfCircle1Vao);
+            GL.DrawElements(PrimitiveType.Triangles, numHalfCircleIndices, DrawElementsType.UnsignedInt, 0);
+
+            // Draw the filled area of half circle 2
+            GL.BindVertexArray(halfCircle2Vao);
+            GL.DrawElements(PrimitiveType.Triangles, numHalfCircleIndices, DrawElementsType.UnsignedInt, 0);
+
+            // Draw the perimeter of the chuck on top
             GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
             GL.BindVertexArray(chuckVao);
             GL.DrawElements(PrimitiveType.LineLoop, numChuckIndices, DrawElementsType.UnsignedInt, 0);
 
             GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
-            GL.DrawElements(PrimitiveType.Triangles, numChuckIndices, DrawElementsType.UnsignedInt, 0);
 
+            // Draw the filled area of the chuck
+            GL.BindVertexArray(chuckVao);
+            GL.DrawElements(PrimitiveType.Triangles, numChuckIndices, DrawElementsType.UnsignedInt, 0);
             GL.BindVertexArray(0);
         }
 
@@ -225,3 +379,4 @@ class HA75Aligner
         return positionMap[point];
     }
 }
+
