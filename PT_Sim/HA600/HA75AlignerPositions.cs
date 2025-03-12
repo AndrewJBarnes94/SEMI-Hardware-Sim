@@ -99,6 +99,47 @@ class HA75AlignerPositions
             _length * 1.8f // Move 10% of the length
         );
 
+        Logger.Log("1", adjustedPerpendicularPoint1);
+        Logger.Log("2", adjustedPerpendicularPoint2);
+        Logger.Log("3", adjustedPerpendicularPoint3);
+        Logger.Log("4", adjustedPerpendicularPoint4);
+
+        (float, float) outerSensorA = Formulas.MovePointTowards(
+            adjustedPerpendicularPoint1.Item1, adjustedPerpendicularPoint1.Item2,
+            adjustedPerpendicularPoint3.Item1, adjustedPerpendicularPoint3.Item2,
+            _length * 0.1f // Move 10% of the length
+        );
+
+        (float, float) adjustedPerpendicularPoint6 = Formulas.MovePointTowards(
+            adjustedPerpendicularPoint2.Item1, adjustedPerpendicularPoint2.Item2,
+            adjustedPerpendicularPoint4.Item1, adjustedPerpendicularPoint4.Item2,
+            _length * 0.1f // Move 10% of the length
+        );
+
+        (float, float) outerSensorB = Formulas.MovePointTowards(
+            adjustedPerpendicularPoint3.Item1, adjustedPerpendicularPoint3.Item2,
+            adjustedPerpendicularPoint1.Item1, adjustedPerpendicularPoint1.Item2,
+            _length * 0.1f // Move 10% of the length
+        );
+
+        (float, float) adjustedPerpendicularPoint8 = Formulas.MovePointTowards(
+            adjustedPerpendicularPoint4.Item1, adjustedPerpendicularPoint4.Item2,
+            adjustedPerpendicularPoint2.Item1, adjustedPerpendicularPoint2.Item2,
+            _length * 0.1f // Move 10% of the length
+        );
+
+        (float, float) outerSensorC = Formulas.MovePointTowards(
+            adjustedPerpendicularPoint8.Item1, adjustedPerpendicularPoint8.Item2,
+            outerSensorA.Item1, outerSensorA.Item2,
+            _length * 0.7f // Move 10% of the length
+        );
+
+        (float, float) outerSensorD = Formulas.MovePointTowards(
+            adjustedPerpendicularPoint6.Item1, adjustedPerpendicularPoint6.Item2,
+            outerSensorB.Item1, outerSensorB.Item2,
+            _length * 0.7f // Move 10% of the length
+        );
+
         // Define chuck positions
         float chuckCenterX = midpoint.Item1;
         float chuckCenterY = midpoint.Item2;
@@ -114,6 +155,42 @@ class HA75AlignerPositions
         float halfCircle2StartY = adjustedPerpendicularPoint3.Item2;
         float halfCircle2EndX = adjustedPerpendicularPoint1.Item1;
         float halfCircle2EndY = adjustedPerpendicularPoint1.Item2;
+
+        (float, float) sensorMidpoint = Formulas.FindMiddlePoint(
+            outerSensorA.Item1, outerSensorA.Item2,
+            outerSensorB.Item1, outerSensorB.Item2,
+            outerSensorC.Item1, outerSensorC.Item2,
+            outerSensorD.Item1, outerSensorD.Item2
+            );
+
+        //(float, float) innerSensorA = Formulas.FindMiddlePoint(sensorMidpoint.Item1, sensorMidpoint.Item2, outerSensorA.Item1, outerSensorA.Item2);
+        //(float, float) innerSensorB = Formulas.FindMiddlePoint(sensorMidpoint.Item1, sensorMidpoint.Item2, outerSensorB.Item1, outerSensorB.Item2);
+        //(float, float) innerSensorC = Formulas.FindMiddlePoint(sensorMidpoint.Item1, sensorMidpoint.Item2, outerSensorC.Item1, outerSensorC.Item2);
+        //(float, float) innerSensorD = Formulas.FindMiddlePoint(sensorMidpoint.Item1, sensorMidpoint.Item2, outerSensorD.Item1, outerSensorD.Item2);
+
+        (float, float) innerSensorA = Formulas.MovePointTowards(
+            outerSensorA.Item1, outerSensorA.Item2,
+            sensorMidpoint.Item1, sensorMidpoint.Item2,
+            _length * 0.15f
+        );
+
+        (float, float) innerSensorB = Formulas.MovePointTowards(
+            outerSensorB.Item1, outerSensorB.Item2,
+            sensorMidpoint.Item1, sensorMidpoint.Item2,
+            _length * 0.15f
+        );
+
+        (float, float) innerSensorC = Formulas.MovePointTowards(
+            outerSensorC.Item1, outerSensorC.Item2,
+            sensorMidpoint.Item1, sensorMidpoint.Item2,
+            _length * 0.15f
+        );
+
+        (float, float) innerSensorD = Formulas.MovePointTowards(
+            outerSensorD.Item1, outerSensorD.Item2,
+            sensorMidpoint.Item1, sensorMidpoint.Item2,
+            _length * 0.15f
+        );
 
         return new HA75Aligner(
             1.0f,
@@ -131,7 +208,19 @@ class HA75AlignerPositions
             halfCircle1StartX, halfCircle1StartY,
             halfCircle1EndX, halfCircle1EndY,
             halfCircle2StartX, halfCircle2StartY,
-            halfCircle2EndX, halfCircle2EndY
+            halfCircle2EndX, halfCircle2EndY,
+
+            // Outer Sensor
+            outerSensorA.Item1, outerSensorA.Item2,
+            outerSensorB.Item1, outerSensorB.Item2,
+            outerSensorC.Item1, outerSensorC.Item2,
+            outerSensorD.Item1, outerSensorD.Item2,
+
+            // Inner Sensor
+            innerSensorA.Item1, innerSensorA.Item2,
+            innerSensorB.Item1, innerSensorB.Item2,
+            innerSensorC.Item1, innerSensorC.Item2,
+            innerSensorD.Item1, innerSensorD.Item2
         );
     }
 }

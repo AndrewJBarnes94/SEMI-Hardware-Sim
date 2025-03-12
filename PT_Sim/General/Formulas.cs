@@ -68,6 +68,13 @@ namespace PT_Sim.General
             return (middleX, middleY);
         }
 
+        public static (float, float) FindMiddlePoint(float x1, float y1, float x2, float y2)
+        {
+            float middleX = (x1 + x2) / 2;
+            float middleY = (y1 + y2) / 2;
+            return (middleX, middleY);
+        }
+
         public static (float, float)[] AdjustRectangle((float, float)[] points)
         {
             // Find leftmost and rightmost x-coordinates
@@ -139,5 +146,89 @@ namespace PT_Sim.General
 
             return (newX, newY);
         }
+
+        public static (float, float, float, float, float, float, float, float) CreateSmallerRectangle(
+     float ax, float ay,
+     float bx, float by,
+     float cx, float cy,
+     float dx, float dy,
+     float scaleFactor)
+        {
+            // Calculate the center point of the rectangle
+            float centerX = (ax + bx + cx + dx) / 4;
+            float centerY = (ay + by + cy + dy) / 4;
+
+            // Find the minimum and maximum x and y coordinates
+            float minX = Math.Min(Math.Min(ax, bx), Math.Min(cx, dx));
+            float maxX = Math.Max(Math.Max(ax, bx), Math.Max(cx, dx));
+            float minY = Math.Min(Math.Min(ay, by), Math.Min(cy, dy));
+            float maxY = Math.Max(Math.Max(ay, by), Math.Max(cy, dy));
+
+            // Calculate the width and height of the original rectangle
+            float width = maxX - minX;
+            float height = maxY - minY;
+
+            // Calculate the new width and height based on the scale factor
+            float newWidth = width * scaleFactor;
+            float newHeight = height * scaleFactor;
+
+            // Calculate the new rectangle points
+            float newAx = centerX - newWidth / 2;
+            float newAy = centerY - newHeight / 2;
+            float newBx = centerX + newWidth / 2;
+            float newBy = centerY - newHeight / 2;
+            float newCx = centerX + newWidth / 2;
+            float newCy = centerY + newHeight / 2;
+            float newDx = centerX - newWidth / 2;
+            float newDy = centerY + newHeight / 2;
+
+            return (newAx, newAy, newBx, newBy, newCx, newCy, newDx, newDy);
+        }
+
+        public static (float, float, float, float, float, float, float, float) CreateScaledRectangle(
+    float ax, float ay,
+    float bx, float by,
+    float cx, float cy,
+    float dx, float dy,
+    float scaleFactor)
+        {
+            // Calculate the direction vectors for each side of the rectangle
+            float abx = bx - ax;
+            float aby = by - ay;
+            float bcx = cx - bx;
+            float bcy = cy - by;
+            float cdx = dx - cx;
+            float cdy = dy - cy;
+            float dax = ax - dx;
+            float day = ay - dy;
+
+            // Scale the direction vectors
+            abx *= scaleFactor;
+            aby *= scaleFactor;
+            bcx *= scaleFactor;
+            bcy *= scaleFactor;
+            cdx *= scaleFactor;
+            cdy *= scaleFactor;
+            dax *= scaleFactor;
+            day *= scaleFactor;
+
+            // Calculate the new positions of the vertices
+            float newAx = ax + dax;
+            float newAy = ay + day;
+            float newBx = bx + abx;
+            float newBy = by + aby;
+            float newCx = cx + bcx;
+            float newCy = cy + bcy;
+            float newDx = dx + cdx;
+            float newDy = dy + cdy;
+
+            return (newAx, newAy, newBx, newBy, newCx, newCy, newDx, newDy);
+        }
+
+
+
+
+
+
     }
 }

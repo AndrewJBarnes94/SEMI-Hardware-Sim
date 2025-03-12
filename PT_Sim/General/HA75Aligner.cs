@@ -14,25 +14,35 @@ class HA75Aligner
     private int numHousingRectangleVertices;
     private int numChuckVertices;
     private int numHalfCircleVertices;
+    private int numOuterSensorVertices;
+    private int numInnerSensorVertices;
 
     private int numHousingRectangleIndices;
     private int numChuckIndices;
     private int numHalfCircleIndices;
+    private int numOuterSensorIndices;
+    private int numInnerSensorIndices;
 
     private int housingRectangleVao, housingRectangleVbo, housingRectangleEbo;
     private int chuckVao, chuckVbo, chuckEbo;
     private int halfCircle1Vao, halfCircle1Vbo, halfCircle1Ebo;
     private int halfCircle2Vao, halfCircle2Vbo, halfCircle2Ebo;
+    private int outerSensorVao, outerSensorVbo, outerSensorEbo;
+    private int innerSensorVao, innerSensorVbo, innerSensorEbo;
 
     private float[] housingRectanglePositions;
     private float[] chuckPositions;
     private float[] halfCircle1Positions;
     private float[] halfCircle2Positions;
+    private float[] outerSensorPositions;
+    private float[] innerSensorPositions;
 
-    private int[] housingRectangleIndices;
+    private uint[] housingRectangleIndices;
     private uint[] chuckIndices;
     private uint[] halfCircle1Indices;
     private uint[] halfCircle2Indices;
+    private uint[] outerSensorIndices;
+    private uint[] innerSensorIndices;
 
     private const float PI = 3.14159265358979323846f;
 
@@ -54,9 +64,11 @@ class HA75Aligner
         float posCy,
         float posDx,
         float posDy,
+
         float chuckCenterX,
         float chuckCenterY,
         float chuckRadius,
+
         float halfCircle1StartX,
         float halfCircle1StartY,
         float halfCircle1EndX,
@@ -64,7 +76,25 @@ class HA75Aligner
         float halfCircle2StartX,
         float halfCircle2StartY,
         float halfCircle2EndX,
-        float halfCircle2EndY
+        float halfCircle2EndY,
+
+        float outerSensorAx,
+        float outerSensorAy,
+        float outerSensorBx,
+        float outerSensorBy,
+        float outerSensorCx,
+        float outerSensorCy,
+        float outerSensorDx,
+        float outerSensorDy,
+
+        float innerSensorAx,
+        float innerSensorAy,
+        float innerSensorBx,
+        float innerSensorBy,
+        float innerSensorCx,
+        float innerSensorCy,
+        float innerSensorDx,
+        float innerSensorDy
     )
     {
         this.scale = scale;
@@ -85,10 +115,14 @@ class HA75Aligner
         this.numHousingRectangleVertices = 4;
         this.numChuckVertices = 21; // 20 segments + center
         this.numHalfCircleVertices = 11; // 10 segments + center
+        this.numOuterSensorVertices = 4;
+        this.numInnerSensorVertices = 4;
 
         this.numHousingRectangleIndices = 6;
         this.numChuckIndices = 3 * 20; // 20 triangles
         this.numHalfCircleIndices = 3 * 10; // 10 triangles
+        this.numOuterSensorIndices = 6;
+        this.numInnerSensorIndices = 6;
 
         this.housingRectanglePositions = new float[]
         {
@@ -98,7 +132,7 @@ class HA75Aligner
             posDx * scale, posDy * scale
         };
 
-        housingRectangleIndices = new int[]
+        housingRectangleIndices = new uint[]
         {
            0, 1, 2,
            1, 3, 2
@@ -192,6 +226,34 @@ class HA75Aligner
             halfCircle2Indices[index++] = (uint)i;
             halfCircle2Indices[index++] = (uint)(i % 10 + 1);
         }
+
+        this.outerSensorPositions = new float[]
+        {
+             outerSensorAx * scale,  outerSensorAy* scale,
+             outerSensorBx * scale, outerSensorBy * scale,
+             outerSensorCx * scale, outerSensorCy * scale,
+             outerSensorDx * scale, outerSensorDy * scale
+        };
+
+        outerSensorIndices = new uint[]
+        {
+           0, 1, 2,
+           1, 3, 2
+        };
+
+        this.innerSensorPositions = new float[]
+        {
+             innerSensorAx * scale,  innerSensorAy* scale,
+             innerSensorBx * scale, innerSensorBy * scale,
+             innerSensorCx * scale, innerSensorCy * scale,
+             innerSensorDx * scale, innerSensorDy * scale
+        };
+
+        innerSensorIndices = new uint[]
+        {
+           0, 1, 2,
+           1, 3, 2
+        };
     }
 
     ~HA75Aligner()
@@ -211,6 +273,14 @@ class HA75Aligner
         GL.DeleteVertexArray(halfCircle2Vao);
         GL.DeleteBuffer(halfCircle2Vbo);
         GL.DeleteBuffer(halfCircle2Ebo);
+
+        GL.DeleteVertexArray(outerSensorVao);
+        GL.DeleteBuffer(outerSensorVbo);
+        GL.DeleteBuffer(outerSensorEbo);
+
+        GL.DeleteVertexArray(innerSensorVao);
+        GL.DeleteBuffer(innerSensorVbo);
+        GL.DeleteBuffer(innerSensorEbo);
     }
 
     public void Initialize()
@@ -290,6 +360,40 @@ class HA75Aligner
         GL.EnableVertexAttribArray(0);
 
         GL.BindVertexArray(0); // Unbind VAO
+
+        // Initialize outer sensor VAO, VBO, and EBO
+        GL.GenVertexArrays(1, out outerSensorVao);
+        GL.GenBuffers(1, out outerSensorVbo);
+        GL.GenBuffers(1, out outerSensorEbo);
+
+        GL.BindVertexArray(outerSensorVao);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, outerSensorVbo);
+        GL.BufferData(BufferTarget.ArrayBuffer, outerSensorPositions.Length * sizeof(float), outerSensorPositions, BufferUsageHint.StaticDraw);
+
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, outerSensorEbo);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, outerSensorIndices.Length * sizeof(uint), outerSensorIndices, BufferUsageHint.StaticDraw);
+
+        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+        GL.EnableVertexAttribArray(0);
+
+        GL.BindVertexArray(0);
+
+        // Initialize inner sensor VAO, VBO, and EBO
+        GL.GenVertexArrays(1, out innerSensorVao);
+        GL.GenBuffers(1, out innerSensorVbo);
+        GL.GenBuffers(1, out innerSensorEbo);
+
+        GL.BindVertexArray(innerSensorVao);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, innerSensorVbo);
+        GL.BufferData(BufferTarget.ArrayBuffer, innerSensorPositions.Length * sizeof(float), innerSensorPositions, BufferUsageHint.StaticDraw);
+
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, innerSensorEbo);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, innerSensorIndices.Length * sizeof(uint), innerSensorIndices, BufferUsageHint.StaticDraw);
+
+        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+        GL.EnableVertexAttribArray(0);
+
+        GL.BindVertexArray(0);
     }
 
     public void Render(Shader shader)
@@ -344,6 +448,29 @@ class HA75Aligner
             // Draw the filled area of the chuck
             GL.BindVertexArray(chuckVao);
             GL.DrawElements(PrimitiveType.Triangles, numChuckIndices, DrawElementsType.UnsignedInt, 0);
+            GL.BindVertexArray(0);
+
+            // Draw the perimeter of the outer sensor
+            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
+            GL.BindVertexArray(outerSensorVao);
+            GL.DrawElements(PrimitiveType.LineLoop, numOuterSensorIndices, DrawElementsType.UnsignedInt, 0);
+
+            // Draw the filled area of the outer sensor
+            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
+            GL.BindVertexArray(outerSensorVao);
+            GL.DrawElements(PrimitiveType.Triangles, numOuterSensorIndices, DrawElementsType.UnsignedInt, 0);
+            GL.BindVertexArray(0);
+
+            // Draw the perimeter of the inner sensor
+            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
+            GL.BindVertexArray(innerSensorVao);
+            GL.DrawElements(PrimitiveType.LineLoop, numInnerSensorIndices, DrawElementsType.UnsignedInt, 0);
+
+            // Draw the filled area of the inner sensor
+            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
+            GL.BindVertexArray(innerSensorVao);
+            GL.DrawElements(PrimitiveType.Triangles, numInnerSensorIndices, DrawElementsType.UnsignedInt, 0);
+
             GL.BindVertexArray(0);
         }
 
