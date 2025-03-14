@@ -9,7 +9,42 @@ using PT_Sim.General;
 
 class HA75Aligner
 {
-    private float scale;
+    public float Scale { get; }
+    public float PosAx { get; }
+    public float PosAy { get; }
+    public float PosBx { get; }
+    public float PosBy { get; }
+    public float PosCx { get; }
+    public float PosCy { get; }
+    public float PosDx { get; }
+    public float PosDy { get; }
+    public float ChuckCenterX { get; }
+    public float ChuckCenterY { get; }
+    public float ChuckRadius { get; }
+    public float HalfCircle1StartX { get; }
+    public float HalfCircle1StartY { get; }
+    public float HalfCircle1EndX { get; }
+    public float HalfCircle1EndY { get; }
+    public float HalfCircle2StartX { get; }
+    public float HalfCircle2StartY { get; }
+    public float HalfCircle2EndX { get; }
+    public float HalfCircle2EndY { get; }
+    public float OuterSensorAx { get; }
+    public float OuterSensorAy { get; }
+    public float OuterSensorBx { get; }
+    public float OuterSensorBy { get; }
+    public float OuterSensorCx { get; }
+    public float OuterSensorCy { get; }
+    public float OuterSensorDx { get; }
+    public float OuterSensorDy { get; }
+    public float InnerSensorAx { get; }
+    public float InnerSensorAy { get; }
+    public float InnerSensorBx { get; }
+    public float InnerSensorBy { get; }
+    public float InnerSensorCx { get; }
+    public float InnerSensorCy { get; }
+    public float InnerSensorDx { get; }
+    public float InnerSensorDy { get; }
 
     private int numHousingRectangleVertices;
     private int numChuckVertices;
@@ -45,14 +80,6 @@ class HA75Aligner
     private uint[] innerSensorIndices;
 
     private const float PI = 3.14159265358979323846f;
-
-    private float posAx, posAy;
-    private float posBx, posBy;
-    private float posCx, posCy;
-    private float posDx, posDy;
-
-    private float chuckCenterX, chuckCenterY;
-    private float chuckRadius;
 
     public HA75Aligner(
         float scale,
@@ -97,34 +124,56 @@ class HA75Aligner
         float innerSensorDy
     )
     {
-        this.scale = scale;
+        Scale = scale;
+        PosAx = posAx;
+        PosAy = posAy;
+        PosBx = posBx;
+        PosBy = posBy;
+        PosCx = posCx;
+        PosCy = posCy;
+        PosDx = posDx;
+        PosDy = posDy;
+        ChuckCenterX = chuckCenterX;
+        ChuckCenterY = chuckCenterY;
+        ChuckRadius = chuckRadius;
+        HalfCircle1StartX = halfCircle1StartX;
+        HalfCircle1StartY = halfCircle1StartY;
+        HalfCircle1EndX = halfCircle1EndX;
+        HalfCircle1EndY = halfCircle1EndY;
+        HalfCircle2StartX = halfCircle2StartX;
+        HalfCircle2StartY = halfCircle2StartY;
+        HalfCircle2EndX = halfCircle2EndX;
+        HalfCircle2EndY = halfCircle2EndY;
+        OuterSensorAx = outerSensorAx;
+        OuterSensorAy = outerSensorAy;
+        OuterSensorBx = outerSensorBx;
+        OuterSensorBy = outerSensorBy;
+        OuterSensorCx = outerSensorCx;
+        OuterSensorCy = outerSensorCy;
+        OuterSensorDx = outerSensorDx;
+        OuterSensorDy = outerSensorDy;
+        InnerSensorAx = innerSensorAx;
+        InnerSensorAy = innerSensorAy;
+        InnerSensorBx = innerSensorBx;
+        InnerSensorBy = innerSensorBy;
+        InnerSensorCx = innerSensorCx;
+        InnerSensorCy = innerSensorCy;
+        InnerSensorDx = innerSensorDx;
+        InnerSensorDy = innerSensorDy;
 
-        this.posAx = posAx;
-        this.posAy = posAy;
-        this.posBx = posBx;
-        this.posBy = posBy;
-        this.posCx = posCx;
-        this.posCy = posCy;
-        this.posDx = posDx;
-        this.posDy = posDy;
+        numHousingRectangleVertices = 4;
+        numChuckVertices = 21; // 20 segments + center
+        numHalfCircleVertices = 11; // 10 segments + center
+        numOuterSensorVertices = 4;
+        numInnerSensorVertices = 4;
 
-        this.chuckCenterX = chuckCenterX;
-        this.chuckCenterY = chuckCenterY;
-        this.chuckRadius = chuckRadius;
+        numHousingRectangleIndices = 6;
+        numChuckIndices = 3 * 20; // 20 triangles
+        numHalfCircleIndices = 3 * 10; // 10 triangles
+        numOuterSensorIndices = 6;
+        numInnerSensorIndices = 6;
 
-        this.numHousingRectangleVertices = 4;
-        this.numChuckVertices = 21; // 20 segments + center
-        this.numHalfCircleVertices = 11; // 10 segments + center
-        this.numOuterSensorVertices = 4;
-        this.numInnerSensorVertices = 4;
-
-        this.numHousingRectangleIndices = 6;
-        this.numChuckIndices = 3 * 20; // 20 triangles
-        this.numHalfCircleIndices = 3 * 10; // 10 triangles
-        this.numOuterSensorIndices = 6;
-        this.numInnerSensorIndices = 6;
-
-        this.housingRectanglePositions = new float[]
+        housingRectanglePositions = new float[]
         {
             posAx * scale, posAy * scale,
             posBx * scale, posBy * scale,
@@ -227,7 +276,7 @@ class HA75Aligner
             halfCircle2Indices[index++] = (uint)(i % 10 + 1);
         }
 
-        this.outerSensorPositions = new float[]
+        outerSensorPositions = new float[]
         {
              outerSensorAx * scale,  outerSensorAy* scale,
              outerSensorBx * scale, outerSensorBy * scale,
@@ -241,7 +290,7 @@ class HA75Aligner
            1, 3, 2
         };
 
-        this.innerSensorPositions = new float[]
+        innerSensorPositions = new float[]
         {
              innerSensorAx * scale,  innerSensorAy* scale,
              innerSensorBx * scale, innerSensorBy * scale,

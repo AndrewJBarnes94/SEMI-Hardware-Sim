@@ -8,6 +8,8 @@ using PT_Sim.General;
 
 class HA75AlignerPositions
 {
+    private const float PI = 3.14159265358979323846f;
+
     private HA600TMChamber _chamber;
 
     private float _length;
@@ -168,28 +170,38 @@ class HA75AlignerPositions
         //(float, float) innerSensorC = Formulas.FindMiddlePoint(sensorMidpoint.Item1, sensorMidpoint.Item2, outerSensorC.Item1, outerSensorC.Item2);
         //(float, float) innerSensorD = Formulas.FindMiddlePoint(sensorMidpoint.Item1, sensorMidpoint.Item2, outerSensorD.Item1, outerSensorD.Item2);
 
+        (float, float) sensorTopMidpoint = Formulas.FindMiddlePoint(
+            outerSensorB.Item1, outerSensorB.Item2,
+            outerSensorD.Item1, outerSensorD.Item2
+        );
+
+        (float, float) sensorBottomMidpoint = Formulas.FindMiddlePoint(
+            outerSensorA.Item1, outerSensorA.Item2,
+            outerSensorC.Item1, outerSensorC.Item2
+        );
+
         (float, float) innerSensorA = Formulas.MovePointTowards(
             outerSensorA.Item1, outerSensorA.Item2,
-            sensorMidpoint.Item1, sensorMidpoint.Item2,
-            _length * 0.15f
+            sensorTopMidpoint.Item1, sensorTopMidpoint.Item2,
+            _length * 0.13f
         );
 
         (float, float) innerSensorB = Formulas.MovePointTowards(
             outerSensorB.Item1, outerSensorB.Item2,
-            sensorMidpoint.Item1, sensorMidpoint.Item2,
-            _length * 0.15f
+            sensorBottomMidpoint.Item1, sensorBottomMidpoint.Item2,
+            _length * 0.13f
         );
 
         (float, float) innerSensorC = Formulas.MovePointTowards(
             outerSensorC.Item1, outerSensorC.Item2,
-            sensorMidpoint.Item1, sensorMidpoint.Item2,
-            _length * 0.15f
+            sensorTopMidpoint.Item1, sensorTopMidpoint.Item2,
+            _length * 0.13f
         );
 
         (float, float) innerSensorD = Formulas.MovePointTowards(
             outerSensorD.Item1, outerSensorD.Item2,
-            sensorMidpoint.Item1, sensorMidpoint.Item2,
-            _length * 0.15f
+            sensorBottomMidpoint.Item1, sensorBottomMidpoint.Item2,
+            _length * 0.13f
         );
 
         return new HA75Aligner(
@@ -221,6 +233,52 @@ class HA75AlignerPositions
             innerSensorB.Item1, innerSensorB.Item2,
             innerSensorC.Item1, innerSensorC.Item2,
             innerSensorD.Item1, innerSensorD.Item2
+        );
+    }
+
+    public HA75Aligner GetMirroredHA75Aligner(HA75Aligner originalAligner)
+    {
+        // Mirror the points about the y-axis
+        float MirrorX(float x) => -x;
+
+        // Calculate the mirrored half circle 1 points
+        float halfCircle1CenterX = (originalAligner.HalfCircle1StartX + originalAligner.HalfCircle1EndX) / 2;
+        float halfCircle1CenterY = (originalAligner.HalfCircle1StartY + originalAligner.HalfCircle1EndY) / 2;
+        float halfCircle1Radius = Formulas.distance(originalAligner.HalfCircle1StartX, originalAligner.HalfCircle1StartY, originalAligner.HalfCircle1EndX, originalAligner.HalfCircle1EndY) / 2;
+        float angle1 = (float)Math.Atan2(originalAligner.HalfCircle1EndY - originalAligner.HalfCircle1StartY, originalAligner.HalfCircle1EndX - originalAligner.HalfCircle1StartX);
+
+        // Calculate the mirrored half circle 2 points
+        float halfCircle2CenterX = (originalAligner.HalfCircle2StartX + originalAligner.HalfCircle2EndX) / 2;
+        float halfCircle2CenterY = (originalAligner.HalfCircle2StartY + originalAligner.HalfCircle2EndY) / 2;
+        float halfCircle2Radius = Formulas.distance(originalAligner.HalfCircle2StartX, originalAligner.HalfCircle2StartY, originalAligner.HalfCircle2EndX, originalAligner.HalfCircle2EndY) / 2;
+        float angle2 = (float)Math.Atan2(originalAligner.HalfCircle2EndY - originalAligner.HalfCircle2StartY, originalAligner.HalfCircle2EndX - originalAligner.HalfCircle2StartX);
+
+        // Mirror the half circle start and end points
+        float mirroredHalfCircle1StartX = MirrorX(originalAligner.HalfCircle1StartX);
+        float mirroredHalfCircle1EndX = MirrorX(originalAligner.HalfCircle1EndX);
+        float mirroredHalfCircle2StartX = MirrorX(originalAligner.HalfCircle2StartX);
+        float mirroredHalfCircle2EndX = MirrorX(originalAligner.HalfCircle2EndX);
+
+        return new HA75Aligner(
+            originalAligner.Scale,
+            MirrorX(originalAligner.PosAx), originalAligner.PosAy,
+            MirrorX(originalAligner.PosBx), originalAligner.PosBy,
+            MirrorX(originalAligner.PosCx), originalAligner.PosCy,
+            MirrorX(originalAligner.PosDx), originalAligner.PosDy,
+            MirrorX(originalAligner.ChuckCenterX), originalAligner.ChuckCenterY,
+            originalAligner.ChuckRadius,
+            mirroredHalfCircle1StartX, originalAligner.HalfCircle1StartY,
+            mirroredHalfCircle1EndX, originalAligner.HalfCircle1EndY,
+            mirroredHalfCircle2StartX, originalAligner.HalfCircle2StartY,
+            mirroredHalfCircle2EndX, originalAligner.HalfCircle2EndY,
+            MirrorX(originalAligner.OuterSensorAx), originalAligner.OuterSensorAy,
+            MirrorX(originalAligner.OuterSensorBx), originalAligner.OuterSensorBy,
+            MirrorX(originalAligner.OuterSensorCx), originalAligner.OuterSensorCy,
+            MirrorX(originalAligner.OuterSensorDx), originalAligner.OuterSensorDy,
+            MirrorX(originalAligner.InnerSensorAx), originalAligner.InnerSensorAy,
+            MirrorX(originalAligner.InnerSensorBx), originalAligner.InnerSensorBy,
+            MirrorX(originalAligner.InnerSensorCx), originalAligner.InnerSensorCy,
+            MirrorX(originalAligner.InnerSensorDx), originalAligner.InnerSensorDy
         );
     }
 }
