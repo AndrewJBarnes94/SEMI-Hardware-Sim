@@ -17,6 +17,17 @@ class HA75AlignerPositions
     private float _gradient1;
     private float _gradient2;
 
+    private float halfCircle1StartX;
+    private float halfCircle1StartY;
+    private float halfCircle1EndX;
+    private float halfCircle1EndY;
+
+    private float halfCircle2StartX;
+    private float halfCircle2StartY;
+    private float halfCircle2EndX;
+    private float halfCircle2EndY;
+
+
     public HA75AlignerPositions(
         HA600TMChamber chamber
     )
@@ -71,10 +82,6 @@ class HA75AlignerPositions
             perpendicularPoint4.Item1, perpendicularPoint4.Item2
         );
 
-        Logger.Log("1", perpendicularPoint1);
-        Logger.Log("2", perpendicularPoint2);
-        Logger.Log("3", perpendicularPoint3);
-        Logger.Log("4", perpendicularPoint4);
 
         (float, float) adjustedPerpendicularPoint1 = Formulas.MovePointTowards(
             perpendicularPoint4.Item1, perpendicularPoint4.Item2,
@@ -100,11 +107,6 @@ class HA75AlignerPositions
             perpendicularPoint4.Item1, perpendicularPoint4.Item2,
             _length * 1.8f // Move 10% of the length
         );
-
-        Logger.Log("1", adjustedPerpendicularPoint1);
-        Logger.Log("2", adjustedPerpendicularPoint2);
-        Logger.Log("3", adjustedPerpendicularPoint3);
-        Logger.Log("4", adjustedPerpendicularPoint4);
 
         (float, float) outerSensorA = Formulas.MovePointTowards(
             adjustedPerpendicularPoint1.Item1, adjustedPerpendicularPoint1.Item2,
@@ -148,15 +150,15 @@ class HA75AlignerPositions
         float chuckRadius = _length / 6;
 
         // Define half circle points
-        float halfCircle1StartX = adjustedPerpendicularPoint4.Item1;
-        float halfCircle1StartY = adjustedPerpendicularPoint4.Item2;
-        float halfCircle1EndX = adjustedPerpendicularPoint2.Item1;
-        float halfCircle1EndY = adjustedPerpendicularPoint2.Item2;
+        halfCircle1StartX = adjustedPerpendicularPoint4.Item1;
+        halfCircle1StartY = adjustedPerpendicularPoint4.Item2;
+        halfCircle1EndX = adjustedPerpendicularPoint2.Item1;
+        halfCircle1EndY = adjustedPerpendicularPoint2.Item2;
 
-        float halfCircle2StartX = adjustedPerpendicularPoint3.Item1;
-        float halfCircle2StartY = adjustedPerpendicularPoint3.Item2;
-        float halfCircle2EndX = adjustedPerpendicularPoint1.Item1;
-        float halfCircle2EndY = adjustedPerpendicularPoint1.Item2;
+        halfCircle2StartX = adjustedPerpendicularPoint3.Item1;
+        halfCircle2StartY = adjustedPerpendicularPoint3.Item2;
+        halfCircle2EndX = adjustedPerpendicularPoint1.Item1;
+        halfCircle2EndY = adjustedPerpendicularPoint1.Item2;
 
         (float, float) sensorMidpoint = Formulas.FindMiddlePoint(
             outerSensorA.Item1, outerSensorA.Item2,
@@ -267,10 +269,10 @@ class HA75AlignerPositions
             MirrorX(originalAligner.PosDx), originalAligner.PosDy,
             MirrorX(originalAligner.ChuckCenterX), originalAligner.ChuckCenterY,
             originalAligner.ChuckRadius,
-            mirroredHalfCircle1StartX, originalAligner.HalfCircle1StartY,
-            mirroredHalfCircle1EndX, originalAligner.HalfCircle1EndY,
-            mirroredHalfCircle2StartX, originalAligner.HalfCircle2StartY,
-            mirroredHalfCircle2EndX, originalAligner.HalfCircle2EndY,
+            -halfCircle1EndX, halfCircle1EndY,
+            -halfCircle1StartX, halfCircle1StartY,
+            -halfCircle2EndX, halfCircle2EndY,
+            -halfCircle2StartX, halfCircle2StartY,
             MirrorX(originalAligner.OuterSensorAx), originalAligner.OuterSensorAy,
             MirrorX(originalAligner.OuterSensorBx), originalAligner.OuterSensorBy,
             MirrorX(originalAligner.OuterSensorCx), originalAligner.OuterSensorCy,
