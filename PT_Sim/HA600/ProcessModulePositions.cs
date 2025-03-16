@@ -67,12 +67,29 @@ public class ProcessModulePositions
 
     public ProcessModule GetProcessModule1()
     {
-        return new ProcessModule(
-            1.0f,
+        (float, float) pm1MidPoint = Formulas.FindMiddlePoint(
             _slitValve1.GetPositionMap("C")[0], _slitValve1.GetPositionMap("C")[1],
             _slitValve1.GetPositionMap("D")[0], _slitValve1.GetPositionMap("D")[1],
             _slitValve1.GetPositionMap("C")[0] - _length, _slitValve1.GetPositionMap("C")[1],
             _slitValve1.GetPositionMap("D")[0] - _length, _slitValve1.GetPositionMap("D")[1]
+        );
+
+        return new ProcessModule(
+            // Scale
+            1.0f,
+
+            // Outer Chamber
+            _slitValve1.GetPositionMap("C")[0], _slitValve1.GetPositionMap("C")[1],
+            _slitValve1.GetPositionMap("D")[0], _slitValve1.GetPositionMap("D")[1],
+            _slitValve1.GetPositionMap("C")[0] - _length, _slitValve1.GetPositionMap("C")[1],
+            _slitValve1.GetPositionMap("D")[0] - _length, _slitValve1.GetPositionMap("D")[1],
+
+            // Wafer Platform
+            pm1MidPoint, _length * 0.32f
+            // Inner Chamber Rectangle
+
+            // Inner Chamber Half-Circle
+
         );
     }
 
@@ -86,12 +103,22 @@ public class ProcessModulePositions
             _slitValve2.GetPositionMap("D")[0], _slitValve2.GetPositionMap("D")[1],
             _gradient2, -_length
         );
+
+        (float, float) pm2MidPoint = Formulas.FindMiddlePoint(
+            _slitValve2.GetPositionMap("C")[0], _slitValve2.GetPositionMap("C")[1],
+            _slitValve2.GetPositionMap("D")[0], _slitValve2.GetPositionMap("D")[1],
+            perpendicularPoint1.Item1, perpendicularPoint1.Item2,
+            perpendicularPoint2.Item1, perpendicularPoint2.Item2
+        );
+
         return new ProcessModule(
             1.0f,
             _slitValve2.GetPositionMap("C")[0], _slitValve2.GetPositionMap("C")[1],
             _slitValve2.GetPositionMap("D")[0], _slitValve2.GetPositionMap("D")[1],
             perpendicularPoint1.Item1, perpendicularPoint1.Item2,
-            perpendicularPoint2.Item1, perpendicularPoint2.Item2
+            perpendicularPoint2.Item1, perpendicularPoint2.Item2,
+
+            pm2MidPoint, _length * 0.32f
         );
     }
 
@@ -105,23 +132,40 @@ public class ProcessModulePositions
             _slitValve3.GetPositionMap("D")[0], _slitValve3.GetPositionMap("D")[1],
             _gradient3, _length
         );
-        return new ProcessModule(
-            1.0f,
+
+        (float, float) pm3MidPoint = Formulas.FindMiddlePoint(
             _slitValve3.GetPositionMap("C")[0], _slitValve3.GetPositionMap("C")[1],
             _slitValve3.GetPositionMap("D")[0], _slitValve3.GetPositionMap("D")[1],
             perpendicularPoint1.Item1, perpendicularPoint1.Item2,
             perpendicularPoint2.Item1, perpendicularPoint2.Item2
         );
+        return new ProcessModule(
+            1.0f,
+            _slitValve3.GetPositionMap("C")[0], _slitValve3.GetPositionMap("C")[1],
+            _slitValve3.GetPositionMap("D")[0], _slitValve3.GetPositionMap("D")[1],
+            perpendicularPoint1.Item1, perpendicularPoint1.Item2,
+            perpendicularPoint2.Item1, perpendicularPoint2.Item2,
+
+            pm3MidPoint, _length * 0.32f
+        );
     }
 
     public ProcessModule GetProcessModule4()
     {
+        (float, float) pm4MidPoint = Formulas.FindMiddlePoint(
+            _slitValve4.GetPositionMap("C")[0], _slitValve4.GetPositionMap("C")[1],
+            _slitValve4.GetPositionMap("D")[0], _slitValve4.GetPositionMap("D")[1],
+            _slitValve4.GetPositionMap("C")[0] + _length, _slitValve4.GetPositionMap("C")[1],
+            _slitValve4.GetPositionMap("D")[0] + _length, _slitValve4.GetPositionMap("D")[1]
+        );
         return new ProcessModule(
             1.0f,
             _slitValve4.GetPositionMap("C")[0], _slitValve4.GetPositionMap("C")[1],
             _slitValve4.GetPositionMap("D")[0], _slitValve4.GetPositionMap("D")[1],
             _slitValve4.GetPositionMap("C")[0] + _length, _slitValve4.GetPositionMap("C")[1],
-            _slitValve4.GetPositionMap("D")[0] + _length, _slitValve4.GetPositionMap("D")[1]
+            _slitValve4.GetPositionMap("D")[0] + _length, _slitValve4.GetPositionMap("D")[1],
+
+            pm4MidPoint, _length * 0.32f
         );
     }
 }

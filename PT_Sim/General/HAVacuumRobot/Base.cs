@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenTK.Graphics.OpenGL;
+using PT_Sim;
 
 class Base
 {
@@ -49,7 +50,7 @@ class Base
             positions[index++] = radius * (float)Math.Sin(angle); // Y
         }
 
-        index = 0; // Fix: Reuse index correctly
+        index = 0;
 
         // Define indices (Triangles forming a fan shape)
         for (int i = 0; i < numOuterVertices; i++)
@@ -63,7 +64,13 @@ class Base
         GL.GenVertexArrays(1, out vao);
         GL.GenBuffers(1, out vbo);
         GL.GenBuffers(1, out ebo);
+        if (vao == 0 || vbo == 0 || ebo == 0)
+        {
+            Logger.Log("Error:", "VAO, VBO, or EBO not initialized correctly");
+            return;
+        }
 
+        // Setup VAO
         GL.BindVertexArray(vao);
 
         // Upload vertex data
