@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 using PT_Sim;
-
+using PT_Sim.General;
 
 public class ProcessModule
 {
     private float _scale;
-    
+
     private int numVertices;
     private int numIndices;
     private float[] positions;
@@ -31,10 +31,20 @@ public class ProcessModule
 
     private int waferPlatformVao, waferPlatformVbo, waferPlatformEbo;
 
+    // Inner Chamber Half-Circle    
+    private int numHalfCircleVertices;
+    private int numHalfCircleIndices;
+    private float[] halfCirclePositions;
+    private uint[] halfCircleIndices;
+
+    private int halfCircleVao, halfCircleVbo, halfCircleEbo;
+
+    private const float PI = 3.14159265359323846f;
 
     public ProcessModule(
         float scale,
 
+        // Outer Chamber
         float posAx,
         float posAy,
         float posBx,
@@ -44,8 +54,15 @@ public class ProcessModule
         float posDx,
         float posDy,
 
+        // Wafer Platform
         (float, float) waferPlatformCenter,
-        float waferPlatformRadius
+        float waferPlatformRadius,
+
+        // Inner Chamber Half-Circle
+        float halfCircleStartX,
+        float halfCircleStartY,
+        float halfCircleEndX,
+        float halfCircleEndY
     )
     {
         this._scale = scale;
@@ -76,6 +93,66 @@ public class ProcessModule
 
         waferPlatformPositions = new float[waferPlatformNumVertices * 2];
         waferPlatformIndices = new uint[waferPlatformNumIndices];
+
+        // PM Wafer Platform
+        int index = 0;
+
+        // Center Vertex
+        waferPlatformPositions[index++] = waferPlatformCenter.Item1; // X
+        waferPlatformPositions[index++] = waferPlatformCenter.Item2; // Y
+
+        // Circle Vertices
+        for (int i = 0; i < waferPlatformNumCircVertices; i++)
+        {
+            float waferPlatformAngle = (float)(2.0 * System.Math.PI * i / waferPlatformNumCircVertices);
+            waferPlatformPositions[index++] = waferPlatformCenter.Item1 + waferPlatformRadius * (float)System.Math.Cos(waferPlatformAngle); // X
+            waferPlatformPositions[index++] = waferPlatformCenter.Item2 + waferPlatformRadius * (float)System.Math.Sin(waferPlatformAngle); // Y
+        }
+
+        index = 0;
+
+        // Define Indices (Triangles forming a fan shape)
+        for (int i = 0; i < waferPlatformNumCircVertices; i++)
+        {
+            waferPlatformIndices[index++] = 0; // Center vertex
+            waferPlatformIndices[index++] = (uint)(i + 1);
+            waferPlatformIndices[index++] = (uint)((i + 1) % waferPlatformNumCircVertices + 1); // Loop around
+        }
+
+        // Inner Chamber Half-Circle
+        float halfCircleCenterX = (halfCircleStartX + halfCircleEndX) / 2.0f;
+        float halfCircleCenterY = (halfCircleStartY + halfCircleEndY) / 2.0f;
+        float halfCircleRadius = Formulas.distance(halfCircleStartX, halfCircleStartY, halfCircleEndX, halfCircleEndY) / 2.0f;
+
+        // Calculate the angle of the line segment
+        float halfCircleAngle = (float)System.Math.Atan2(halfCircleEndY - halfCircleStartY, halfCircleEndX - halfCircleStartX);
+
+        // Initialize the halfCirclePositions array
+        halfCirclePositions = new float[22]; // 11 vertices with x and y coordinates
+
+        // Center vertex
+        halfCirclePositions[0] = halfCircleCenterX * scale;
+        halfCirclePositions[1] = halfCircleCenterY * scale;
+
+        // Half-Circle Vertices
+        for (int i = 0; i <= 10; ++i)
+        {
+            float theta = halfCircleAngle + -PI * i / 10;
+            halfCirclePositions[2 * i] = halfCircleCenterX * scale + halfCircleRadius * (float)System.Math.Cos(theta); // x
+            halfCirclePositions[2 * i + 1] = halfCircleCenterY * scale + halfCircleRadius * (float)System.Math.Sin(theta); // y
+        }
+
+        // Initialize the halfCircleIndices array
+        halfCircleIndices = new uint[33]; // 11 triangles with 3 indices each
+
+        // Half-Circle Indices
+        index = 0;
+        for (int i = 1; i <= 10; ++i)
+        {
+            halfCircleIndices[index++] = 0; // Center vertex
+            halfCircleIndices[index++] = (uint)i;
+            halfCircleIndices[index++] = (uint)(i % 10 + 1);
+        }
     }
 
     ~ProcessModule()
@@ -87,6 +164,10 @@ public class ProcessModule
         GL.DeleteVertexArray(waferPlatformVao);
         GL.DeleteBuffer(waferPlatformVbo);
         GL.DeleteBuffer(waferPlatformEbo);
+
+        GL.DeleteVertexArray(halfCircleVao);
+        GL.DeleteBuffer(halfCircleVbo);
+        GL.DeleteBuffer(halfCircleEbo);
     }
 
     public void Initialize()
@@ -117,32 +198,7 @@ public class ProcessModule
 
         GL.BindVertexArray(0);
 
-
-        // PM Wafer Platform
-        int index = 0;
-
-        // Center Vertex
-        waferPlatformPositions[index++] = waferPlatformCenter.Item1; // X
-        waferPlatformPositions[index++] = waferPlatformCenter.Item2; // Y
-
-        // Circle Vertices
-        for (int i = 0; i < waferPlatformNumCircVertices; i++)
-        {
-            float angle = (float)(2.0 * System.Math.PI * i / waferPlatformNumCircVertices);
-            waferPlatformPositions[index++] = waferPlatformCenter.Item1 + waferPlatformRadius * (float)System.Math.Cos(angle); // X
-            waferPlatformPositions[index++] = waferPlatformCenter.Item2 + waferPlatformRadius * (float)System.Math.Sin(angle); // Y
-        }
-
-        index = 0;
-
-        // Define Indices (Triangles forming a fan shape)
-        for (int i = 0; i < waferPlatformNumCircVertices; i++)
-        {
-            waferPlatformIndices[index++] = 0; // Center vertex
-            waferPlatformIndices[index++] = (uint)(i + 1);
-            waferPlatformIndices[index++] = (uint)((i + 1) % waferPlatformNumCircVertices + 1); // Loop around
-        }
-
+        // Wafer Platform
         // Generate OpenGL Buffers
         GL.GenVertexArrays(1, out waferPlatformVao);
         GL.GenBuffers(1, out waferPlatformVbo);
@@ -169,6 +225,34 @@ public class ProcessModule
         GL.EnableVertexAttribArray(0);
 
         GL.BindVertexArray(0);
+
+        // Inner Chamber Half-Circle
+        GL.GenVertexArrays(1, out halfCircleVao);
+        GL.GenBuffers(1, out halfCircleVbo);
+        GL.GenBuffers(1, out halfCircleEbo);
+
+        if (halfCircleVao == 0 || halfCircleVbo == 0 || halfCircleEbo == 0)
+        {
+            Logger.Log("Error:", "PM Inner Chamber Half-Circle VAO, VBO, or EBO not initialized correctly");
+            return;
+        }
+
+        // Setup VAO
+        GL.BindVertexArray(halfCircleVao);
+
+        // Upload vertex data
+        GL.BindBuffer(BufferTarget.ArrayBuffer, halfCircleVbo);
+        GL.BufferData(BufferTarget.ArrayBuffer, halfCirclePositions.Length * sizeof(float), halfCirclePositions, BufferUsageHint.StaticDraw);
+
+        // Upload index data
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, halfCircleEbo);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, halfCircleIndices.Length * sizeof(uint), halfCircleIndices, BufferUsageHint.StaticDraw);
+
+        // Define vertex attributes
+        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+        GL.EnableVertexAttribArray(0);
+
+        GL.BindVertexArray(0);
     }
 
     public void Render(Shader shader)
@@ -188,6 +272,17 @@ public class ProcessModule
             // Draw Filled Interior (Gray)
             GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
             GL.DrawElements(PrimitiveType.Triangles, numIndices, DrawElementsType.UnsignedInt, 0);
+
+            GL.BindVertexArray(0);
+
+            // Inner Chamber Half-Circle
+            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
+            GL.BindVertexArray(halfCircleVao);
+            GL.DrawElements(PrimitiveType.LineLoop, halfCircleIndices.Length, DrawElementsType.UnsignedInt, 0);
+
+            // Draw Filled Interior (Gray)
+            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
+            GL.DrawElements(PrimitiveType.Triangles, halfCircleIndices.Length, DrawElementsType.UnsignedInt, 0);
 
             GL.BindVertexArray(0);
 
@@ -220,6 +315,4 @@ public class ProcessModule
 
         return positionMap[point];
     }
-
 }
-

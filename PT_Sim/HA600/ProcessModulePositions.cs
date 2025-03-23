@@ -74,6 +74,9 @@ public class ProcessModulePositions
             _slitValve1.GetPositionMap("D")[0] - _length, _slitValve1.GetPositionMap("D")[1]
         );
 
+        float waferPlatformRadius = _length / 3.32f;
+        float halfCircleRadius = _length * 0.71f - waferPlatformRadius; // Slightly larger radius
+
         return new ProcessModule(
             // Scale
             1.0f,
@@ -85,13 +88,17 @@ public class ProcessModulePositions
             _slitValve1.GetPositionMap("D")[0] - _length, _slitValve1.GetPositionMap("D")[1],
 
             // Wafer Platform
-            pm1MidPoint, _length * 0.32f
-            // Inner Chamber Rectangle
+            pm1MidPoint, waferPlatformRadius,
 
             // Inner Chamber Half-Circle
+            pm1MidPoint.Item1, pm1MidPoint.Item2 + halfCircleRadius,
+            pm1MidPoint.Item1, pm1MidPoint.Item2- halfCircleRadius
+
+            // Inner Chamber Rectangle
 
         );
     }
+
 
     public ProcessModule GetProcessModule2()
     {
@@ -111,6 +118,9 @@ public class ProcessModulePositions
             perpendicularPoint2.Item1, perpendicularPoint2.Item2
         );
 
+        float waferPlatformRadius = _length / 3.32f;
+        float halfCircleRadius = _length * 0.71f - waferPlatformRadius; // Slightly larger radius
+
         return new ProcessModule(
             1.0f,
             _slitValve2.GetPositionMap("C")[0], _slitValve2.GetPositionMap("C")[1],
@@ -118,7 +128,11 @@ public class ProcessModulePositions
             perpendicularPoint1.Item1, perpendicularPoint1.Item2,
             perpendicularPoint2.Item1, perpendicularPoint2.Item2,
 
-            pm2MidPoint, _length * 0.32f
+            pm2MidPoint, waferPlatformRadius,
+
+            pm2MidPoint.Item1, pm2MidPoint.Item2 + halfCircleRadius,
+            pm2MidPoint.Item1, pm2MidPoint.Item2 - halfCircleRadius
+
         );
     }
 
@@ -139,6 +153,10 @@ public class ProcessModulePositions
             perpendicularPoint1.Item1, perpendicularPoint1.Item2,
             perpendicularPoint2.Item1, perpendicularPoint2.Item2
         );
+
+        float waferPlatformRadius = _length / 3.32f;
+        float halfCircleRadius = _length * 0.71f - waferPlatformRadius; // Slightly larger radius
+
         return new ProcessModule(
             1.0f,
             _slitValve3.GetPositionMap("C")[0], _slitValve3.GetPositionMap("C")[1],
@@ -146,7 +164,11 @@ public class ProcessModulePositions
             perpendicularPoint1.Item1, perpendicularPoint1.Item2,
             perpendicularPoint2.Item1, perpendicularPoint2.Item2,
 
-            pm3MidPoint, _length * 0.32f
+            pm3MidPoint, _length / 3.32f,
+
+            pm3MidPoint.Item1, pm3MidPoint.Item2 - halfCircleRadius,
+            pm3MidPoint.Item1, pm3MidPoint.Item2 + halfCircleRadius
+            
         );
     }
 
@@ -158,6 +180,10 @@ public class ProcessModulePositions
             _slitValve4.GetPositionMap("C")[0] + _length, _slitValve4.GetPositionMap("C")[1],
             _slitValve4.GetPositionMap("D")[0] + _length, _slitValve4.GetPositionMap("D")[1]
         );
+
+        float waferPlatformRadius = _length / 3.32f;
+        float halfCircleRadius = _length * 0.71f - waferPlatformRadius; // Slightly larger radius
+
         return new ProcessModule(
             1.0f,
             _slitValve4.GetPositionMap("C")[0], _slitValve4.GetPositionMap("C")[1],
@@ -165,7 +191,10 @@ public class ProcessModulePositions
             _slitValve4.GetPositionMap("C")[0] + _length, _slitValve4.GetPositionMap("C")[1],
             _slitValve4.GetPositionMap("D")[0] + _length, _slitValve4.GetPositionMap("D")[1],
 
-            pm4MidPoint, _length * 0.32f
+            pm4MidPoint, waferPlatformRadius,
+
+            pm4MidPoint.Item1, pm4MidPoint.Item2 - halfCircleRadius,
+            pm4MidPoint.Item1, pm4MidPoint.Item2 + halfCircleRadius
         );
     }
 }
