@@ -31,19 +31,35 @@ namespace PT_Sim.General
 
         public static (float, float) FindPerpendicularPoint_Vector(float x0, float y0, float m, float d)
         {
-            // Perpendicular slope (negative reciprocal)
-            float m_perp = -1f / m;
+            float dx, dy;
+            const float epsilon = 1e-6f;
 
-            // Compute dx and dy using vector formula
-            float dx = (float)(d / Math.Sqrt(1 + (m_perp * m_perp)));
-            float dy = m_perp * dx;
+            if (float.IsPositiveInfinity(m))
+            {
+                // Original line is vertical → perpendicular is horizontal
+                dx = d;
+                dy = 0;
+            }
+            else if (Math.Abs(m) < epsilon)
+            {
+                // Original line is horizontal → perpendicular is vertical
+                dx = 0;
+                dy = d;
+            }
+            else
+            {
+                float m_perp = -1f / m;
+                dx = (float)(d / Math.Sqrt(1 + m_perp * m_perp));
+                dy = m_perp * dx;
+            }
 
-            // Compute new point
             float x1 = x0 + dx;
             float y1 = y0 + dy;
 
             return (x1, y1);
         }
+
+
 
         public static (float, float) FindIntersectionPoint(float m1, float b1, float m2, float b2)
         {

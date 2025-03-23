@@ -75,7 +75,46 @@ public class ProcessModulePositions
         );
 
         float waferPlatformRadius = _length / 3.32f;
-        float halfCircleRadius = _length * 0.71f - waferPlatformRadius; // Slightly larger radius
+
+        float pm1HalfCircGradient = Formulas.slope(
+            _slitValve1.GetPositionMap("C")[0], _slitValve1.GetPositionMap("C")[1],
+            _slitValve1.GetPositionMap("C")[0] -_length, _slitValve1.GetPositionMap("C")[1]
+        );
+
+        (float, float) waferPlatformCircPoint1 = Formulas.FindPerpendicularPoint_Vector(
+            pm1MidPoint.Item1, pm1MidPoint.Item2,
+            pm1HalfCircGradient, waferPlatformRadius
+        );
+
+        (float, float) waferPlatformCircPoint2 = Formulas.FindPerpendicularPoint_Vector(
+            pm1MidPoint.Item1, pm1MidPoint.Item2,
+            pm1HalfCircGradient, -waferPlatformRadius
+        );
+
+        (float, float) outerWallMidpoint1 = Formulas.FindMiddlePoint(
+            _slitValve1.GetPositionMap("C")[0], _slitValve1.GetPositionMap("C")[1],
+            _slitValve1.GetPositionMap("C")[0] - _length, _slitValve1.GetPositionMap("C")[1]
+        );
+
+        (float, float) outerWallMidpoint2 = Formulas.FindMiddlePoint(
+            _slitValve1.GetPositionMap("D")[0], _slitValve1.GetPositionMap("D")[1],
+            _slitValve1.GetPositionMap("D")[0] - _length, _slitValve1.GetPositionMap("D")[1]
+        );
+
+        (float, float) halfCircleA = Formulas.FindMiddlePoint(
+            waferPlatformCircPoint1.Item1, waferPlatformCircPoint1.Item2,
+            outerWallMidpoint1.Item1, outerWallMidpoint1.Item2
+        );
+
+        (float, float) halfCircleB = Formulas.FindMiddlePoint(
+            waferPlatformCircPoint2.Item1, waferPlatformCircPoint2.Item2,
+            outerWallMidpoint2.Item1, outerWallMidpoint2.Item2
+        );
+
+        float distance = Formulas.distance(
+            waferPlatformCircPoint2.Item1, waferPlatformCircPoint2.Item2,
+            outerWallMidpoint2.Item1, outerWallMidpoint2.Item2
+        );
 
         return new ProcessModule(
             // Scale
@@ -91,14 +130,16 @@ public class ProcessModulePositions
             pm1MidPoint, waferPlatformRadius,
 
             // Inner Chamber Half-Circle
-            pm1MidPoint.Item1, pm1MidPoint.Item2 + halfCircleRadius,
-            pm1MidPoint.Item1, pm1MidPoint.Item2- halfCircleRadius
+            halfCircleA.Item1, halfCircleA.Item2,
+            halfCircleB.Item1, halfCircleB.Item2,
 
             // Inner Chamber Rectangle
-
+            halfCircleA.Item1, halfCircleA.Item2,
+            halfCircleB.Item1, halfCircleB.Item2,
+            _slitValve1.GetPositionMap("C")[0], _slitValve1.GetPositionMap("C")[1] - distance/2f,
+            _slitValve1.GetPositionMap("D")[0], _slitValve1.GetPositionMap("D")[1] + distance/2f
         );
     }
-
 
     public ProcessModule GetProcessModule2()
     {
@@ -119,7 +160,65 @@ public class ProcessModulePositions
         );
 
         float waferPlatformRadius = _length / 3.32f;
-        float halfCircleRadius = _length * 0.71f - waferPlatformRadius; // Slightly larger radius
+
+        float pm2HalfCircGradient = Formulas.slope(
+            _slitValve2.GetPositionMap("C")[0], _slitValve2.GetPositionMap("C")[1],
+            perpendicularPoint1.Item1, perpendicularPoint1.Item2
+        );
+
+        (float, float) waferPlatformCircPoint1 = Formulas.FindPerpendicularPoint_Vector(
+            pm2MidPoint.Item1, pm2MidPoint.Item2,
+            pm2HalfCircGradient, waferPlatformRadius
+        );
+
+        (float, float) waferPlatformCircPoint2 = Formulas.FindPerpendicularPoint_Vector(
+            pm2MidPoint.Item1, pm2MidPoint.Item2,
+            pm2HalfCircGradient, -waferPlatformRadius
+        );
+
+        (float, float) outerWallMidpoint1 = Formulas.FindMiddlePoint(
+            _slitValve2.GetPositionMap("C")[0], _slitValve2.GetPositionMap("C")[1],
+            perpendicularPoint1.Item1, perpendicularPoint1.Item2
+        );
+
+        (float, float) outerWallMidpoint2 = Formulas.FindMiddlePoint(
+            _slitValve2.GetPositionMap("D")[0], _slitValve2.GetPositionMap("D")[1],
+            perpendicularPoint2.Item1, perpendicularPoint2.Item2
+        );
+
+        (float, float) halfCircleA = Formulas.FindMiddlePoint(
+            waferPlatformCircPoint1.Item1, waferPlatformCircPoint1.Item2,
+            outerWallMidpoint2.Item1, outerWallMidpoint2.Item2
+        );
+
+        (float, float) halfCircleB = Formulas.FindMiddlePoint(
+            waferPlatformCircPoint2.Item1, waferPlatformCircPoint2.Item2,
+            outerWallMidpoint1.Item1, outerWallMidpoint1.Item2
+        );
+
+        float distance1 = Formulas.distance(
+            halfCircleA.Item1, halfCircleA.Item2,
+            outerWallMidpoint2.Item1, outerWallMidpoint2.Item2
+        );
+
+        float distance2 = Formulas.distance(
+            halfCircleB.Item1, halfCircleB.Item2,
+            outerWallMidpoint1.Item1, outerWallMidpoint1.Item2
+        );
+
+        (float, float) innerRectangleA = Formulas.MovePointTowards(
+
+            _slitValve2.GetPositionMap("C")[0], _slitValve2.GetPositionMap("C")[1],
+            _slitValve2.GetPositionMap("D")[0], _slitValve2.GetPositionMap("D")[1],
+            distance1
+        );
+
+        (float, float) innerRectangleB = Formulas.MovePointTowards(
+
+            _slitValve2.GetPositionMap("D")[0], _slitValve2.GetPositionMap("D")[1],
+            _slitValve2.GetPositionMap("C")[0], _slitValve2.GetPositionMap("C")[1],
+            distance2
+        );
 
         return new ProcessModule(
             1.0f,
@@ -130,11 +229,16 @@ public class ProcessModulePositions
 
             pm2MidPoint, waferPlatformRadius,
 
-            pm2MidPoint.Item1, pm2MidPoint.Item2 + halfCircleRadius,
-            pm2MidPoint.Item1, pm2MidPoint.Item2 - halfCircleRadius
+            halfCircleA.Item1, halfCircleA.Item2,
+            halfCircleB.Item1, halfCircleB.Item2,
 
+            halfCircleA.Item1, halfCircleA.Item2,
+            halfCircleB.Item1, halfCircleB.Item2,
+            innerRectangleB.Item1, innerRectangleB.Item2,
+            innerRectangleA.Item1, innerRectangleA.Item2
         );
     }
+
 
     public ProcessModule GetProcessModule3()
     {
@@ -155,7 +259,65 @@ public class ProcessModulePositions
         );
 
         float waferPlatformRadius = _length / 3.32f;
-        float halfCircleRadius = _length * 0.71f - waferPlatformRadius; // Slightly larger radius
+
+        float pm3HalfCircGradient = Formulas.slope(
+            _slitValve3.GetPositionMap("C")[0], _slitValve3.GetPositionMap("C")[1],
+            perpendicularPoint1.Item1, perpendicularPoint1.Item2
+        );
+
+        (float, float) waferPlatformCircPoint1 = Formulas.FindPerpendicularPoint_Vector(
+            pm3MidPoint.Item1, pm3MidPoint.Item2,
+            pm3HalfCircGradient, waferPlatformRadius
+        );
+
+        (float, float) waferPlatformCircPoint2 = Formulas.FindPerpendicularPoint_Vector(
+            pm3MidPoint.Item1, pm3MidPoint.Item2,
+            pm3HalfCircGradient, -waferPlatformRadius
+        );
+
+        (float, float) outerWallMidpoint1 = Formulas.FindMiddlePoint(
+            _slitValve3.GetPositionMap("C")[0], _slitValve3.GetPositionMap("C")[1],
+            perpendicularPoint1.Item1, perpendicularPoint1.Item2
+        );
+
+        (float, float) outerWallMidpoint2 = Formulas.FindMiddlePoint(
+            _slitValve3.GetPositionMap("D")[0], _slitValve3.GetPositionMap("D")[1],
+            perpendicularPoint2.Item1, perpendicularPoint2.Item2
+        );
+
+        (float, float) halfCircleA = Formulas.FindMiddlePoint(
+            waferPlatformCircPoint1.Item1, waferPlatformCircPoint1.Item2,
+            outerWallMidpoint1.Item1, outerWallMidpoint1.Item2
+        );
+
+        (float, float) halfCircleB = Formulas.FindMiddlePoint(
+            waferPlatformCircPoint2.Item1, waferPlatformCircPoint2.Item2,
+            outerWallMidpoint2.Item1, outerWallMidpoint2.Item2
+        );
+
+        float distance1 = Formulas.distance(
+            halfCircleA.Item1, halfCircleA.Item2,
+            outerWallMidpoint2.Item1, outerWallMidpoint2.Item2
+        );
+
+        float distance2 = Formulas.distance(
+            halfCircleB.Item1, halfCircleB.Item2,
+            outerWallMidpoint1.Item1, outerWallMidpoint1.Item2
+        );
+
+        (float, float) innerRectangleA = Formulas.MovePointTowards(
+
+            _slitValve3.GetPositionMap("C")[0], _slitValve3.GetPositionMap("C")[1],
+            _slitValve3.GetPositionMap("D")[0], _slitValve3.GetPositionMap("D")[1],
+            distance1
+        );
+
+        (float, float) innerRectangleB = Formulas.MovePointTowards(
+
+            _slitValve3.GetPositionMap("D")[0], _slitValve3.GetPositionMap("D")[1],
+            _slitValve3.GetPositionMap("C")[0], _slitValve3.GetPositionMap("C")[1],
+            distance2
+        );
 
         return new ProcessModule(
             1.0f,
@@ -164,13 +326,18 @@ public class ProcessModulePositions
             perpendicularPoint1.Item1, perpendicularPoint1.Item2,
             perpendicularPoint2.Item1, perpendicularPoint2.Item2,
 
-            pm3MidPoint, _length / 3.32f,
+            pm3MidPoint, waferPlatformRadius,
 
-            pm3MidPoint.Item1, pm3MidPoint.Item2 - halfCircleRadius,
-            pm3MidPoint.Item1, pm3MidPoint.Item2 + halfCircleRadius
-            
+            halfCircleA.Item1, halfCircleA.Item2,
+            halfCircleB.Item1, halfCircleB.Item2,
+
+            halfCircleA.Item1, halfCircleA.Item2,
+            halfCircleB.Item1, halfCircleB.Item2,
+            innerRectangleB.Item1, innerRectangleB.Item2,
+            innerRectangleA.Item1, innerRectangleA.Item2
         );
     }
+
 
     public ProcessModule GetProcessModule4()
     {
@@ -182,7 +349,46 @@ public class ProcessModulePositions
         );
 
         float waferPlatformRadius = _length / 3.32f;
-        float halfCircleRadius = _length * 0.71f - waferPlatformRadius; // Slightly larger radius
+
+        float pm4HalfCircGradient = Formulas.slope(
+            _slitValve4.GetPositionMap("C")[0], _slitValve4.GetPositionMap("C")[1],
+            _slitValve4.GetPositionMap("C")[0] + _length, _slitValve4.GetPositionMap("C")[1]
+        );
+
+        (float, float) waferPlatformCircPoint1 = Formulas.FindPerpendicularPoint_Vector(
+            pm4MidPoint.Item1, pm4MidPoint.Item2,
+            pm4HalfCircGradient, waferPlatformRadius
+        );
+
+        (float, float) waferPlatformCircPoint2 = Formulas.FindPerpendicularPoint_Vector(
+            pm4MidPoint.Item1, pm4MidPoint.Item2,
+            pm4HalfCircGradient, -waferPlatformRadius
+        );
+
+        (float, float) outerWallMidpoint1 = Formulas.FindMiddlePoint(
+            _slitValve4.GetPositionMap("C")[0], _slitValve4.GetPositionMap("C")[1],
+            _slitValve4.GetPositionMap("C")[0] + _length, _slitValve4.GetPositionMap("C")[1]
+        );
+
+        (float, float) outerWallMidpoint2 = Formulas.FindMiddlePoint(
+            _slitValve4.GetPositionMap("D")[0], _slitValve4.GetPositionMap("D")[1],
+            _slitValve4.GetPositionMap("D")[0] + _length, _slitValve4.GetPositionMap("D")[1]
+        );
+
+        (float, float) halfCircleA = Formulas.FindMiddlePoint(
+            waferPlatformCircPoint1.Item1, waferPlatformCircPoint1.Item2,
+            outerWallMidpoint1.Item1, outerWallMidpoint1.Item2
+        );
+
+        (float, float) halfCircleB = Formulas.FindMiddlePoint(
+            waferPlatformCircPoint2.Item1, waferPlatformCircPoint2.Item2,
+            outerWallMidpoint2.Item1, outerWallMidpoint2.Item2
+        );
+
+        float distance = Formulas.distance(
+            waferPlatformCircPoint2.Item1, waferPlatformCircPoint2.Item2,
+            outerWallMidpoint2.Item1, outerWallMidpoint2.Item2
+        );
 
         return new ProcessModule(
             1.0f,
@@ -192,9 +398,14 @@ public class ProcessModulePositions
             _slitValve4.GetPositionMap("D")[0] + _length, _slitValve4.GetPositionMap("D")[1],
 
             pm4MidPoint, waferPlatformRadius,
+            
+            halfCircleB.Item1, halfCircleB.Item2,
+            halfCircleA.Item1, halfCircleA.Item2,
 
-            pm4MidPoint.Item1, pm4MidPoint.Item2 - halfCircleRadius,
-            pm4MidPoint.Item1, pm4MidPoint.Item2 + halfCircleRadius
+            halfCircleB.Item1, halfCircleB.Item2,
+            halfCircleA.Item1, halfCircleA.Item2,
+            _slitValve4.GetPositionMap("D")[0], _slitValve4.GetPositionMap("D")[1] + distance/2f,
+            _slitValve4.GetPositionMap("C")[0], _slitValve4.GetPositionMap("C")[1] - distance / 2f
         );
     }
 }
