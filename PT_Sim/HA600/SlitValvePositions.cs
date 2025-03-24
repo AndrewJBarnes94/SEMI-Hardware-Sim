@@ -39,8 +39,8 @@ public class SlitValvePositions
             1.0f,
             _chamber.GetPositionMap("topLeft")[0], _chamber.GetPositionMap("topLeft")[1],
             _chamber.GetPositionMap("topLeft")[0], _chamber.GetPositionMap("topLeft")[1] - _slitValveLength,
-            _chamber.GetPositionMap("topLeft")[0] - _slitValveLength / 6, _chamber.GetPositionMap("topLeft")[1],
-            _chamber.GetPositionMap("topLeft")[0] - _slitValveLength / 6, _chamber.GetPositionMap("topLeft")[1] - _slitValveLength
+            _chamber.GetPositionMap("topLeft")[0] - _slitValveLength / 10, _chamber.GetPositionMap("topLeft")[1],
+            _chamber.GetPositionMap("topLeft")[0] - _slitValveLength / 10, _chamber.GetPositionMap("topLeft")[1] - _slitValveLength
         );
     }
 
@@ -48,12 +48,12 @@ public class SlitValvePositions
     {
         (float, float) perpendicularPoint1 = Formulas.FindPerpendicularPoint_Vector(
             _chamber.GetPositionMap("topLeft")[0], _chamber.GetPositionMap("topLeft")[1],
-            _gradient1, -_slitValveLength / 6
+            _gradient1, -_slitValveLength / 10
         );
 
         (float, float) perpendicularPoint2 = Formulas.FindPerpendicularPoint_Vector(
             _chamber.GetPositionMap("top")[0], _chamber.GetPositionMap("top")[1],
-            _gradient1, -_slitValveLength / 6
+            _gradient1, -_slitValveLength / 10
         );
 
         return new SlitValve(
@@ -69,12 +69,12 @@ public class SlitValvePositions
     {
         (float, float) perpendicularPoint1 = Formulas.FindPerpendicularPoint_Vector(
             _chamber.GetPositionMap("topRight")[0], _chamber.GetPositionMap("topRight")[1],
-            -_gradient1, _slitValveLength / 6
+            -_gradient1, _slitValveLength / 10
         );
 
         (float, float) perpendicularPoint2 = Formulas.FindPerpendicularPoint_Vector(
             _chamber.GetPositionMap("top")[0], _chamber.GetPositionMap("top")[1],
-            -_gradient1, _slitValveLength / 6
+            -_gradient1, _slitValveLength / 10
         );
 
         return new SlitValve(
@@ -92,8 +92,8 @@ public class SlitValvePositions
              1.0f,
              _chamber.GetPositionMap("topRight")[0], _chamber.GetPositionMap("topRight")[1],
              _chamber.GetPositionMap("topRight")[0], _chamber.GetPositionMap("topRight")[1] - _slitValveLength,
-             _chamber.GetPositionMap("topRight")[0] + _slitValveLength / 6, _chamber.GetPositionMap("topRight")[1],
-             _chamber.GetPositionMap("topRight")[0] + _slitValveLength / 6, _chamber.GetPositionMap("topRight")[1] - _slitValveLength
+             _chamber.GetPositionMap("topRight")[0] + _slitValveLength / 10, _chamber.GetPositionMap("topRight")[1],
+             _chamber.GetPositionMap("topRight")[0] + _slitValveLength / 10, _chamber.GetPositionMap("topRight")[1] - _slitValveLength
          );
     }
 
@@ -101,12 +101,12 @@ public class SlitValvePositions
     {
         (float, float) perpendicularPoint1 = Formulas.FindPerpendicularPoint_Vector(
             _chamber.GetPositionMap("bottomRight")[0], _chamber.GetPositionMap("bottomRight")[1],
-            -_gradient2, _slitValveLength / 6
+            -_gradient2, _slitValveLength / 10
         );
 
         (float, float) perpendicularPoint2 = Formulas.FindPerpendicularPoint_Vector(
             _chamber.GetPositionMap("bottom")[0], _chamber.GetPositionMap("bottom")[1],
-            -_gradient2, _slitValveLength / 6
+            -_gradient2, _slitValveLength / 10
         );
 
         return new SlitValve(
@@ -122,12 +122,12 @@ public class SlitValvePositions
     {
         (float, float) perpendicularPoint1 = Formulas.FindPerpendicularPoint_Vector(
             _chamber.GetPositionMap("bottomLeft")[0], _chamber.GetPositionMap("bottomLeft")[1],
-            _gradient2, -_slitValveLength / 6
+            _gradient2, -_slitValveLength / 10
         );
 
         (float, float) perpendicularPoint2 = Formulas.FindPerpendicularPoint_Vector(
             _chamber.GetPositionMap("bottom")[0], _chamber.GetPositionMap("bottom")[1],
-            _gradient2, -_slitValveLength / 6
+            _gradient2, -_slitValveLength / 10
         );
 
         return new SlitValve(
