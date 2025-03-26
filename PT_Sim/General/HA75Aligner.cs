@@ -492,20 +492,22 @@ class HA75Aligner
             GL.BindVertexArray(chuckVao);
             GL.DrawElements(PrimitiveType.LineLoop, numChuckIndices, DrawElementsType.UnsignedInt, 0);
 
-            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
+            GL.Uniform4(location, 0.7f, 0.7f, 0.7f, 1.0f);
 
             // Draw the filled area of the chuck
             GL.BindVertexArray(chuckVao);
             GL.DrawElements(PrimitiveType.Triangles, numChuckIndices, DrawElementsType.UnsignedInt, 0);
             GL.BindVertexArray(0);
 
+            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
+            
             // Draw the perimeter of the outer sensor
             GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
             GL.BindVertexArray(outerSensorVao);
             GL.DrawElements(PrimitiveType.LineLoop, numOuterSensorIndices, DrawElementsType.UnsignedInt, 0);
 
             // Draw the filled area of the outer sensor
-            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
+            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
             GL.BindVertexArray(outerSensorVao);
             GL.DrawElements(PrimitiveType.Triangles, numOuterSensorIndices, DrawElementsType.UnsignedInt, 0);
             GL.BindVertexArray(0);
@@ -516,7 +518,7 @@ class HA75Aligner
             GL.DrawElements(PrimitiveType.LineLoop, numInnerSensorIndices, DrawElementsType.UnsignedInt, 0);
 
             // Draw the filled area of the inner sensor
-            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
+            GL.Uniform4(location, 0.5f, 0.0f, 0.0f, 1.0f);
             GL.BindVertexArray(innerSensorVao);
             GL.DrawElements(PrimitiveType.Triangles, numInnerSensorIndices, DrawElementsType.UnsignedInt, 0);
 

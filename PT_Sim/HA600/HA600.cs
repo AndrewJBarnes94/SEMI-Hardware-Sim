@@ -61,7 +61,7 @@ public class HA600 : GLControl
         // Load and compile shaders
         _shader = new Shader("vertexShader.glsl", "fragmentShader.glsl");
 
-        float scale = 0.8f;
+        float scale = 0.7f;
 
         _chamber = new HA600TMChamber(scale);
         _chamber.Initialize();
@@ -122,7 +122,7 @@ public class HA600 : GLControl
         _BL.Initialize();
 
         // Initialize Robot
-        _robot = new Robot(ref angle1, ref angle2, ref angle3, ref newInputReceived, scale);
+        _robot = new Robot(ref angle1, ref angle2, ref angle3, ref newInputReceived, scale * 0.9f);
         _robot.Initialize(0.0f, 0.0f, 0.0f);
         SetRobotAngles(30.0f, -30.0f, -90.0f);
     }

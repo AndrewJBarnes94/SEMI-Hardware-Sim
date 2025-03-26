@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 using PT_Sim;
 using PT_Sim.General;
@@ -46,6 +47,13 @@ public class ProcessModule
     private uint[] innerRecIndices;
 
     private int innerRecVao, innerRecVbo, innerRecEbo;
+
+    // Inner Wafer Platform
+    private int innerWaferPlatformNumVertices;
+    private float[] innerWaferPlatformPositions;
+    private uint[] innerWaferPlatformIndices;
+
+    private int innerWaferPlatformVao, innerWaferPlatformVbo, innerWaferPlatformEbo;
 
     private const float PI = 3.14159265359323846f;
 
@@ -137,31 +145,30 @@ public class ProcessModule
         // Calculate the angle of the line segment
         float halfCircleAngle = (float)System.Math.Atan2(halfCircleEndY - halfCircleStartY, halfCircleEndX - halfCircleStartX);
 
-        // Initialize the halfCirclePositions array
-        halfCirclePositions = new float[22]; // 11 vertices with x and y coordinates
+        // Increase the number of vertices for a smoother half-circle
+        numHalfCircleVertices = 21; // Increased from 11 to 21
+        halfCirclePositions = new float[(numHalfCircleVertices + 1) * 2]; // +1 for the center vertex
+        halfCircleIndices = new uint[numHalfCircleVertices * 3]; // 3 indices per triangle
 
         // Center vertex
         halfCirclePositions[0] = halfCircleCenterX * scale;
         halfCirclePositions[1] = halfCircleCenterY * scale;
 
         // Half-Circle Vertices
-        for (int i = 0; i <= 10; ++i)
+        for (int i = 0; i <= numHalfCircleVertices; ++i)
         {
-            float theta = halfCircleAngle + -PI * i / 10;
+            float theta = halfCircleAngle + -PI * i / numHalfCircleVertices;
             halfCirclePositions[2 * i] = halfCircleCenterX * scale + halfCircleRadius * (float)System.Math.Cos(theta); // x
             halfCirclePositions[2 * i + 1] = halfCircleCenterY * scale + halfCircleRadius * (float)System.Math.Sin(theta); // y
         }
 
-        // Initialize the halfCircleIndices array
-        halfCircleIndices = new uint[33]; // 11 triangles with 3 indices each
-
         // Half-Circle Indices
         index = 0;
-        for (int i = 1; i <= 10; ++i)
+        for (int i = 1; i <= numHalfCircleVertices; ++i)
         {
             halfCircleIndices[index++] = 0; // Center vertex
             halfCircleIndices[index++] = (uint)i;
-            halfCircleIndices[index++] = (uint)(i % 10 + 1);
+            halfCircleIndices[index++] = (uint)(i % numHalfCircleVertices + 1);
         }
 
         // Inner Chamber Rectangle
@@ -181,6 +188,20 @@ public class ProcessModule
             0, 1, 2,
             1, 3, 2
         };
+
+        // Inner Wafer Platform
+        innerWaferPlatformNumVertices = waferPlatformNumCircVertices;
+        innerWaferPlatformPositions = new float[innerWaferPlatformNumVertices * 2];
+        innerWaferPlatformIndices = new uint[innerWaferPlatformNumVertices];
+        float innerWaferPlatformRadius = 0.9f * waferPlatformRadius; // 80% of the wafer platform radius
+
+        for (int i = 0; i < innerWaferPlatformNumVertices; i++)
+        {
+            float angle = 2.0f * (float)Math.PI * i / innerWaferPlatformNumVertices;
+            innerWaferPlatformPositions[2 * i] = waferPlatformCenter.Item1 + innerWaferPlatformRadius * (float)Math.Cos(angle);
+            innerWaferPlatformPositions[2 * i + 1] = waferPlatformCenter.Item2 + innerWaferPlatformRadius * (float)Math.Sin(angle);
+            innerWaferPlatformIndices[i] = (uint)i;
+        }
     }
 
     ~ProcessModule()
@@ -200,6 +221,10 @@ public class ProcessModule
         GL.DeleteVertexArray(innerRecVao);
         GL.DeleteBuffer(innerRecVbo);
         GL.DeleteBuffer(innerRecEbo);
+
+        GL.DeleteVertexArray(innerWaferPlatformVao);
+        GL.DeleteBuffer(innerWaferPlatformVbo);
+        GL.DeleteBuffer(innerWaferPlatformEbo);
     }
 
     public void Initialize()
@@ -313,6 +338,34 @@ public class ProcessModule
         GL.EnableVertexAttribArray(0);
 
         GL.BindVertexArray(0);
+
+        // Inner Wafer Platform
+        GL.GenVertexArrays(1, out innerWaferPlatformVao);
+        GL.GenBuffers(1, out innerWaferPlatformVbo);
+        GL.GenBuffers(1, out innerWaferPlatformEbo);
+
+        if (innerWaferPlatformVao == 0 || innerWaferPlatformVbo == 0 || innerWaferPlatformEbo == 0)
+        {
+            Logger.Log("Error:", "Inner Wafer Platform VAO, VBO, or EBO not initialized correctly");
+            return;
+        }
+
+        // Setup VAO
+        GL.BindVertexArray(innerWaferPlatformVao);
+
+        // Upload vertex data
+        GL.BindBuffer(BufferTarget.ArrayBuffer, innerWaferPlatformVbo);
+        GL.BufferData(BufferTarget.ArrayBuffer, innerWaferPlatformPositions.Length * sizeof(float), innerWaferPlatformPositions, BufferUsageHint.StaticDraw);
+
+        // Upload index data
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, innerWaferPlatformEbo);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, innerWaferPlatformIndices.Length * sizeof(uint), innerWaferPlatformIndices, BufferUsageHint.StaticDraw);
+
+        // Define vertex attributes
+        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+        GL.EnableVertexAttribArray(0);
+
+        GL.BindVertexArray(0);
     }
 
     public void Render(Shader shader)
@@ -324,67 +377,58 @@ public class ProcessModule
         {
             GL.LineWidth(2.0f);
 
-            if (location != -1)
-            {
-                // === OUTER SHELL ===
-                GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f); // Black outline
-                GL.BindVertexArray(vao);
-                GL.DrawElements(PrimitiveType.LineLoop, numIndices, DrawElementsType.UnsignedInt, 0);
+            // === OUTER SHELL ===
+            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f); // Black outline
+            GL.BindVertexArray(vao);
+            GL.DrawElements(PrimitiveType.LineLoop, numIndices, DrawElementsType.UnsignedInt, 0);
 
-                GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f); // Gray fill
-                GL.DrawElements(PrimitiveType.Triangles, numIndices, DrawElementsType.UnsignedInt, 0);
-                GL.BindVertexArray(0);
+            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f); // Gray fill
+            GL.DrawElements(PrimitiveType.Triangles, numIndices, DrawElementsType.UnsignedInt, 0);
+            GL.BindVertexArray(0);
 
-                // === INNER CHAMBER PERIMETER (Rectangle + Half-Circle) ===
-                GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f); // Black outline
+            // === INNER CHAMBER PERIMETER (Rectangle + Half-Circle) ===
+            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f); // Black outline
 
-                // Draw rectangle first
-                GL.BindVertexArray(innerRecVao);
-                GL.DrawElements(PrimitiveType.LineLoop, innerRecNumIndices, DrawElementsType.UnsignedInt, 0);
+            // Draw rectangle first
+            GL.BindVertexArray(innerRecVao);
+            GL.DrawElements(PrimitiveType.LineLoop, innerRecNumIndices, DrawElementsType.UnsignedInt, 0);
 
-                // Then draw half-circle on top
-                GL.BindVertexArray(halfCircleVao);
-                GL.DrawElements(PrimitiveType.LineLoop, halfCircleIndices.Length, DrawElementsType.UnsignedInt, 0);
+            // Then draw half-circle on top
+            GL.BindVertexArray(halfCircleVao);
+            GL.DrawElements(PrimitiveType.LineLoop, halfCircleIndices.Length, DrawElementsType.UnsignedInt, 0);
 
-                // === INNER CHAMBER FILLED INTERIOR ===
-                GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f); // Gray fill
+            // === INNER CHAMBER FILLED INTERIOR ===
+            GL.Uniform4(location, 0.6f, 0.6f, 0.6f, 1.0f); // Gray fill
 
-                // Fill rectangle
-                GL.BindVertexArray(innerRecVao);
-                GL.DrawElements(PrimitiveType.Triangles, innerRecNumIndices, DrawElementsType.UnsignedInt, 0);
+            // Fill rectangle
+            GL.BindVertexArray(innerRecVao);
+            GL.DrawElements(PrimitiveType.Triangles, innerRecNumIndices, DrawElementsType.UnsignedInt, 0);
 
-                // Fill half-circle
-                GL.BindVertexArray(halfCircleVao);
-                GL.DrawElements(PrimitiveType.Triangles, halfCircleIndices.Length, DrawElementsType.UnsignedInt, 0);
-                GL.BindVertexArray(0);
+            // Fill half-circle
+            GL.BindVertexArray(halfCircleVao);
+            GL.DrawElements(PrimitiveType.Triangles, halfCircleIndices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.BindVertexArray(0);
 
-                // === PM WAFER PLATFORM ===
-                GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f); // Black outline
-                GL.BindVertexArray(waferPlatformVao);
-                GL.DrawElements(PrimitiveType.LineLoop, waferPlatformNumIndices, DrawElementsType.UnsignedInt, 0);
+            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f); // Gray fill
 
-                GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f); // Gray fill
-                GL.DrawElements(PrimitiveType.Triangles, waferPlatformNumIndices, DrawElementsType.UnsignedInt, 0);
-                GL.BindVertexArray(0);
-            }
+            // === PM WAFER PLATFORM ===
+            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f); // Black outline
+            GL.BindVertexArray(waferPlatformVao);
+            GL.DrawElements(PrimitiveType.LineLoop, waferPlatformNumIndices, DrawElementsType.UnsignedInt, 0);
 
-            shader.Unbind();
+            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f); // Gray fill
+            GL.DrawElements(PrimitiveType.Triangles, waferPlatformNumIndices, DrawElementsType.UnsignedInt, 0);
+            GL.BindVertexArray(0);
 
+            // === INNER WAFER PLATFORM ===
+            GL.LineWidth(0.1f);
+            GL.Uniform4(location, 0.25f, 0.25f, 0.25f, 1.0f); // Black outline
+            GL.BindVertexArray(innerWaferPlatformVao);
+            GL.DrawElements(PrimitiveType.LineLoop, innerWaferPlatformNumVertices, DrawElementsType.UnsignedInt, 0);
+
+            GL.BindVertexArray(0);
         }
 
         shader.Unbind();
-    }
-
-    public List<float> GetPositionMap(string point)
-    {
-        Dictionary<string, List<float>> positionMap = new Dictionary<string, List<float>>
-        {
-            { "A", new List<float> { posAx, posAy } },
-            { "B", new List<float> { posBx, posBy } },
-            { "C", new List<float> { posCx, posCy } },
-            { "D", new List<float> { posDx, posDy } },
-        };
-
-        return positionMap[point];
     }
 }

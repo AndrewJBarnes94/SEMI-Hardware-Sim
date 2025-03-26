@@ -77,42 +77,6 @@ public class Robot
 
         var redDotPosition_1 = appendage_1.CalculateRedDotPosition("right");
         var redDotPosition_2 = appendage_2.CalculateRedDotPosition("left");
-
-        //RenderDot(redDotPosition_1.Item1, redDotPosition_1.Item2, 0.01f, 1.0f, 0.0f, 0.0f);
-        //RenderDot(redDotPosition_2.Item1, redDotPosition_2.Item2, 0.01f, 1.0f, 0.0f, 0.0f);
-    }
-
-    private void RenderDot(float x, float y, float size, float r, float g, float b)
-    {
-        int location = shader.GetUniformLocation("u_Color");
-        GL.Uniform4(location, r, g, b, 1.0f);
-
-        float[] dotVertices = {
-            x - size, y - size,
-            x + size, y - size,
-            x + size, y + size,
-            x - size, y + size
-        };
-
-        uint[] dotIndices = { 0, 1, 2, 2, 3, 0 };
-
-        int vao, vbo, ebo;
-        GL.GenVertexArrays(1, out vao);
-        GL.GenBuffers(1, out vbo);
-        GL.GenBuffers(1, out ebo);
-
-        GL.BindVertexArray(vao);
-        GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-        GL.BufferData(BufferTarget.ArrayBuffer, dotVertices.Length * sizeof(float), dotVertices, BufferUsageHint.StaticDraw);
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);
-        GL.BufferData(BufferTarget.ElementArrayBuffer, dotIndices.Length * sizeof(uint), dotIndices, BufferUsageHint.StaticDraw);
-        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), IntPtr.Zero);
-        GL.EnableVertexAttribArray(0);
-        GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
-
-        GL.DeleteVertexArray(vao);
-        GL.DeleteBuffer(vbo);
-        GL.DeleteBuffer(ebo);
     }
 
     public void SetAngles(float angle1, float angle2, float angle3)

@@ -93,7 +93,7 @@ class HA75AlignerPositions
         (float, float) adjustedPerpendicularPoint2 = Formulas.MovePointTowards(
             perpendicularPoint1.Item1, perpendicularPoint1.Item2,
             perpendicularPoint2.Item1, perpendicularPoint2.Item2,
-            _length * 1.8f // Move 10% of the length
+            _length * 1.6f // Move 10% of the length
         );
 
         (float, float) adjustedPerpendicularPoint3 = Formulas.MovePointTowards(
@@ -105,7 +105,7 @@ class HA75AlignerPositions
         (float, float) adjustedPerpendicularPoint4 = Formulas.MovePointTowards(
             perpendicularPoint3.Item1, perpendicularPoint3.Item2,
             perpendicularPoint4.Item1, perpendicularPoint4.Item2,
-            _length * 1.8f // Move 10% of the length
+            _length * 1.6f // Move 10% of the length
         );
 
         (float, float) outerSensorA = Formulas.MovePointTowards(
@@ -135,13 +135,13 @@ class HA75AlignerPositions
         (float, float) outerSensorC = Formulas.MovePointTowards(
             adjustedPerpendicularPoint8.Item1, adjustedPerpendicularPoint8.Item2,
             outerSensorA.Item1, outerSensorA.Item2,
-            _length * 0.7f // Move 10% of the length
+            _length * 0.6f // Move 10% of the length
         );
 
         (float, float) outerSensorD = Formulas.MovePointTowards(
             adjustedPerpendicularPoint6.Item1, adjustedPerpendicularPoint6.Item2,
             outerSensorB.Item1, outerSensorB.Item2,
-            _length * 0.7f // Move 10% of the length
+            _length * 0.6f // Move 10% of the length
         );
 
         // Define chuck positions
@@ -166,11 +166,6 @@ class HA75AlignerPositions
             outerSensorC.Item1, outerSensorC.Item2,
             outerSensorD.Item1, outerSensorD.Item2
             );
-
-        //(float, float) innerSensorA = Formulas.FindMiddlePoint(sensorMidpoint.Item1, sensorMidpoint.Item2, outerSensorA.Item1, outerSensorA.Item2);
-        //(float, float) innerSensorB = Formulas.FindMiddlePoint(sensorMidpoint.Item1, sensorMidpoint.Item2, outerSensorB.Item1, outerSensorB.Item2);
-        //(float, float) innerSensorC = Formulas.FindMiddlePoint(sensorMidpoint.Item1, sensorMidpoint.Item2, outerSensorC.Item1, outerSensorC.Item2);
-        //(float, float) innerSensorD = Formulas.FindMiddlePoint(sensorMidpoint.Item1, sensorMidpoint.Item2, outerSensorD.Item1, outerSensorD.Item2);
 
         (float, float) sensorTopMidpoint = Formulas.FindMiddlePoint(
             outerSensorB.Item1, outerSensorB.Item2,
