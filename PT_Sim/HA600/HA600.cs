@@ -61,7 +61,7 @@ public class HA600 : GLControl
         // Load and compile shaders
         _shader = new Shader("vertexShader.glsl", "fragmentShader.glsl");
 
-        float scale = 0.7f;
+        float scale = 0.8f;
 
         _chamber = new HA600TMChamber(scale);
         _chamber.Initialize();

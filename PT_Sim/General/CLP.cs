@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 using PT_Sim;
+using PT_Sim.General;
 
 public class CLP
 {
@@ -49,10 +50,15 @@ public class CLP
         float centerY = (posAy + posBy + posCy + posDy) / 4.0f * scale;
 
         // Calculate positions for the 90% square
+        (float, float) newSquare90A = (posAx, posAy);
+        (float, float) newSquare90B = (posBx, posBy);
+        newSquare90A = Formulas.MovePointTowards(newSquare90A.Item1, newSquare90A.Item2, newSquare90B.Item1, newSquare90B.Item2, 0.02f * scale);
+        newSquare90B = Formulas.MovePointTowards(newSquare90B.Item1, newSquare90B.Item2, newSquare90A.Item1, newSquare90A.Item2, 0.02f * scale);
+
         positions90 = new float[]
         {
-            centerX + (posAx * scale - centerX) * 0.9f, centerY + (posAy * scale - centerY) * 0.9f,
-            centerX + (posBx * scale - centerX) * 0.9f, centerY + (posBy * scale - centerY) * 0.9f,
+            newSquare90A.Item1, newSquare90A.Item2,
+            newSquare90B.Item1, newSquare90B.Item2,
             centerX + (posCx * scale - centerX) * 0.9f, centerY + (posCy * scale - centerY) * 0.9f,
             centerX + (posDx * scale - centerX) * 0.9f, centerY + (posDy * scale - centerY) * 0.9f
         };
