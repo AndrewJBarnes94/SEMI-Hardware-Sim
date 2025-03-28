@@ -60,10 +60,10 @@ public class RobotArmAppendage
         for (int i = 0; i <= 20; i++)
         {
             float theta = -PI / 2 + PI * i / 20;
-            circlePositions[index] = scale * (0.45f + 0.2f * (float)Math.Cos(theta)); // Left Half-Circle (was 0.4f)
+            circlePositions[index] = scale * (0.5f + 0.22f * (float)Math.Cos(theta)); // Left Half-Circle (was 0.4f)
             initialCirclePositions[index] = circlePositions[index];
             index++;
-            circlePositions[index] = scale * (0.2f * (float)Math.Sin(theta));
+            circlePositions[index] = scale * (0.22f * (float)Math.Sin(theta));
             initialCirclePositions[index] = circlePositions[index];
             index++;
         }
@@ -72,19 +72,19 @@ public class RobotArmAppendage
         for (int i = 0; i <= 20; i++)
         {
             float theta = PI / 2 + PI * i / 20;
-            circlePositions[index] = scale * (-0.45f + 0.2f * (float)Math.Cos(theta)); // Right Half-Circle (was -0.4f)
+            circlePositions[index] = scale * (-0.5f + 0.22f * (float)Math.Cos(theta)); // Right Half-Circle (was -0.4f)
             initialCirclePositions[index] = circlePositions[index];
             index++;
-            circlePositions[index] = scale * (0.2f * (float)Math.Sin(theta));
+            circlePositions[index] = scale * (0.22f * (float)Math.Sin(theta));
             initialCirclePositions[index] = circlePositions[index];
             index++;
         }
 
         float[] rectVerts = {
-            0.45f,  0.2f, // Top right
-            0.45f, -0.2f, // Bottom right
-            -0.45f, -0.2f, // Bottom left
-            -0.45f,  0.2f  // Top left
+            0.5f,  0.22f, // Top right
+            0.5f, -0.22f, // Bottom right
+            -0.5f, -0.22f, // Bottom left
+            -0.5f,  0.22f  // Top left
         };
 
         for (int i = 0; i < rectanglePositions.Length; i++)
@@ -94,10 +94,10 @@ public class RobotArmAppendage
         }
 
         // Translate to center
-        TranslateToCenter(circlePositions, numCircleVertices, -scale * 0.45f, 0.0f);
-        TranslateToCenter(rectanglePositions, numRectangleVertices, -scale * 0.45f, 0.0f);
-        TranslateToCenter(initialCirclePositions, numCircleVertices, -scale * 0.45f, 0.0f);
-        TranslateToCenter(initialRectanglePositions, numRectangleVertices, -scale * 0.45f, 0.0f);
+        TranslateToCenter(circlePositions, numCircleVertices, -scale * 0.5f, 0.0f);
+        TranslateToCenter(rectanglePositions, numRectangleVertices, -scale * 0.5f, 0.0f);
+        TranslateToCenter(initialCirclePositions, numCircleVertices, -scale * 0.5f, 0.0f);
+        TranslateToCenter(initialRectanglePositions, numRectangleVertices, -scale * 0.5f, 0.0f);
 
         // Indices for circles
         index = 0;

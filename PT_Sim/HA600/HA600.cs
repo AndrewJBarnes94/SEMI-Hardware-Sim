@@ -124,7 +124,7 @@ public class HA600 : GLControl
         // Initialize Robot
         _robot = new Robot(ref angle1, ref angle2, ref angle3, ref newInputReceived, scale * 0.9f);
         _robot.Initialize(0.0f, 0.0f, 0.0f);
-        SetRobotAngles(30.0f, -30.0f, -90.0f);
+        SetRobotAngles(33.0f, -33.0f, -90.0f);
     }
 
     private void OnPaint(object sender, PaintEventArgs e)
