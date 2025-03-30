@@ -5,16 +5,17 @@ public class RobotArmEndEffector
 {
     private float scale;
 
-    private int numCircleVertices, numRectangleVertices;
-    private int numCircleIndices, numRectangleIndices;
+    private int numCircleVertices, numRectangleVertices, numScribePlateVertices;
+    private int numCircleIndices, numRectangleIndices, numScribePlateIndices;
 
     private int circleVao, circleVbo, circleEbo;
     private int rectangleVao, rectangleVbo, rectangleEbo;
+    private int scribePlateVao, scribePlateVbo, scribePlateEbo;
 
-    private float[] circlePositions, rectanglePositions;
-    private float[] initialCirclePositions, initialRectanglePositions;
+    private float[] circlePositions, rectanglePositions, scribePlatePositions;
+    private float[] initialCirclePositions, initialRectanglePositions, initialScribePlatePositions;
 
-    private uint[] circleIndices, rectangleIndices;
+    private uint[] circleIndices, rectangleIndices, scribePlateIndices;
 
     private const float PI = 3.14159265358979323846f;
 
@@ -24,37 +25,125 @@ public class RobotArmEndEffector
 
         numCircleVertices = 21;
         numRectangleVertices = 4;
+        numScribePlateVertices = 42; // 21 points for each parabola
 
         numCircleIndices = 3 * 20;
         numRectangleIndices = 6;
+        numScribePlateIndices = 6 * 20 + 2 * 21; // 2 triangles per segment, 20 segments + 2 * 21 for the outline
 
         // Initialize arrays to prevent `NullReferenceException`
         circlePositions = new float[numCircleVertices * 2];
         rectanglePositions = new float[numRectangleVertices * 2];
+        scribePlatePositions = new float[numScribePlateVertices * 2];
 
         initialCirclePositions = new float[numCircleVertices * 2];
         initialRectanglePositions = new float[numRectangleVertices * 2];
+        initialScribePlatePositions = new float[numScribePlateVertices * 2];
 
         circleIndices = new uint[numCircleIndices];
         rectangleIndices = new uint[numRectangleIndices];
+        scribePlateIndices = new uint[numScribePlateIndices];
     }
 
     ~RobotArmEndEffector()
     {
-        GL.DeleteVertexArray(circleVao);
-        GL.DeleteBuffer(circleVbo);
-        GL.DeleteBuffer(circleEbo);
-
-        GL.DeleteVertexArray(rectangleVao);
-        GL.DeleteBuffer(rectangleVbo);
-        GL.DeleteBuffer(rectangleEbo);
+        DeleteBuffers(circleVao, circleVbo, circleEbo);
+        DeleteBuffers(rectangleVao, rectangleVbo, rectangleEbo);
+        DeleteBuffers(scribePlateVao, scribePlateVbo, scribePlateEbo);
     }
 
     public void Initialize()
     {
-        int index = 0;
+        InitializeCircleVertices();
+        InitializeRectangleVertices();
+        InitializeScribePlateVertices(0.1f, 0.0f, 0.0f, -1.0f, 1.0f, 21); // Adjusted 'a' value to 0.1
+        InitializeIndices();
+        InitializeScribePlateIndices();
 
-        // Left half-circle vertices (from -π/2 to π/2)
+        TranslateToCenter(circlePositions, numCircleVertices, -scale * 0.4f, 0.0f);
+        TranslateToCenter(rectanglePositions, numRectangleVertices, -scale * 0.4f, 0.0f);
+        TranslateToCenter(scribePlatePositions, numScribePlateVertices, -scale * 1.2f, 0.0f); // Adjusted offset to move scribePlate to the left
+        TranslateToCenter(initialCirclePositions, numCircleVertices, -scale * 0.4f, 0.0f);
+        TranslateToCenter(initialRectanglePositions, numRectangleVertices, -scale * 0.4f, 0.0f);
+        TranslateToCenter(initialScribePlatePositions, numScribePlateVertices, -scale * 1.2f, 0.0f); // Adjusted offset to move scribePlate to the left
+
+        CreateBuffer(ref circleVao, ref circleVbo, ref circleEbo, circlePositions, circleIndices, numCircleVertices, numCircleIndices);
+        CreateBuffer(ref rectangleVao, ref rectangleVbo, ref rectangleEbo, rectanglePositions, rectangleIndices, numRectangleVertices, numRectangleIndices);
+        CreateBuffer(ref scribePlateVao, ref scribePlateVbo, ref scribePlateEbo, scribePlatePositions, scribePlateIndices, numScribePlateVertices, numScribePlateIndices);
+    }
+
+    public void UpdateRotation(float angle, float centerX, float centerY)
+    {
+        ApplyRotation(circlePositions, initialCirclePositions, numCircleVertices, angle, centerX, centerY);
+        ApplyRotation(rectanglePositions, initialRectanglePositions, numRectangleVertices, angle, centerX, centerY);
+        ApplyRotation(scribePlatePositions, initialScribePlatePositions, numScribePlateVertices, angle, centerX, centerY);
+
+        UpdateBuffer(circleVbo, circlePositions, numCircleVertices);
+        UpdateBuffer(rectangleVbo, rectanglePositions, numRectangleVertices);
+        UpdateBuffer(scribePlateVbo, scribePlatePositions, numScribePlateVertices);
+    }
+
+    public void TranslateArbitrary(float[] positions, int numVertices, float offsetX, float offsetY)
+    {
+        for (int i = 0; i < numVertices * 2; i += 2)
+        {
+            positions[i] += offsetX;
+            positions[i + 1] += offsetY;
+        }
+
+        UpdateBuffer(positions == circlePositions ? circleVbo : positions == rectanglePositions ? rectangleVbo : scribePlateVbo, positions, numVertices);
+    }
+
+    public void TranslateToPosition(float x, float y)
+    {
+        var redDotPosition = CalculateRedDotPosition();
+        float offsetX = x - redDotPosition.Item1;
+        float offsetY = y - redDotPosition.Item2;
+
+        TranslateArbitrary(circlePositions, numCircleVertices, offsetX, offsetY);
+        TranslateArbitrary(rectanglePositions, numRectangleVertices, offsetX, offsetY);
+        TranslateArbitrary(scribePlatePositions, numScribePlateVertices, offsetX, offsetY);
+    }
+
+    public void Render(Shader shader)
+    {
+        shader.Bind();
+
+        int location = shader.GetUniformLocation("u_Color");
+
+        if (location != -1)
+        {
+            GL.LineWidth(2.0f);
+            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
+
+            Draw(circleVao, numCircleIndices, PrimitiveType.LineLoop);
+            Draw(rectangleVao, numRectangleIndices, PrimitiveType.LineLoop);
+
+            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
+
+            Draw(circleVao, numCircleIndices, PrimitiveType.Triangles);
+            Draw(rectangleVao, numRectangleIndices, PrimitiveType.Triangles);
+
+            // Fill the area between the parabolas in blue
+            GL.Uniform4(location, 0.0f, 0.0f, 1.0f, 1.0f);
+            Draw(scribePlateVao, numScribePlateIndices - numScribePlateVertices, PrimitiveType.Triangles);
+
+            // Draw the outline of the scribe plate last
+            GL.Uniform4(location, 0.0f, 0.0f, 1.0f, 1.0f);
+            Draw(scribePlateVao, numScribePlateVertices, PrimitiveType.LineLoop);
+        }
+        else
+        {
+            Console.WriteLine("Uniform location for 'u_Color' is invalid.");
+        }
+
+        GL.BindVertexArray(0);
+        shader.Unbind();
+    }
+
+    private void InitializeCircleVertices()
+    {
+        int index = 0;
         for (int i = 0; i <= 20; ++i)
         {
             float theta = -PI / 2 + PI * i / 20;
@@ -65,8 +154,10 @@ public class RobotArmEndEffector
             initialCirclePositions[index] = circlePositions[index];
             index++;
         }
+    }
 
-        // Rectangle vertices
+    private void InitializeRectangleVertices()
+    {
         rectanglePositions[0] = scale * 0.7f;  // Top right
         initialRectanglePositions[0] = rectanglePositions[0];
         rectanglePositions[1] = scale * 0.2f;
@@ -83,17 +174,40 @@ public class RobotArmEndEffector
         initialRectanglePositions[6] = rectanglePositions[6];
         rectanglePositions[7] = scale * 0.2f;
         initialRectanglePositions[7] = rectanglePositions[7];
+    }
 
-        // Translate the entire geometry to center
-        TranslateToCenter(circlePositions, numCircleVertices, -scale * 0.4f, 0.0f);
-        TranslateToCenter(rectanglePositions, numRectangleVertices, -scale * 0.4f, 0.0f);
+    private void InitializeScribePlateVertices(float a, float b, float c, float startX, float endX, int numPoints)
+    {
+        int index = 0;
+        float step = (endX - startX) / (numPoints - 1);
+        float scribeScaleX = 0.25f; // Slightly increased scaling factor to make the scribe plate wider in the x direction
+        float scribeScaleY = 1.0f; // Scaling factor to increase the distance between the parabolas
+        for (int i = 0; i < numPoints; ++i)
+        {
+            float x = startX + i * step;
+            float y = a * x * x + b * x + c;
 
-        TranslateToCenter(initialCirclePositions, numCircleVertices, -scale * 0.4f, 0.0f);
-        TranslateToCenter(initialRectanglePositions, numRectangleVertices, -scale * 0.4f, 0.0f);
+            // First parabola
+            scribePlatePositions[index] = -y * scale * scribeScaleY; // Negate y to rotate 180 degrees
+            initialScribePlatePositions[index] = scribePlatePositions[index];
+            index++;
+            scribePlatePositions[index] = -x * scale * scribeScaleX; // Negate x to rotate 180 degrees
+            initialScribePlatePositions[index] = scribePlatePositions[index];
+            index++;
 
-        index = 0;
+            // Second parabola (parallel and shifted)
+            scribePlatePositions[index] = -(y - 0.2f) * scale * scribeScaleY; // Negate y to rotate 180 degrees
+            initialScribePlatePositions[index] = scribePlatePositions[index];
+            index++;
+            scribePlatePositions[index] = -x * scale * scribeScaleX; // Negate x to rotate 180 degrees
+            initialScribePlatePositions[index] = scribePlatePositions[index];
+            index++;
+        }
+    }
 
-        // Left half-circle indices
+    private void InitializeIndices()
+    {
+        int index = 0;
         for (int i = 0; i < 20; ++i)
         {
             circleIndices[index++] = 0;
@@ -101,148 +215,93 @@ public class RobotArmEndEffector
             circleIndices[index++] = (uint)(i + 1);
         }
 
-        // Rectangle indices
         rectangleIndices[0] = 0; // Top right
         rectangleIndices[1] = 1; // Bottom right
         rectangleIndices[2] = 2; // Bottom left
         rectangleIndices[3] = 0; // Top right
         rectangleIndices[4] = 2; // Bottom left
         rectangleIndices[5] = 3; // Top left
+    }
 
-        // Vertex Array Object and Buffer for circles
-        GL.GenVertexArrays(1, out circleVao);
-        GL.GenBuffers(1, out circleVbo);
-        GL.GenBuffers(1, out circleEbo);
+    private void InitializeScribePlateIndices()
+    {
+        int index = 0;
+        int numPoints = numScribePlateVertices / 2;
 
-        // Initialize VAO and VBO for circles
-        GL.BindVertexArray(circleVao);
-        GL.BindBuffer(BufferTarget.ArrayBuffer, circleVbo);
-        GL.BufferData(BufferTarget.ArrayBuffer, sizeof(float) * numCircleVertices * 2, circlePositions, BufferUsageHint.DynamicDraw);
+        // Indices for the triangles
+        for (int i = 0; i < numPoints - 1; ++i)
+        {
+            // First triangle
+            scribePlateIndices[index++] = (uint)(2 * i);
+            scribePlateIndices[index++] = (uint)(2 * i + 1);
+            scribePlateIndices[index++] = (uint)(2 * (i + 1));
 
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, circleEbo);
-        GL.BufferData(BufferTarget.ElementArrayBuffer, sizeof(uint) * numCircleIndices, circleIndices, BufferUsageHint.StaticDraw);
+            // Second triangle
+            scribePlateIndices[index++] = (uint)(2 * (i + 1));
+            scribePlateIndices[index++] = (uint)(2 * i + 1);
+            scribePlateIndices[index++] = (uint)(2 * (i + 1) + 1);
+        }
 
-        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), IntPtr.Zero);
-        GL.EnableVertexAttribArray(0);
+        // Indices for the outline
+        for (int i = 0; i < numPoints; ++i)
+        {
+            scribePlateIndices[index++] = (uint)(2 * i);
+        }
+        for (int i = numPoints - 1; i >= 0; --i)
+        {
+            scribePlateIndices[index++] = (uint)(2 * i + 1);
+        }
+    }
 
-        // Vertex Array Object and Buffer for rectangle
-        GL.GenVertexArrays(1, out rectangleVao);
-        GL.GenBuffers(1, out rectangleVbo);
-        GL.GenBuffers(1, out rectangleEbo);
+    private void CreateBuffer(ref int vao, ref int vbo, ref int ebo, float[] positions, uint[] indices, int numVertices, int numIndices)
+    {
+        GL.GenVertexArrays(1, out vao);
+        GL.GenBuffers(1, out vbo);
+        GL.GenBuffers(1, out ebo);
 
-        // Initialize VAO and VBO for rectangle
-        GL.BindVertexArray(rectangleVao);
-        GL.BindBuffer(BufferTarget.ArrayBuffer, rectangleVbo);
-        GL.BufferData(BufferTarget.ArrayBuffer, sizeof(float) * numRectangleVertices * 2, rectanglePositions, BufferUsageHint.DynamicDraw);
+        GL.BindVertexArray(vao);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+        GL.BufferData(BufferTarget.ArrayBuffer, sizeof(float) * numVertices * 2, positions, BufferUsageHint.DynamicDraw);
 
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, rectangleEbo);
-        GL.BufferData(BufferTarget.ElementArrayBuffer, sizeof(uint) * numRectangleIndices, rectangleIndices, BufferUsageHint.StaticDraw);
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, sizeof(uint) * numIndices, indices, BufferUsageHint.StaticDraw);
 
         GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), IntPtr.Zero);
         GL.EnableVertexAttribArray(0);
     }
 
-    public void UpdateRotation(float angle, float centerX, float centerY)
+    private void UpdateBuffer(int vbo, float[] positions, int numVertices)
     {
-        for (int i = 0; i < numCircleVertices * 2; i += 2)
-        {
-            float x = initialCirclePositions[i] - centerX;
-            float y = initialCirclePositions[i + 1] - centerY;
-
-            // Apply rotation (negate angle for clockwise rotation)
-            circlePositions[i] = (float)Math.Cos(-angle) * x - (float)Math.Sin(-angle) * y + centerX; // New x
-            circlePositions[i + 1] = (float)Math.Sin(-angle) * x + (float)Math.Cos(-angle) * y + centerY; // New y
-        }
-
-        for (int i = 0; i < numRectangleVertices * 2; i += 2)
-        {
-            float x = initialRectanglePositions[i] - centerX;
-            float y = initialRectanglePositions[i + 1] - centerY;
-
-            // Apply rotation (negate angle for clockwise rotation)
-            rectanglePositions[i] = (float)Math.Cos(-angle) * x - (float)Math.Sin(-angle) * y + centerX; // New x
-            rectanglePositions[i + 1] = (float)Math.Sin(-angle) * x + (float)Math.Cos(-angle) * y + centerY; // New y
-        }
-
-        // Update the vertex buffer with the new positions
-        GL.BindBuffer(BufferTarget.ArrayBuffer, circleVbo);
-        GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, sizeof(float) * numCircleVertices * 2, circlePositions);
-
-        GL.BindBuffer(BufferTarget.ArrayBuffer, rectangleVbo);
-        GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, sizeof(float) * numRectangleVertices * 2, rectanglePositions);
+        GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+        GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, sizeof(float) * numVertices * 2, positions);
     }
 
-    public void TranslateArbitrary(float[] positions, int numVertices, float offsetX, float offsetY)
+    private void ApplyRotation(float[] positions, float[] initialPositions, int numVertices, float angle, float centerX, float centerY)
     {
+        float cosA = (float)Math.Cos(-angle);
+        float sinA = (float)Math.Sin(-angle);
+
         for (int i = 0; i < numVertices * 2; i += 2)
         {
-            positions[i] += offsetX;
-            positions[i + 1] += offsetY;
-        }
+            float x = initialPositions[i] - centerX;
+            float y = initialPositions[i + 1] - centerY;
 
-        // Update the vertex buffer with the new positions
-        if (positions == circlePositions)
-        {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, circleVbo);
-            GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, sizeof(float) * numCircleVertices * 2, circlePositions);
-        }
-        else if (positions == rectanglePositions)
-        {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, rectangleVbo);
-            GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, sizeof(float) * numRectangleVertices * 2, rectanglePositions);
+            positions[i] = cosA * x - sinA * y + centerX;
+            positions[i + 1] = sinA * x + cosA * y + centerY;
         }
     }
 
-    public void TranslateToPosition(float x, float y)
+    private void Draw(int vao, int numIndices, PrimitiveType mode)
     {
-        // Calculate the offset needed to translate the appendage to the specified position
-        var redDotPosition = CalculateRedDotPosition();
-        float offsetX = x - redDotPosition.Item1;
-        float offsetY = y - redDotPosition.Item2;
-
-        // Translate the entire geometry
-        TranslateArbitrary(circlePositions, numCircleVertices, offsetX, offsetY);
-        TranslateArbitrary(rectanglePositions, numRectangleVertices, offsetX, offsetY);
+        GL.BindVertexArray(vao);
+        GL.DrawElements(mode, numIndices, DrawElementsType.UnsignedInt, IntPtr.Zero);
     }
 
-    public void Render(Shader shader)
+    private void DeleteBuffers(int vao, int vbo, int ebo)
     {
-        shader.Bind(); // Ensure the shader is bound
-
-        int location = shader.GetUniformLocation("u_Color");
-
-        if (location != -1) // Check if the uniform location is valid
-        {
-            // Draw the outline
-            GL.LineWidth(2.0f); // Set the line width for the outline
-            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f); // Set color to black
-
-            // Draw the circles outline
-            GL.BindVertexArray(circleVao);
-            GL.DrawElements(PrimitiveType.LineLoop, numCircleIndices, DrawElementsType.UnsignedInt, IntPtr.Zero);
-
-            // Draw the rectangle outline
-            GL.BindVertexArray(rectangleVao);
-            GL.DrawElements(PrimitiveType.LineLoop, numRectangleIndices, DrawElementsType.UnsignedInt, IntPtr.Zero);
-
-            // Draw the fill
-            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f); // Set color to metallic gray/silver
-
-            // Draw the circles fill
-            GL.BindVertexArray(circleVao);
-            GL.DrawElements(PrimitiveType.Triangles, numCircleIndices, DrawElementsType.UnsignedInt, IntPtr.Zero);
-
-            // Draw the rectangle fill
-            GL.BindVertexArray(rectangleVao);
-            GL.DrawElements(PrimitiveType.Triangles, numRectangleIndices, DrawElementsType.UnsignedInt, IntPtr.Zero);
-        }
-        else
-        {
-            Console.WriteLine("Uniform location for 'u_Color' is invalid.");
-        }
-
-        GL.BindVertexArray(0); // Unbind the VAO
-        shader.Unbind(); // Unbind the shader program
+        GL.DeleteVertexArray(vao);
+        GL.DeleteBuffer(vbo);
+        GL.DeleteBuffer(ebo);
     }
 
     private void TranslateToCenter(float[] positions, int numVertices, float offsetX, float offsetY)
@@ -256,13 +315,11 @@ public class RobotArmEndEffector
 
     private Tuple<float, float> CalculateRedDotPosition()
     {
-        // Calculate the red dot position based on the rectangle's height midpoint
         return CalculateRectangleHeightMidpoint();
     }
 
     private Tuple<float, float> CalculateRectangleHeightMidpoint()
     {
-        // Midpoint of the rectangle's height on the left side
         float midpointX = (rectanglePositions[0] + rectanglePositions[2]) / 2;
         float midpointY = (rectanglePositions[1] + rectanglePositions[3]) / 2;
         return Tuple.Create(midpointX, midpointY);

@@ -9,6 +9,7 @@ namespace PT_Sim.General
 {
     class Formulas
     {
+        public static float PI = 3.14159265358979323846f;
         public static float distance(float x1, float y1, float x2, float y2)
         {
             return (float)Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
@@ -241,10 +242,14 @@ namespace PT_Sim.General
             return (newAx, newAy, newBx, newBy, newCx, newCy, newDx, newDy);
         }
 
+        internal static float Cos(float theta)
+        {
+            throw new NotImplementedException();
+        }
 
-
-
-
-
+        internal static float Sin(float theta)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
