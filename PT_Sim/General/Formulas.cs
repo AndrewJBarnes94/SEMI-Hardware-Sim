@@ -60,8 +60,6 @@ namespace PT_Sim.General
             return (x1, y1);
         }
 
-
-
         public static (float, float) FindIntersectionPoint(float m1, float b1, float m2, float b2)
         {
             // Check if the lines are parallel

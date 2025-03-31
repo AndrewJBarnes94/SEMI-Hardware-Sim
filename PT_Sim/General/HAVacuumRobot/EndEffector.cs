@@ -125,11 +125,11 @@ public class RobotArmEndEffector
             Draw(rectangleVao, numRectangleIndices, PrimitiveType.Triangles);
 
             // Fill the area between the parabolas in blue
-            GL.Uniform4(location, 0.0f, 0.0f, 1.0f, 1.0f);
+            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
             Draw(scribePlateVao, numScribePlateIndices - numScribePlateVertices, PrimitiveType.Triangles);
 
             // Draw the outline of the scribe plate last
-            GL.Uniform4(location, 0.0f, 0.0f, 1.0f, 1.0f);
+            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
             Draw(scribePlateVao, numScribePlateVertices, PrimitiveType.LineLoop);
         }
         else
