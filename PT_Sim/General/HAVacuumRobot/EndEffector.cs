@@ -62,10 +62,10 @@ public class RobotArmEndEffector
 
         TranslateToCenter(circlePositions, numCircleVertices, -scale * 0.4f, 0.0f);
         TranslateToCenter(rectanglePositions, numRectangleVertices, -scale * 0.4f, 0.0f);
-        TranslateToCenter(scribePlatePositions, numScribePlateVertices, -scale * 1.2f, 0.0f); // Adjusted offset to move scribePlate to the left
+        TranslateToCenter(scribePlatePositions, numScribePlateVertices, -scale * 1.1f, 0.0f); // Adjusted offset to move scribePlate to the left
         TranslateToCenter(initialCirclePositions, numCircleVertices, -scale * 0.4f, 0.0f);
         TranslateToCenter(initialRectanglePositions, numRectangleVertices, -scale * 0.4f, 0.0f);
-        TranslateToCenter(initialScribePlatePositions, numScribePlateVertices, -scale * 1.2f, 0.0f); // Adjusted offset to move scribePlate to the left
+        TranslateToCenter(initialScribePlatePositions, numScribePlateVertices, -scale * 1.1f, 0.0f); // Adjusted offset to move scribePlate to the left
 
         CreateBuffer(ref circleVao, ref circleVbo, ref circleEbo, circlePositions, circleIndices, numCircleVertices, numCircleIndices);
         CreateBuffer(ref rectangleVao, ref rectangleVbo, ref rectangleEbo, rectanglePositions, rectangleIndices, numRectangleVertices, numRectangleIndices);
@@ -118,19 +118,15 @@ public class RobotArmEndEffector
 
             Draw(circleVao, numCircleIndices, PrimitiveType.LineLoop);
             Draw(rectangleVao, numRectangleIndices, PrimitiveType.LineLoop);
+            GL.BindVertexArray(scribePlateVao);
+            GL.DrawElements(PrimitiveType.LineLoop, numScribePlateVertices, DrawElementsType.UnsignedInt, (IntPtr)(sizeof(uint) * (numScribePlateIndices - numScribePlateVertices)));
+
 
             GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
 
             Draw(circleVao, numCircleIndices, PrimitiveType.Triangles);
             Draw(rectangleVao, numRectangleIndices, PrimitiveType.Triangles);
-
-            // Fill the area between the parabolas in blue
-            GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
             Draw(scribePlateVao, numScribePlateIndices - numScribePlateVertices, PrimitiveType.Triangles);
-
-            // Draw the outline of the scribe plate last
-            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
-            Draw(scribePlateVao, numScribePlateVertices, PrimitiveType.LineLoop);
         }
         else
         {
@@ -147,7 +143,7 @@ public class RobotArmEndEffector
         for (int i = 0; i <= 20; ++i)
         {
             float theta = -PI / 2 + PI * i / 20;
-            circlePositions[index] = scale * (0.7f + 0.2f * (float)Math.Cos(theta));
+            circlePositions[index] = scale * (0.65f + 0.2f * (float)Math.Cos(theta));
             initialCirclePositions[index] = circlePositions[index];
             index++;
             circlePositions[index] = scale * (0.2f * (float)Math.Sin(theta));
@@ -158,19 +154,19 @@ public class RobotArmEndEffector
 
     private void InitializeRectangleVertices()
     {
-        rectanglePositions[0] = scale * 0.7f;  // Top right
+        rectanglePositions[0] = scale * 0.65f;  // Top right
         initialRectanglePositions[0] = rectanglePositions[0];
         rectanglePositions[1] = scale * 0.2f;
         initialRectanglePositions[1] = rectanglePositions[1];
-        rectanglePositions[2] = scale * 0.7f;  // Bottom right
+        rectanglePositions[2] = scale * 0.65f;  // Bottom right
         initialRectanglePositions[2] = rectanglePositions[2];
         rectanglePositions[3] = scale * -0.2f;
         initialRectanglePositions[3] = rectanglePositions[3];
-        rectanglePositions[4] = scale * -0.7f; // Bottom left
+        rectanglePositions[4] = scale * -0.65f; // Bottom left
         initialRectanglePositions[4] = rectanglePositions[4];
         rectanglePositions[5] = scale * -0.2f;
         initialRectanglePositions[5] = rectanglePositions[5];
-        rectanglePositions[6] = scale * -0.7f; // Top left
+        rectanglePositions[6] = scale * -0.65f; // Top left
         initialRectanglePositions[6] = rectanglePositions[6];
         rectanglePositions[7] = scale * 0.2f;
         initialRectanglePositions[7] = rectanglePositions[7];
@@ -228,30 +224,38 @@ public class RobotArmEndEffector
         int index = 0;
         int numPoints = numScribePlateVertices / 2;
 
-        // Indices for the triangles
+        // Triangles to fill the area between the parabolas
         for (int i = 0; i < numPoints - 1; ++i)
         {
-            // First triangle
-            scribePlateIndices[index++] = (uint)(2 * i);
-            scribePlateIndices[index++] = (uint)(2 * i + 1);
-            scribePlateIndices[index++] = (uint)(2 * (i + 1));
+            uint topLeft = (uint)(i * 2);
+            uint bottomLeft = (uint)(i * 2 + 1);
+            uint topRight = (uint)(i * 2 + 2);
+            uint bottomRight = (uint)(i * 2 + 3);
 
-            // Second triangle
-            scribePlateIndices[index++] = (uint)(2 * (i + 1));
-            scribePlateIndices[index++] = (uint)(2 * i + 1);
-            scribePlateIndices[index++] = (uint)(2 * (i + 1) + 1);
+            // Triangle 1
+            scribePlateIndices[index++] = topLeft;
+            scribePlateIndices[index++] = bottomLeft;
+            scribePlateIndices[index++] = topRight;
+
+            // Triangle 2
+            scribePlateIndices[index++] = topRight;
+            scribePlateIndices[index++] = bottomLeft;
+            scribePlateIndices[index++] = bottomRight;
         }
 
-        // Indices for the outline
+        // Indices for the outline (top parabola forward)
         for (int i = 0; i < numPoints; ++i)
         {
-            scribePlateIndices[index++] = (uint)(2 * i);
+            scribePlateIndices[index++] = (uint)(i * 2); // top curve
         }
+
+        // Outline (bottom parabola in reverse)
         for (int i = numPoints - 1; i >= 0; --i)
         {
-            scribePlateIndices[index++] = (uint)(2 * i + 1);
+            scribePlateIndices[index++] = (uint)(i * 2 + 1); // bottom curve
         }
     }
+
 
     private void CreateBuffer(ref int vao, ref int vbo, ref int ebo, float[] positions, uint[] indices, int numVertices, int numIndices)
     {
