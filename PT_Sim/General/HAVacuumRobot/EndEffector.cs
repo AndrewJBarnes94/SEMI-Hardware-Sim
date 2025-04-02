@@ -17,6 +17,22 @@ public class RobotArmEndEffector
 
     private uint[] circleIndices, rectangleIndices, scribePlateIndices;
 
+
+    private int numFork1Vertices;
+    private int numFork1Indices;
+    private int fork1Vao, fork1Vbo, fork1Ebo;
+    private float[] fork1Positions;
+    private float[] initialFork1Positions;
+    private uint[] fork1Indices;
+
+    private int numfork2Vertices;
+    private int numfork2Indices;
+    private int fork2Vao, fork2Vbo, fork2Ebo;
+    private float[] fork2Positions;
+    private float[] initialFork2Positions;
+    private uint[] fork2Indices;
+
+
     private const float PI = 3.14159265358979323846f;
 
     public RobotArmEndEffector(float scale)
@@ -43,6 +59,18 @@ public class RobotArmEndEffector
         circleIndices = new uint[numCircleIndices];
         rectangleIndices = new uint[numRectangleIndices];
         scribePlateIndices = new uint[numScribePlateIndices];
+
+        numFork1Vertices = 4;
+        numFork1Indices = 6;
+        fork1Positions = new float[numFork1Vertices * 2];
+        initialFork1Positions = new float[numFork1Vertices * 2];
+        fork1Indices = new uint[numFork1Indices];
+
+        numfork2Vertices = 4;
+        numfork2Indices = 6;
+        fork2Positions = new float[numfork2Vertices * 2];
+        initialFork2Positions = new float[numfork2Vertices * 2];
+        fork2Indices = new uint[numfork2Indices];
     }
 
     ~RobotArmEndEffector()
@@ -50,6 +78,8 @@ public class RobotArmEndEffector
         DeleteBuffers(circleVao, circleVbo, circleEbo);
         DeleteBuffers(rectangleVao, rectangleVbo, rectangleEbo);
         DeleteBuffers(scribePlateVao, scribePlateVbo, scribePlateEbo);
+        DeleteBuffers(fork1Ebo, fork1Vbo, fork1Ebo);
+        DeleteBuffers(fork2Ebo, fork2Vbo, fork2Ebo);
     }
 
     public void Initialize()
@@ -59,17 +89,25 @@ public class RobotArmEndEffector
         InitializeScribePlateVertices(0.1f, 0.0f, 0.0f, -1.0f, 1.0f, 21); // Adjusted 'a' value to 0.1
         InitializeIndices();
         InitializeScribePlateIndices();
+        InitializeFork1Vertices();
+        InitializeFork2Vertices();
 
         TranslateToCenter(circlePositions, numCircleVertices, -scale * 0.4f, 0.0f);
         TranslateToCenter(rectanglePositions, numRectangleVertices, -scale * 0.4f, 0.0f);
         TranslateToCenter(scribePlatePositions, numScribePlateVertices, -scale * 1.1f, 0.0f); // Adjusted offset to move scribePlate to the left
+       
+
+
         TranslateToCenter(initialCirclePositions, numCircleVertices, -scale * 0.4f, 0.0f);
         TranslateToCenter(initialRectanglePositions, numRectangleVertices, -scale * 0.4f, 0.0f);
         TranslateToCenter(initialScribePlatePositions, numScribePlateVertices, -scale * 1.1f, 0.0f); // Adjusted offset to move scribePlate to the left
+        
 
         CreateBuffer(ref circleVao, ref circleVbo, ref circleEbo, circlePositions, circleIndices, numCircleVertices, numCircleIndices);
         CreateBuffer(ref rectangleVao, ref rectangleVbo, ref rectangleEbo, rectanglePositions, rectangleIndices, numRectangleVertices, numRectangleIndices);
         CreateBuffer(ref scribePlateVao, ref scribePlateVbo, ref scribePlateEbo, scribePlatePositions, scribePlateIndices, numScribePlateVertices, numScribePlateIndices);
+        CreateBuffer(ref fork1Vao, ref fork1Vbo, ref fork1Ebo, fork1Positions, fork1Indices, numFork1Vertices, numFork1Indices);
+        CreateBuffer(ref fork2Vao, ref fork2Vbo, ref fork2Ebo, fork2Positions, fork2Indices, numfork2Vertices, numfork2Indices);
     }
 
     public void UpdateRotation(float angle, float centerX, float centerY)
@@ -77,10 +115,14 @@ public class RobotArmEndEffector
         ApplyRotation(circlePositions, initialCirclePositions, numCircleVertices, angle, centerX, centerY);
         ApplyRotation(rectanglePositions, initialRectanglePositions, numRectangleVertices, angle, centerX, centerY);
         ApplyRotation(scribePlatePositions, initialScribePlatePositions, numScribePlateVertices, angle, centerX, centerY);
+        ApplyRotation(fork1Positions, initialFork1Positions, numFork1Vertices, angle, centerX, centerY);
+        ApplyRotation(fork2Positions, initialFork2Positions, numfork2Vertices, angle, centerX, centerY);
 
         UpdateBuffer(circleVbo, circlePositions, numCircleVertices);
         UpdateBuffer(rectangleVbo, rectanglePositions, numRectangleVertices);
         UpdateBuffer(scribePlateVbo, scribePlatePositions, numScribePlateVertices);
+        UpdateBuffer(fork1Vbo, fork1Positions, numFork1Vertices);
+        UpdateBuffer(fork2Vbo, fork2Positions, numfork2Vertices);
     }
 
     public void TranslateArbitrary(float[] positions, int numVertices, float offsetX, float offsetY)
@@ -121,12 +163,20 @@ public class RobotArmEndEffector
             GL.BindVertexArray(scribePlateVao);
             GL.DrawElements(PrimitiveType.LineLoop, numScribePlateVertices, DrawElementsType.UnsignedInt, (IntPtr)(sizeof(uint) * (numScribePlateIndices - numScribePlateVertices)));
 
+            Draw(fork1Vao, numFork1Indices, PrimitiveType.LineLoop);
+            Draw(fork2Vao, numfork2Indices, PrimitiveType.LineLoop);
 
             GL.Uniform4(location, 0.75f, 0.75f, 0.75f, 1.0f);
 
             Draw(circleVao, numCircleIndices, PrimitiveType.Triangles);
             Draw(rectangleVao, numRectangleIndices, PrimitiveType.Triangles);
             Draw(scribePlateVao, numScribePlateIndices - numScribePlateVertices, PrimitiveType.Triangles);
+
+            //GL.Uniform4(location, 1.0f, 0.1f, 0.1f, 1.0f);
+            Draw(fork1Vao, numFork1Indices, PrimitiveType.Triangles);
+
+            //GL.Uniform4(location, 0.3f, 1.0f, 0.3f, 1.0f);
+            Draw(fork2Vao, numfork2Indices, PrimitiveType.Triangles);
         }
         else
         {
@@ -217,6 +267,20 @@ public class RobotArmEndEffector
         rectangleIndices[3] = 0; // Top right
         rectangleIndices[4] = 2; // Bottom left
         rectangleIndices[5] = 3; // Top left
+
+        fork1Indices[0] = 0;
+        fork1Indices[1] = 1;
+        fork1Indices[2] = 2;
+        fork1Indices[3] = 0;
+        fork1Indices[4] = 2;
+        fork1Indices[5] = 3;
+
+        fork2Indices[0] = 0;
+        fork2Indices[1] = 1;
+        fork2Indices[2] = 2;
+        fork2Indices[3] = 0;
+        fork2Indices[4] = 2;
+        fork2Indices[5] = 3;
     }
 
     private void InitializeScribePlateIndices()
@@ -255,6 +319,52 @@ public class RobotArmEndEffector
             scribePlateIndices[index++] = (uint)(i * 2 + 1); // bottom curve
         }
     }
+
+    public void InitializeFork1Vertices()
+    {
+        float forkLength = scale * 0.4f;
+        float forkHeight = scale * 0.05f;
+        float xStart = -scale * 1.7f; // left edge of rectangle
+        float yStart = scale * 0.2f;  // just above centerline
+
+        fork1Positions[0] = xStart;               // Top left
+        fork1Positions[1] = yStart + forkHeight;
+        fork1Positions[2] = xStart;               // Bottom left
+        fork1Positions[3] = yStart;
+        fork1Positions[4] = xStart + forkLength;  // Bottom right
+        fork1Positions[5] = yStart;
+        fork1Positions[6] = xStart + forkLength;  // Top right
+        fork1Positions[7] = yStart + forkHeight;
+
+        for (int i = 0; i < 8; ++i)
+            initialFork1Positions[i] = fork1Positions[i];
+    }
+
+
+
+
+    public void InitializeFork2Vertices()
+    {
+        float forkLength = scale * 0.4f;
+        float forkHeight = scale * 0.05f;
+        float xStart = -scale * 1.7f; // left edge of rectangle
+        float yStart = -scale * 0.25f;  // just below centerline
+
+        fork2Positions[0] = xStart;               // Top left
+        fork2Positions[1] = yStart + forkHeight;
+        fork2Positions[2] = xStart;               // Bottom left
+        fork2Positions[3] = yStart;
+        fork2Positions[4] = xStart + forkLength;  // Bottom right
+        fork2Positions[5] = yStart;
+        fork2Positions[6] = xStart + forkLength;  // Top right
+        fork2Positions[7] = yStart + forkHeight;
+
+        for (int i = 0; i < 8; ++i)
+            initialFork2Positions[i] = fork2Positions[i];
+    }
+
+
+
 
 
     private void CreateBuffer(ref int vao, ref int vbo, ref int ebo, float[] positions, uint[] indices, int numVertices, int numIndices)
