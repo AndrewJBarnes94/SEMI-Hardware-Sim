@@ -11,6 +11,10 @@
       "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\havacuumrobot\\robot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\general\\havacuumrobot\\armsegment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\havacuumrobot\\armsegment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\ha600\\ha600.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:ha600\\ha600.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -22,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 184,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,13 +42,26 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "HA600.cs",
+              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\HA600\\HA600.cs",
+              "RelativeDocumentMoniker": "HA600\\HA600.cs",
+              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\HA600\\HA600.cs",
+              "RelativeToolTip": "HA600\\HA600.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-25T01:19:46.795Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
               "Title": "Robot.cs",
               "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\General\\HAVacuumRobot\\Robot.cs",
               "RelativeDocumentMoniker": "General\\HAVacuumRobot\\Robot.cs",
               "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\General\\HAVacuumRobot\\Robot.cs",
               "RelativeToolTip": "General\\HAVacuumRobot\\Robot.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAYwDsAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAABEAAAAAAAAAAAAAwCoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-23T02:37:22.551Z",
               "EditorCaption": ""
@@ -52,14 +69,15 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "HA600.cs",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\HA600\\HA600.cs",
-              "RelativeDocumentMoniker": "HA600\\HA600.cs",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\HA600\\HA600.cs",
-              "RelativeToolTip": "HA600\\HA600.cs",
-              "ViewState": "AgIAAGwAAAAAAAAAAAAYwH4AAAAjAAAAAAAAAA==",
+              "Title": "ArmSegment.cs",
+              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\General\\HAVacuumRobot\\ArmSegment.cs",
+              "RelativeDocumentMoniker": "General\\HAVacuumRobot\\ArmSegment.cs",
+              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\General\\HAVacuumRobot\\ArmSegment.cs",
+              "RelativeToolTip": "General\\HAVacuumRobot\\ArmSegment.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAAwHMAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-23T02:12:26.192Z"
+              "WhenOpened": "2025-04-25T01:20:06.963Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -69,7 +87,7 @@
               "RelativeDocumentMoniker": "General\\HAVacuumRobot\\EndEffector.cs",
               "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\General\\HAVacuumRobot\\EndEffector.cs",
               "RelativeToolTip": "General\\HAVacuumRobot\\EndEffector.cs",
-              "ViewState": "AgIAAOQAAAAAAAAAAAAkwAEBAAABAAAAAAAAAA==",
+              "ViewState": "AgIAADgAAAAAAAAAAAAAAEIAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-30T02:24:47.71Z",
               "EditorCaption": ""

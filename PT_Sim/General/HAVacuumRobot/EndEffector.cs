@@ -1,47 +1,44 @@
 ﻿using System;
 using OpenTK.Graphics.OpenGL;
 
-public class RobotArmEndEffector
+public class EndEffector
 {
     private float scale;
+
     private int numCircleVertices;
-    private int numRectangleVertices;
     private int numCircleIndices;
-    private int numRectangleIndices;
-
     private int circleVao, circleVbo, circleEbo;
-    private int rectangleVao, rectangleVbo, rectangleEbo;
-
     private float[] circlePositions;
-    private float[] rectanglePositions;
-
     private float[] initialCirclePositions;
-    private float[] initialRectanglePositions;
-
     private uint[] circleIndices;
+
+    private int numRectangleVertices;
+    private int numRectangleIndices;
+    private int rectangleVao, rectangleVbo, rectangleEbo;
+    private float[] rectanglePositions;
+    private float[] initialRectanglePositions;
     private uint[] rectangleIndices;
 
     private const float PI = 3.14159265358979323846f;
 
-    public RobotArmEndEffector(float scale)
+    public EndEffector(float scale)
     {
-        this.scale = scale / 3;
+        this.scale = scale/3;
+
         numCircleVertices = 2 * (20 + 1);
-        numRectangleVertices = 4;
         numCircleIndices = 2 * 3 * 20;
-        numRectangleIndices = 6;
-
         circlePositions = new float[numCircleVertices * 2];
-        rectanglePositions = new float[numRectangleVertices * 2];
-
         initialCirclePositions = new float[numCircleVertices * 2];
-        initialRectanglePositions = new float[numRectangleVertices * 2];
-
         circleIndices = new uint[numCircleIndices];
+
+        numRectangleVertices = 4;
+        numRectangleIndices = 6;
+        rectanglePositions = new float[numRectangleVertices * 2];
+        initialRectanglePositions = new float[numRectangleVertices * 2];
         rectangleIndices = new uint[numRectangleIndices];
     }
 
-    ~RobotArmEndEffector()
+    ~EndEffector()
     {
         GL.DeleteVertexArray(circleVao);
         GL.DeleteBuffer(circleVbo);
@@ -55,10 +52,11 @@ public class RobotArmEndEffector
     {
         int index = 0;
 
+        // Left half-circle vertices
         for (int i = 0; i <= 20; i++)
         {
             float theta = -PI / 2 + PI * i / 20;
-            circlePositions[index] = scale * (0.55f + 0.22f * (float)Math.Cos(theta));
+            circlePositions[index] = scale * (0.55f + 0.22f * (float)Math.Cos(theta)); // Left Half-Circle (was 0.4f)
             initialCirclePositions[index] = circlePositions[index];
             index++;
             circlePositions[index] = scale * (0.22f * (float)Math.Sin(theta));
@@ -66,22 +64,13 @@ public class RobotArmEndEffector
             index++;
         }
 
-        for (int i = 0; i <= 20; i++)
-        {
-            float theta = PI / 2 + PI * i / 20;
-            circlePositions[index] = scale * (-0.55f + 0.22f * (float)Math.Cos(theta));
-            initialCirclePositions[index] = circlePositions[index];
-            index++;
-            circlePositions[index] = scale * (0.22f * (float)Math.Sin(theta));
-            initialCirclePositions[index] = circlePositions[index];
-            index++;
-        }
+        
 
         float[] rectVerts = {
-            0.55f,  0.22f,
-            0.55f, -0.22f,
-            -0.55f, -0.22f,
-            -0.55f,  0.22f
+            -0.55f,  0.22f, // Top right
+            -0.55f, -0.22f, // Bottom right
+            0.55f, -0.22f, // Bottom left
+            0.55f,  0.22f  // Top left
         };
 
         for (int i = 0; i < rectanglePositions.Length; i++)
@@ -90,11 +79,13 @@ public class RobotArmEndEffector
             initialRectanglePositions[i] = rectanglePositions[i];
         }
 
+        // Translate to center
         TranslateToCenter(circlePositions, numCircleVertices, -scale * 0.55f, 0.0f);
         TranslateToCenter(rectanglePositions, numRectangleVertices, -scale * 0.55f, 0.0f);
         TranslateToCenter(initialCirclePositions, numCircleVertices, -scale * 0.55f, 0.0f);
         TranslateToCenter(initialRectanglePositions, numRectangleVertices, -scale * 0.55f, 0.0f);
 
+        // Indices for circles
         index = 0;
         for (int i = 0; i < 20; i++)
         {
@@ -110,8 +101,10 @@ public class RobotArmEndEffector
             circleIndices[index++] = (uint)(i + 1);
         }
 
+        // Indices for rectangle
         rectangleIndices = new uint[] { 0, 1, 2, 0, 2, 3 };
 
+        // OpenGL Buffers Initialization
         CreateBuffer(ref circleVao, ref circleVbo, ref circleEbo, circlePositions, circleIndices);
         CreateBuffer(ref rectangleVao, ref rectangleVbo, ref rectangleEbo, rectanglePositions, rectangleIndices);
     }
@@ -210,6 +203,7 @@ public class RobotArmEndEffector
             positions[i + 1] += offsetY;
         }
 
+        // Update the vertex buffer with the new positions
         if (positions == circlePositions)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, circleVbo);
@@ -224,32 +218,38 @@ public class RobotArmEndEffector
 
     public Tuple<float, float> CalculateRectangleHeightMidpoint(string side)
     {
+        // Midpoint of the rectangle's height on the left side
         if (side == "left")
         {
             float midpointX = (rectanglePositions[0] + rectanglePositions[2]) / 2;
             float midpointY = (rectanglePositions[1] + rectanglePositions[3]) / 2;
             return Tuple.Create(midpointX, midpointY);
         }
+        // Midpoint of the rectangle's height on the right side
         else if (side == "right")
         {
             float midpointX = (rectanglePositions[4] + rectanglePositions[6]) / 2;
             float midpointY = (rectanglePositions[5] + rectanglePositions[7]) / 2;
             return Tuple.Create(midpointX, midpointY);
         }
+        // Default return value for unexpected side values
         return Tuple.Create(0.0f, 0.0f);
     }
 
     public Tuple<float, float> CalculateRedDotPosition(string side)
     {
+        // Calculate the red dot position based on the rectangle's height midpoint
         return CalculateRectangleHeightMidpoint(side);
     }
 
     public void TranslateToPosition(float x, float y)
     {
+        // Calculate the offset needed to translate the appendage to the specified position
         var redDotPosition = CalculateRedDotPosition("right");
         float offsetX = x - redDotPosition.Item1;
         float offsetY = y - redDotPosition.Item2;
 
+        // Translate the entire geometry
         TranslateArbitrary(circlePositions, numCircleVertices, offsetX, offsetY);
         TranslateArbitrary(rectanglePositions, numRectangleVertices, offsetX, offsetY);
     }

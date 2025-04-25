@@ -10,7 +10,7 @@ public class Robot
     private float posX, posY, initialRotationRadians;
     private float angle1, angle2, angle3;
     private bool newInputReceived;
-    private RobotArmEndEffector endEffector;
+    private EndEffector endEffector;
     private RobotArmAppendage appendage_1, appendage_2;
     private Base vacuumSeal;
 
@@ -27,7 +27,7 @@ public class Robot
         this.vacuumSeal = new Base(scale);
         this.appendage_1 = new RobotArmAppendage(scale);
         this.appendage_2 = new RobotArmAppendage(scale);
-        this.endEffector = new RobotArmEndEffector(scale);
+        this.endEffector = new EndEffector(scale);
     }
 
     public void Initialize(float posX, float posY, float initialRotationDegrees)
@@ -38,7 +38,9 @@ public class Robot
 
         appendage_1.Initialize();
         appendage_2.Initialize();
+
         endEffector.Initialize();
+
         vacuumSeal.Initialize();
 
         shader.Bind();
