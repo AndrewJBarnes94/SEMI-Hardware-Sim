@@ -109,19 +109,19 @@ public class EndEffector
         for (int i = 0; i <= 20; i++)
         {
             float theta = -PI / 2 + PI * i / 20;
-            circlePositions[index] = scale * (0.55f + 0.22f * (float)Math.Cos(theta)); // Left Half-Circle (was 0.4f)
+            circlePositions[index] = scale * (0.5f + 0.2f * (float)Math.Cos(theta)); // Left Half-Circle (was 0.4f)
             initialCirclePositions[index] = circlePositions[index];
             index++;
-            circlePositions[index] = scale * (0.22f * (float)Math.Sin(theta));
+            circlePositions[index] = scale * (0.2f * (float)Math.Sin(theta));
             initialCirclePositions[index] = circlePositions[index];
             index++;
         }
 
         float[] rectVerts = {
-            -0.55f,  0.22f, // Top right
-            -0.55f, -0.22f, // Bottom right
-            0.55f, -0.22f, // Bottom left
-            0.55f,  0.22f  // Top left
+            -0.9f,  0.2f, // Top right
+            -0.9f, -0.2f, // Bottom right
+            0.5f, -0.2f, // Bottom left
+            0.5f,  0.2f  // Top left
         };
 
         for (int i = 0; i < rectanglePositions.Length; i++)
@@ -132,10 +132,10 @@ public class EndEffector
 
         float[] fork1Verts =
         {
-            -0.8f,  0.25f, // Top right
-            -0.8f, 0.20f, // Bottom right
-            -0.35f, 0.20f, // Bottom left
-            -0.35f,  0.25f  // Top left
+            -1.2f,  0.25f, // Top right
+            -1.2f, 0.20f, // Bottom right
+            -0.75f, 0.20f, // Bottom left
+            -0.75f,  0.25f  // Top left
         };
 
         for (int i = 0; i < fork1Positions.Length; i++)
@@ -146,10 +146,10 @@ public class EndEffector
 
         float[] fork2Verts =
         {
-            -0.8f, -0.25f, // Top right
-            -0.8f, -0.20f, // Bottom right
-            -0.35f, -0.20f, // Bottom left
-            -0.35f,  -0.25f  // Top left
+            -1.2f, -0.25f, // Top right
+            -1.2f, -0.20f, // Bottom right
+            -0.75f, -0.20f, // Bottom left
+            -0.75f,  -0.25f  // Top left
         };
 
         for (int i = 0; i < fork2Positions.Length; i++)
@@ -174,8 +174,8 @@ public class EndEffector
         TranslateToCenter(fork2Positions, numFork2Vertices, -scale * 0.65f, 0.0f);
         TranslateToCenter(initialFork2Positions, numFork2Vertices, -scale * 0.65f, 0.0f);
 
-        TranslateToCenter(scribePlatePositions, numScribePlateVertices, -scale * 1.1f, 0.0f); // Adjusted offset to move scribePlate to the left
-        TranslateToCenter(initialScribePlatePositions, numScribePlateVertices, -scale * 1.1f, 0.0f); // Adjusted offset to move scribePlate to the left
+        TranslateToCenter(scribePlatePositions, numScribePlateVertices, -scale * 1.5f, 0.0f); // Adjusted offset to move scribePlate to the left
+        TranslateToCenter(initialScribePlatePositions, numScribePlateVertices, -scale * 1.5f, 0.0f); // Adjusted offset to move scribePlate to the left
 
         // Indices for circles
         index = 0;
