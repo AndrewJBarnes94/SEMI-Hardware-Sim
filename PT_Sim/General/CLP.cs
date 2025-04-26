@@ -30,6 +30,16 @@ public class CLP
     public CLP(float scale, float posAx, float posAy, float posBx, float posBy, float posCx, float posCy, float posDx, float posDy)
     {
         this.scale = scale;
+
+        this.posAx = posAx;
+        this.posAy = posAy;
+        this.posBx = posBx;
+        this.posBy = posBy;
+        this.posCx = posCx;
+        this.posCy = posCy;
+        this.posDx = posDx;
+        this.posDy = posDy;
+
         numVertices = 4;
         numIndices = 6;
         positions = new float[]
@@ -255,7 +265,19 @@ public class CLP
             { "A", new List<float> { posAx, posAy } },
             { "B", new List<float> { posBx, posBy } },
             { "C", new List<float> { posCx, posCy } },
-            { "D", new List<float> { posDx, posDy } }
+            { "D", new List<float> { posDx, posDy } },
+            { "A90", new List<float> { positions90[0], positions90[1] } },
+            { "B90", new List<float> { positions90[2], positions90[3] } },
+            { "C90", new List<float> { positions90[4], positions90[5] } },
+            { "D90", new List<float> { positions90[6], positions90[7] } },
+            { "A80", new List<float> { positions80[0], positions80[1] } },
+            { "B80", new List<float> { positions80[2], positions80[3] } },
+            { "C80", new List<float> { positions80[4], positions80[5] } },
+            { "D80", new List<float> { positions80[6], positions80[7] } },
+            { "A70", new List<float> { positions70[0], positions70[1] } },
+            { "B70", new List<float> { positions70[2], positions70[3] } },
+            { "C70", new List<float> { positions70[4], positions70[5] } },
+            { "D70", new List<float> { positions70[6], positions70[7] } }
         };
 
         return positionMap[point];

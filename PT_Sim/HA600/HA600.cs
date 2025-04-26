@@ -36,6 +36,11 @@ public class HA600 : GLControl
     private CLP _AL;
     private CLP _BL;
 
+    private CLPCassettePositions _CLPCassettePositions;
+
+    private CLPCassette _cassette1;
+    private CLPCassette _cassette2;
+
     private Robot _robot;
     private float angle1 = 45.0f;
     private float angle2 = 90.0f;
@@ -121,6 +126,14 @@ public class HA600 : GLControl
         _BL = _CLPPositions.GetBL();
         _BL.Initialize();
 
+        _CLPCassettePositions = new CLPCassettePositions(_AL, _BL);
+        
+        _cassette1 = _CLPCassettePositions.GetALCassettePlatform();
+        _cassette1.Initialize();
+
+        _cassette2 = _CLPCassettePositions.GetBLCassettePlatform();
+        _cassette2.Initialize();
+
         // Initialize Robot
         _robot = new Robot(ref angle1, ref angle2, ref angle3, ref newInputReceived, scale * 0.9f);
         _robot.Initialize(0.0f, 0.0f, 0.0f);
@@ -137,6 +150,9 @@ public class HA600 : GLControl
 
         _AL.Render(_shader);
         _BL.Render(_shader);
+
+        _cassette1.Render(_shader);
+        _cassette2.Render(_shader);
 
         _slitValve1.Render(_shader);
         _slitValve2.Render(_shader);
