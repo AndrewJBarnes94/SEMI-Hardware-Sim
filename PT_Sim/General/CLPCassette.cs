@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing.Printing;
 using OpenTK.Graphics.OpenGL;
 using PT_Sim;
 public class CLPCassette : IDisposable
@@ -18,6 +19,18 @@ public class CLPCassette : IDisposable
     private float[] squarePositions;
     private uint[] squareIndices;
     float x5, y5, x6, y6, x7, y7, x8, y8;
+
+    private int numTriLVertices;
+    private int numTriLIndices;
+    private int triLVao, triLVbo, triLEbo;
+    private float[] triLPositions;
+    private uint[] triLIndices;
+
+    private int numTriRVertices;
+    private int numTriRIndices;
+    private int triRVao, triRVbo, triREbo;
+    private float[] triRPositions;
+    private uint[] triRIndices;
 
     public CLPCassette(
         float scale,
@@ -49,6 +62,12 @@ public class CLPCassette : IDisposable
 
         numSquareVertices = 4;
         numSquareIndices = 6;
+
+        numTriLVertices = 3;
+        numTriLIndices = 3;
+
+        numTriRVertices = 3;
+        numTriRIndices = 3;
     }
 
     ~CLPCassette()
@@ -58,7 +77,7 @@ public class CLPCassette : IDisposable
 
     public void Initialize()
     {
-        // Rectangle initialization (existing code)
+        // Rectangle initialization
         recPositions = new float[]
         {
         scale * x1, scale * y1,
@@ -123,6 +142,70 @@ public class CLPCassette : IDisposable
         GL.EnableVertexAttribArray(0);
 
         GL.BindVertexArray(0);
+
+        // Triangle initialization (left)
+        triLPositions = new float[]
+        {
+            scale * x5, scale * y5,
+            scale * x6, scale * y6,
+            scale * x2, scale * y2,
+        };
+
+        triLIndices = new uint[] { 0, 1, 2 };
+
+        GL.GenVertexArrays(1, out triLVao);
+        GL.GenBuffers(1, out triLVbo);
+        GL.GenBuffers(1, out triLEbo);
+        if (triLVao == 0 || triLVbo == 0 || triLEbo == 0)
+        {
+            Logger.Log("Error:", "Triangle left VAO, VBO, or EBO not initialized correctly");
+            return;
+        }
+
+        GL.BindVertexArray(triLVao);
+
+        GL.BindBuffer(BufferTarget.ArrayBuffer, triLVbo);
+        GL.BufferData(BufferTarget.ArrayBuffer, triLPositions.Length * sizeof(float), triLPositions, BufferUsageHint.StaticDraw);
+
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, triLEbo);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, triLIndices.Length * sizeof(uint), triLIndices, BufferUsageHint.StaticDraw);
+
+        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+        GL.EnableVertexAttribArray(0);
+
+        GL.BindVertexArray(0);
+
+        // Triangle initialization (right)
+        triRPositions = new float[]
+        {
+            scale * x7, scale * y7,
+            scale * x8, scale * y8,
+            scale * x4, scale * y4,
+        };
+
+        triRIndices = new uint[] { 0, 1, 2 };
+
+        GL.GenVertexArrays(1, out triRVao);
+        GL.GenBuffers(1, out triRVbo);
+        GL.GenBuffers(1, out triREbo);
+        if (triRVao == 0 || triRVbo == 0 || triREbo == 0)
+        {
+            Logger.Log("Error:", "Triangle right VAO, VBO, or EBO not initialized correctly");
+            return;
+        }
+
+        GL.BindVertexArray(triRVao);
+
+        GL.BindBuffer(BufferTarget.ArrayBuffer, triRVbo);
+        GL.BufferData(BufferTarget.ArrayBuffer, triRPositions.Length * sizeof(float), triRPositions, BufferUsageHint.StaticDraw);
+
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, triREbo);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, triRIndices.Length * sizeof(uint), triRIndices, BufferUsageHint.StaticDraw);
+
+        GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+        GL.EnableVertexAttribArray(0);
+
+        GL.BindVertexArray(0);
     }
 
     public void Render(Shader shader)
@@ -159,6 +242,28 @@ public class CLPCassette : IDisposable
             GL.DrawElements(PrimitiveType.Triangles, squareIndices.Length, DrawElementsType.UnsignedInt, 0);
 
             GL.BindVertexArray(0);
+
+            // Render triangle left
+            GL.BindVertexArray(triLVao);
+            // Draw outline
+            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
+            GL.DrawElements(PrimitiveType.LineLoop, numTriLIndices, DrawElementsType.UnsignedInt, 0);
+            // Draw filled interior
+            GL.Uniform4(location, 0.5f, 0.2f, 0.8f, 1.0f);
+            GL.DrawElements(PrimitiveType.Triangles, numTriLIndices, DrawElementsType.UnsignedInt, 0);
+            GL.BindVertexArray(0);
+
+            // Render triangle right
+            GL.BindVertexArray(triRVao);
+            // Draw outline
+            GL.Uniform4(location, 0.0f, 0.0f, 0.0f, 1.0f);
+            GL.DrawElements(PrimitiveType.LineLoop, numTriRIndices, DrawElementsType.UnsignedInt, 0);
+            // Draw filled interior
+            GL.Uniform4(location, 0.5f, 0.2f, 0.8f, 1.0f);
+            GL.DrawElements(PrimitiveType.Triangles, numTriRIndices, DrawElementsType.UnsignedInt, 0);
+            GL.BindVertexArray(0);
+
+
         }
 
         shader.Unbind();
@@ -179,6 +284,20 @@ public class CLPCassette : IDisposable
         if (squareEbo != 0) GL.DeleteBuffer(squareEbo);
 
         squareVao = squareVbo = squareEbo = 0;
+
+        // Dispose triangle left resources
+        if (triLVao != 0) GL.DeleteVertexArray(triLVao);
+        if (triLVbo != 0) GL.DeleteBuffer(triLVbo);
+        if (triLEbo != 0) GL.DeleteBuffer(triLEbo);
+
+        triLVao = triLVbo = triLEbo = 0;
+
+        // Dispose triangle right resources
+        if (triRVao != 0) GL.DeleteVertexArray(triRVao);
+        if (triRVbo != 0) GL.DeleteBuffer(triRVbo);
+        if (triREbo != 0) GL.DeleteBuffer(triREbo);
+
+        triRVao = triRVbo = triREbo = 0;
 
         GC.SuppressFinalize(this);
     }

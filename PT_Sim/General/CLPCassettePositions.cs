@@ -41,23 +41,33 @@ public class CLPCassettePositions
         x2y2 = Formulas.MovePointTowards(x2y2.Item1, x2y2.Item2, x4y4.Item1, x4y4.Item2, distanceMoved);
 
         // Move bottom two points towards top points
-        x3y3 = Formulas.MovePointTowards(x3y3.Item1, x3y3.Item2, x1y1.Item1, x1y1.Item2, distanceMoved * 4);
-        x4y4 = Formulas.MovePointTowards(x4y4.Item1, x4y4.Item2, x2y2.Item1, x2y2.Item2, distanceMoved * 4);
+        x3y3 = Formulas.MovePointTowards(x3y3.Item1, x3y3.Item2, x1y1.Item1, x1y1.Item2, distanceMoved*4);
+        x4y4 = Formulas.MovePointTowards(x4y4.Item1, x4y4.Item2, x2y2.Item1, x2y2.Item2, distanceMoved*4);
 
-        // Adding points to create irregular hexagon
-        (float, float) x5y5 = Formulas.MovePointTowards(x3y3.Item1, x3y3.Item2, x2, y2, distanceMoved);
+        (float, float) lowRecMidpoint = Formulas.FindMiddlePoint(x3y3.Item1, x3y3.Item2, x4y4.Item1, x4y4.Item2);
+        float sqEdgeDistance = Formulas.distance(x3y3.Item1, x3y3.Item2, x4y4.Item1, x4y4.Item2) / 4;
+        float lowRecSlope = Formulas.slope(x3y3.Item1, x3y3.Item2, x4y4.Item1, x4y4.Item2);
+
+        (float, float) sqTopLeft = Formulas.FindMiddlePoint(lowRecMidpoint.Item1, lowRecMidpoint.Item2, x3y3.Item1, x3y3.Item2);
+        (float, float) sqTopRight = Formulas.FindMiddlePoint(lowRecMidpoint.Item1, lowRecMidpoint.Item2, x4y4.Item1, x4y4.Item2);
+        (float, float) sqBottomLeft = Formulas.FindPerpendicularPoint_Vector(sqTopLeft.Item1, sqTopLeft.Item2, lowRecSlope, -sqEdgeDistance);
+        (float, float) sqBottomRight = Formulas.FindPerpendicularPoint_Vector(sqTopRight.Item1, sqTopRight.Item2, lowRecSlope, -sqEdgeDistance);
 
         return new CLPCassette(
             1.0f,
 
+            // Lower Rectangle
             x1y1.Item1, x1y1.Item2,
             x2y2.Item1, x2y2.Item2,
             x3y3.Item1, x3y3.Item2,
             x4y4.Item1, x4y4.Item2,
-            x1y1.Item1, x1y1.Item2,
-            x2y2.Item1, x2y2.Item2,
-            x3y3.Item1, x3y3.Item2,
-            x4y4.Item1, x4y4.Item2
+
+            // Lower Square
+            sqTopLeft.Item1, sqTopLeft.Item2,
+            sqTopRight.Item1, sqTopRight.Item2,
+            sqBottomLeft.Item1, sqBottomLeft.Item2,
+            sqBottomRight.Item1, sqBottomRight.Item2
+            
         );
     }
 
@@ -88,21 +98,30 @@ public class CLPCassettePositions
         x3y3 = Formulas.MovePointTowards(x3y3.Item1, x3y3.Item2, x1y1.Item1, x1y1.Item2, distanceMoved*4);
         x4y4 = Formulas.MovePointTowards(x4y4.Item1, x4y4.Item2, x2y2.Item1, x2y2.Item2, distanceMoved*4);
 
-        // Adding points to create irregular hexagon
-        (float, float) x5y5 = Formulas.MovePointTowards(x3y3.Item1, x3y3.Item2, x2, y2, -distanceMoved);
-        
+        (float, float) lowRecMidpoint = Formulas.FindMiddlePoint(x3y3.Item1, x3y3.Item2, x4y4.Item1, x4y4.Item2);
+        float sqEdgeDistance = Formulas.distance(x3y3.Item1, x3y3.Item2, x4y4.Item1, x4y4.Item2) / 4;
+        float lowRecSlope = Formulas.slope(x3y3.Item1, x3y3.Item2, x4y4.Item1, x4y4.Item2);
+
+        (float, float) sqTopLeft = Formulas.FindMiddlePoint(lowRecMidpoint.Item1, lowRecMidpoint.Item2, x3y3.Item1, x3y3.Item2);
+        (float, float) sqTopRight = Formulas.FindMiddlePoint(lowRecMidpoint.Item1, lowRecMidpoint.Item2, x4y4.Item1, x4y4.Item2);
+        (float, float) sqBottomLeft = Formulas.FindPerpendicularPoint_Vector(sqTopLeft.Item1, sqTopLeft.Item2, lowRecSlope, sqEdgeDistance);
+        (float, float) sqBottomRight = Formulas.FindPerpendicularPoint_Vector(sqTopRight.Item1, sqTopRight.Item2, lowRecSlope, sqEdgeDistance);
+
         return new CLPCassette(
             1.0f,
 
+            // Lower Rectangle
             x1y1.Item1, x1y1.Item2,
             x2y2.Item1, x2y2.Item2,
             x3y3.Item1, x3y3.Item2,
             x4y4.Item1, x4y4.Item2,
 
-            x1y1.Item1, x1y1.Item2,
-            x2y2.Item1, x2y2.Item2,
-            x3y3.Item1, x3y3.Item2,
-            x4y4.Item1, x4y4.Item2
+            // Lower Square
+            sqTopLeft.Item1, sqTopLeft.Item2,
+            sqTopRight.Item1, sqTopRight.Item2,
+            sqBottomLeft.Item1, sqBottomLeft.Item2,
+            sqBottomRight.Item1, sqBottomRight.Item2
+
         );
     }
 }

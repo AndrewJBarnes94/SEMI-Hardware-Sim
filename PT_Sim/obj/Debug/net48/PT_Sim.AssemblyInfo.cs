@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PT_Sim")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5485a9b1382affe6f26b950f409631bd2c5cebd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ddf41e0e62de535ff7a7269793f94967c2c1ac9")]
 [assembly: System.Reflection.AssemblyProductAttribute("PT_Sim")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PT_Sim")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
