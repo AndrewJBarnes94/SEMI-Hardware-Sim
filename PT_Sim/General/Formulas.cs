@@ -163,11 +163,12 @@ namespace PT_Sim.General
         }
 
         public static (float, float, float, float, float, float, float, float) CreateSmallerRectangle(
-     float ax, float ay,
-     float bx, float by,
-     float cx, float cy,
-     float dx, float dy,
-     float scaleFactor)
+             float ax, float ay,
+             float bx, float by,
+             float cx, float cy,
+             float dx, float dy,
+             float scaleFactor
+            )
         {
             // Calculate the center point of the rectangle
             float centerX = (ax + bx + cx + dx) / 4;

@@ -166,6 +166,9 @@ public class HA600 : GLControl
         _alignerAL.Render(_shader);
         _alignerBL.Render(_shader);
 
+        _cassette1.Render(_shader);
+        _cassette2.Render(_shader);
+
         // Update and render the robot
         if (newInputReceived)
         {

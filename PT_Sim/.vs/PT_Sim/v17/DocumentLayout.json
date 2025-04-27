@@ -3,28 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\general\\clpcassettepositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\clpcassettepositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\general\\formulas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\formulas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\general\\clpcassette.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\clpcassette.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\ha600\\ha600.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:ha600\\ha600.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\ha600\\clppositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:ha600\\clppositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\general\\clpcassettepositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\clpcassettepositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\general\\clp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:general\\clp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\ha600\\clppositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:ha600\\clppositions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\ha600\\ha600.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|solutionrelative:ha600\\ha600.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{ED4190F3-5D37-4F91-B4FB-DCBA79DC871F}|PT_Sim.csproj|c:\\users\\aj\\documents\\brocode_software\\semi-hardware-sim\\pt_sim\\general\\havacuumrobot\\endeffector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -38,11 +38,36 @@
       "DocumentGroups": [
         {
           "DockedWidth": 184,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 3,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
+              "Title": "Formulas.cs",
+              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\General\\Formulas.cs",
+              "RelativeDocumentMoniker": "General\\Formulas.cs",
+              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\General\\Formulas.cs",
+              "RelativeToolTip": "General\\Formulas.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAkwCoAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-27T00:20:51.333Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "CLPPositions.cs",
               "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\HA600\\CLPPositions.cs",
               "RelativeDocumentMoniker": "HA600\\CLPPositions.cs",
@@ -63,43 +88,30 @@
               "RelativeToolTip": "General\\HAVacuumRobot\\EndEffector.cs",
               "ViewState": "AgIAAMgAAAAAAAAAAAAgwE0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-26T18:52:25.718Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+              "WhenOpened": "2025-04-26T18:52:25.718Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "HA600.cs",
               "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\HA600\\HA600.cs",
               "RelativeDocumentMoniker": "HA600\\HA600.cs",
               "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\HA600\\HA600.cs",
               "RelativeToolTip": "HA600\\HA600.cs",
-              "ViewState": "AgIAAKkAAAAAAAAAAAAqwJoAAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAJEAAAAAAAAAAAAqwJ4AAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-25T01:19:46.795Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "CLP.cs",
               "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\General\\CLP.cs",
               "RelativeDocumentMoniker": "General\\CLP.cs",
               "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\General\\CLP.cs",
               "RelativeToolTip": "General\\CLP.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAAwCgAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAACgAAAAAAAAAAAAQwCgAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-26T18:10:40.767Z",
               "EditorCaption": ""
@@ -112,39 +124,20 @@
               "RelativeDocumentMoniker": "General\\CLPCassette.cs",
               "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\General\\CLPCassette.cs",
               "RelativeToolTip": "General\\CLPCassette.cs",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAgwFcAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAAAGoAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-26T18:28:03.504Z",
-              "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 1,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Logger.cs",
-              "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\Logger.cs",
-              "RelativeDocumentMoniker": "Logger.cs",
-              "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\Logger.cs",
-              "RelativeToolTip": "Logger.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-26T19:20:40.538Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "CLPCassettePositions.cs",
               "DocumentMoniker": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\General\\CLPCassettePositions.cs",
               "RelativeDocumentMoniker": "General\\CLPCassettePositions.cs",
               "ToolTip": "C:\\Users\\AJ\\Documents\\BroCode_Software\\SEMI-Hardware-Sim\\PT_Sim\\General\\CLPCassettePositions.cs",
               "RelativeToolTip": "General\\CLPCassettePositions.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAcAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAcwGgAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-26T19:15:48.512Z",
               "EditorCaption": ""
