@@ -13,11 +13,6 @@ C:\Users\AJ\Documents\BroCode_Software\PT_Sim\obj\Debug\net48\PT_Sim.csproj.Core
 C:\Users\AJ\Documents\BroCode_Software\PT_Sim\obj\Debug\net48\PT_Sim.csproj.Up2Date
 C:\Users\AJ\Documents\BroCode_Software\PT_Sim\obj\Debug\net48\PT_Sim.exe
 C:\Users\AJ\Documents\BroCode_Software\PT_Sim\obj\Debug\net48\PT_Sim.pdb
-C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\bin\Debug\net48\PT_Sim.exe.config
-C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\bin\Debug\net48\PT_Sim.exe
-C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\bin\Debug\net48\PT_Sim.pdb
-C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\bin\Debug\net48\OpenTK.dll
-C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\bin\Debug\net48\OpenTK.GLControl.dll
 C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\obj\Debug\net48\PT_Sim.csproj.AssemblyReference.cache
 C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\obj\Debug\net48\PT_Sim.Form1.resources
 C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\obj\Debug\net48\PT_Sim.csproj.GenerateResource.cache
@@ -26,6 +21,11 @@ C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\obj\Debug\net48\
 C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\obj\Debug\net48\PT_Sim.AssemblyInfo.cs
 C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\obj\Debug\net48\PT_Sim.csproj.CoreCompileInputs.cache
 C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\obj\Debug\net48\PT_Sim.sourcelink.json
+C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\bin\Debug\net48\PT_Sim.exe.config
+C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\bin\Debug\net48\PT_Sim.exe
+C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\bin\Debug\net48\PT_Sim.pdb
+C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\bin\Debug\net48\OpenTK.dll
+C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\bin\Debug\net48\OpenTK.GLControl.dll
 C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\obj\Debug\net48\PT_Sim.csproj.Up2Date
 C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\obj\Debug\net48\PT_Sim.exe
 C:\Users\AJ\Documents\BroCode_Software\SEMI-Hardware-Sim\PT_Sim\obj\Debug\net48\PT_Sim.pdb
